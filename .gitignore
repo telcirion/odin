@@ -1,0 +1,14 @@
+/nb-configuration.xml
+/**/target/
+/.idea/
+*.iml
+*.project
+*.classpath
+.settings/
+nb-configuration.xml
+/**/nbproject/
+/**/activemq-data/
+/**/testdb
+/**/.vscode/
+/**/dependency-reduced-pom.xml
+/**/.factorypath

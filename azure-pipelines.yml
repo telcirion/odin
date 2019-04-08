@@ -8,7 +8,7 @@ steps:
 - task: DownloadSecureFile@1
   displayName: 'Download secure file'
   inputs:
-    secureFile: '42214c1e-97e3-4260-b331-619cfbb9c71b'
+    secureFile: 'settings.xml'
 
 - task: Maven@3
   displayName: 'Maven pom.xml'

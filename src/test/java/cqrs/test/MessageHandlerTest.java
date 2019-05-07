@@ -14,10 +14,8 @@
 
 package cqrs.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.status.StatusLogger;
 import org.junit.jupiter.api.Test;
 
 import cqrs.concepts.applicationservices.IMessageBusFactory;
@@ -44,7 +42,7 @@ class MessageHandlerTest {
 
 	@Test
 	void test() {
-		StatusLogger.getLogger().setLevel(Level.OFF);
+		//StatusLogger.getLogger().setLevel(Level.OFF);
 
 		H2DBServer.startServer();
 		IRepositoryFactory f=  new IRepositoryFactory() {

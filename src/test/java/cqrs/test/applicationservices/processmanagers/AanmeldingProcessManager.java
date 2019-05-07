@@ -14,7 +14,11 @@
 
 package cqrs.test.applicationservices.processmanagers;
 
+import java.lang.invoke.MethodHandles;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cqrs.concepts.applicationservices.ICommand;
 import cqrs.concepts.applicationservices.IMessageBusFactory;
@@ -44,15 +48,17 @@ public class AanmeldingProcessManager implements IProcessManager {
 	}
 
 	private IMessageHandler handle(PersoonAangemeld msg){
-		System.out.println("Event " +msg.getClass().getSimpleName() + " ontvangen, command naar: "+outboundEndpoint+".");
+		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+		logger.info("Event " +msg.getClass().getSimpleName() + " ontvangen, command naar: "+outboundEndpoint+".");
 		ISendMessage<ICommand> bus1=messageBusFactory.getMessageBus(outboundEndpoint);
 		bus1.send(new RegistreerPersoon(UUID.randomUUID(), msg.getSsn(),msg.getNaam()));
 		return this;
 	}
 	
 	private IMessageHandler handle(PersoonGeregistreerd msg){
-		System.out.println("Event " +msg.getClass().getSimpleName() + " ontvangen.");
-		System.out.println("Message aggregateId: "+ msg.getAggregateId()
+		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+		logger.info("Event " +msg.getClass().getSimpleName() + " ontvangen.");
+		logger.info("Message aggregateId: "+ msg.getAggregateId()
 				+ " message ssn value: "+ msg.getSsn()
 				+ " message name value: "+ msg.getNaam());
 		return this;

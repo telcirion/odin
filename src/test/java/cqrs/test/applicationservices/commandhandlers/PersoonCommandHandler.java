@@ -14,6 +14,11 @@
 
 package cqrs.test.applicationservices.commandhandlers;
 
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cqrs.concepts.applicationservices.ICommandHandler;
 import cqrs.concepts.applicationservices.IMessageBusFactory;
 import cqrs.concepts.applicationservices.IRepository;
@@ -40,7 +45,8 @@ public class PersoonCommandHandler implements ICommandHandler {
     }
 
     private IMessageHandler handle(RegistreerPersoon registreerPersoon) {
-        System.out.println("Command " + registreerPersoon.getClass().getSimpleName() + " ontvangen voor aggregateId:"
+        final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+        logger.info("Command " + registreerPersoon.getClass().getSimpleName() + " ontvangen voor aggregateId:"
                 + registreerPersoon.getTargetId() + ", event naar: " + outboundEndpoint);
 
         ISendMessage<IDomainEvent> bus1 =messageBusFactory.getMessageBus(outboundEndpoint);
@@ -51,13 +57,14 @@ public class PersoonCommandHandler implements ICommandHandler {
         persoonRepository.create(persoon);
         persoon.getEvents().forEach(s -> {
             bus1.send(s);
-            System.out.println("EventId: " + s.getEventId());
+            logger.info("EventId: " + s.getEventId());
         });
         return this;
     }
 
     private IMessageHandler handle(WijzigNaamPersoon wijzigNaamPersoon) {
-        System.out.println("Command " + wijzigNaamPersoon.getClass().getSimpleName() + " ontvangen voor aggregateId:"
+        final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+        logger.info("Command " + wijzigNaamPersoon.getClass().getSimpleName() + " ontvangen voor aggregateId:"
                 + wijzigNaamPersoon.getTargetId() + ", event naar: " + outboundEndpoint);
 
         ISendMessage<IDomainEvent> bus1 = new SimpleMessageBus<>(outboundEndpoint);
@@ -68,7 +75,7 @@ public class PersoonCommandHandler implements ICommandHandler {
         persoonRepository.update(persoon);
         persoon.getEvents().forEach(s -> {
             bus1.send(s);
-            System.out.println("EventId: " + s.getEventId());
+            logger.info("EventId: " + s.getEventId());
         });
         return this;
     }

@@ -16,7 +16,11 @@ package cqrs.test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.invoke.MethodHandles;
+
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cqrs.concepts.applicationservices.IMessageBusFactory;
 import cqrs.concepts.applicationservices.IRepository;
@@ -42,7 +46,7 @@ class MessageHandlerTest {
 
 	@Test
 	void test() {
-		//StatusLogger.getLogger().setLevel(Level.OFF);
+		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 		H2DBServer.startServer();
 		IRepositoryFactory f=  new IRepositoryFactory() {
@@ -64,22 +68,22 @@ class MessageHandlerTest {
 
 		//start processmanager
 		IProcessorHost h=new ProcessorHost(EVENTQUEUE,dir);
-		System.out.println("ProcessManager aangemaakt, wacht op verwerking.");
+		logger.info("ProcessManager aangemaakt, wacht op verwerking.");
 
 		//start commandhandler
 		new ProcessorHost(COMMANDQUEUE,dir);
-		System.out.println("CommandHandler aangemaakt, wacht op verwerking.");
+		logger.info("CommandHandler aangemaakt, wacht op verwerking.");
 		
 		//stuur eerste event
 		bus1.send(new PersoonAangemeld("1234567892","pietje"));
 		bus1.send(new PersoonAangemeld("1234567893","jantje"));
 
-		System.out.println("Domainevent verstuurd.");
+		logger.info("Domainevent verstuurd.");
 		
 		//na twee events zijn we klaar
 		//noinspection StatementWithEmptyBody
 		while (h.getCalled()<4);
-		System.out.println("alle domainevents verwerkt.");
+		logger.info("alle domainevents verwerkt.");
 
 		assertTrue(true);
 		H2DBServer.stopServer();

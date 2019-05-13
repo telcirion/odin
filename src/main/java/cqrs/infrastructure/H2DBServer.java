@@ -29,7 +29,7 @@ public class H2DBServer {
 
     public static void startServer() {
     	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-        if (!running) {
+        if (!isRunning()) {
             try {
                 webServer = Server.createWebServer("-webAllowOthers", "-webPort", "8082").start(); // (4a)
                 server = Server.createTcpServer("-tcpAllowOthers").start()  ;  // (4b)

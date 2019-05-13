@@ -17,6 +17,7 @@ package cqrs.test.applicationservices.processmanagers;
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
+import cqrs.concepts.domainmodel.IDomainEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,14 +28,14 @@ import cqrs.concepts.applicationservices.ISendMessage;
 import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageHandler;
 import cqrs.framework.DispatcherBuilder;
-import cqrs.test.applicationservices.commands.RegistreerPersoon;
-import cqrs.test.domain.events.PersoonAangemeld;
-import cqrs.test.domain.events.PersoonGeregistreerd;
+import cqrs.test.applicationservices.commands.RegisterPerson;
+import cqrs.test.domain.events.PersonSignUpReceived;
+import cqrs.test.domain.events.PersonRegistered;
 
-public class AanmeldingProcessManager implements IProcessManager {
+public class SignUpPersonProcessManager implements IProcessManager {
 	private final String outboundEndpoint;
     private final IMessageBusFactory messageBusFactory;
-	public AanmeldingProcessManager(String outboundEndpoint, IMessageBusFactory messageBusFactory){
+	public SignUpPersonProcessManager(String outboundEndpoint, IMessageBusFactory messageBusFactory){
 		this.outboundEndpoint=outboundEndpoint;
 		this.messageBusFactory=messageBusFactory;
 	}
@@ -42,25 +43,25 @@ public class AanmeldingProcessManager implements IProcessManager {
     @Override
 	public IDispatcher getDispatcher() {
 		return new DispatcherBuilder()
-				.dispatch(PersoonAangemeld.class, this::handle)
-				.dispatch(PersoonGeregistreerd.class, this::handle)
+				.dispatch(PersonSignUpReceived.class, this::handle)
+				.dispatch(PersonRegistered.class, this::handle)
 				.build();
 	}
 
-	private IMessageHandler handle(PersoonAangemeld msg){
+	private IMessageHandler handle(PersonSignUpReceived msg){
 		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-		logger.info("Event " +msg.getClass().getSimpleName() + " ontvangen, command naar: "+outboundEndpoint+".");
+		logger.info("Event " +msg.getClass().getSimpleName() + " received, command to: "+outboundEndpoint+".");
 		ISendMessage<ICommand> bus1=messageBusFactory.getMessageBus(outboundEndpoint);
-		bus1.send(new RegistreerPersoon(UUID.randomUUID(), msg.getSsn(),msg.getNaam()));
+		bus1.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(),msg.getName()));
 		return this;
 	}
 	
-	private IMessageHandler handle(PersoonGeregistreerd msg){
+	private IMessageHandler handle(PersonRegistered msg){
 		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-		logger.info("Event " +msg.getClass().getSimpleName() + " ontvangen.");
-		logger.info("Message aggregateId: "+ msg.getAggregateId()
+		logger.info("Event " +msg.getClass().getSimpleName() + " received.");
+		logger.info("Message aggregateId: "+ ((IDomainEvent)msg).getAggregateId()
 				+ " message ssn value: "+ msg.getSsn()
-				+ " message name value: "+ msg.getNaam());
+				+ " message name value: "+ msg.getName());
 		return this;
 	}
 }

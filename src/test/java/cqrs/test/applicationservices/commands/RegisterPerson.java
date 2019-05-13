@@ -12,9 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cqrs.test.applicationservices.queries;
+package cqrs.test.applicationservices.commands;
 
-import cqrs.concepts.applicationservices.IQuery;
+import cqrs.framework.AbstractCommand;
 
-class PersoonQuery implements IQuery {
+import java.util.UUID;
+
+public class RegisterPerson extends AbstractCommand {
+
+	private final String name;
+	private final String ssn;
+
+    public RegisterPerson(UUID targetId, String ssn, String name){
+		super (targetId, null);
+    	this.name =name;
+		this.ssn=ssn;
+
+    }
+
+	public String getSsn() {
+		return ssn;
+	}
+	public String getName() {
+		return name;
+	}
 }

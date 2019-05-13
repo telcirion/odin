@@ -12,21 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cqrs.test.applicationservices.commands;
+package cqrs.test.domain.events;
 
-import cqrs.framework.AbstractCommand;
-
+import cqrs.framework.AbstractDomainEvent;
 import java.util.UUID;
 
-public class WijzigNaamPersoon extends AbstractCommand {
+public class PersonRegistered extends AbstractDomainEvent {
+	private final String ssn;
+	private final String name;
 
-    private final String naam;
 
-    public WijzigNaamPersoon(String naam, UUID targetId, UUID targetVersion) {
-        super(targetId, targetVersion);
-        this.naam = naam;
-    }
-    public String getNaam() {
-        return this.naam;
-    }
+	public PersonRegistered(UUID aggregateId, String ssn, String name){
+		super(aggregateId);
+		this.ssn=ssn;
+		this.name =name;
+	}
+
+	public String getSsn() {
+		return ssn;
+	}
+
+	public String getName() {
+		return name;
+	}
 }
+

@@ -12,7 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cqrs.concepts.infra;
-public interface IWebserviceHost{
-    
+package cqrs.test.applicationservices.commands;
+
+import cqrs.framework.AbstractCommand;
+
+import java.util.UUID;
+
+public class ChangePersonName extends AbstractCommand {
+
+    private final String name;
+
+    public ChangePersonName(String name, UUID targetId, UUID targetVersion) {
+        super(targetId, targetVersion);
+        this.name = name;
+    }
+    public String getName() {
+        return this.name;
+    }
 }

@@ -21,7 +21,7 @@ import cqrs.concepts.infra.IDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class HikariCPTestDataSource implements IDataSource {
+public class TestDataSource implements IDataSource {
 
 	private static final HikariConfig config = new HikariConfig();
 	private static final HikariDataSource ds;
@@ -42,6 +42,6 @@ public class HikariCPTestDataSource implements IDataSource {
 		return ds.getConnection();
 	}
 
-	public HikariCPTestDataSource() {
+	public TestDataSource() {
 	}
 }

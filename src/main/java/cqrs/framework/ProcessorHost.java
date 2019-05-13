@@ -44,6 +44,7 @@ public class ProcessorHost implements IProcessorHost {
 		}
 	}
 	
+	@SuppressWarnings("unused") // called using camel
 	public void process(Object m) {
 		directory.getDispatchers(m.getClass()).forEach(s -> s.dispatch(m));
 		synchronized (this) {

@@ -21,69 +21,69 @@ import java.util.UUID;
 import cqrs.concepts.common.IDispatcher;
 import cqrs.framework.AbstractAggregateRoot;
 import cqrs.framework.DispatcherBuilder;
-import cqrs.test.domain.events.PersoonGeregistreerd;
-import cqrs.test.domain.events.PersoonNaamGewijzigd;
+import cqrs.test.domain.events.PersonRegistered;
+import cqrs.test.domain.events.PersonNameChanged;
 
 /**
  *
  * @author peter
  */
 
-public class Persoon extends AbstractAggregateRoot<Persoon> {
+public class Person extends AbstractAggregateRoot<Person> {
 
-	final private String naam;
+	final private String name;
 	final private String ssn;
 	public String getSsn() {
 		return ssn;
 	}
 
-	public String getNaam() {
-		return naam;
+	public String getName() {
+		return name;
 	}
 
-	public Persoon(UUID id) {
+	public Person(UUID id) {
 		super(id);
-		this.naam = null;
+		this.name = null;
 		this.ssn=null;
 	}
 
-	private Persoon(Persoon persoon) {
-		super(persoon);
-		this.naam = persoon.getNaam();
-		this.ssn=persoon.getSsn();
+	private Person(Person person) {
+		super(person);
+		this.name = person.getName();
+		this.ssn= person.getSsn();
 	}
 
-	private Persoon(Persoon previousState, PersoonGeregistreerd event) {
+	private Person(Person previousState, PersonRegistered event) {
 		super(previousState, event);
-		this.naam = event.getNaam();
+		this.name = event.getName();
 		this.ssn= event.getSsn();
 	}
 
-	private Persoon(Persoon previousState, PersoonNaamGewijzigd event) {
+	private Person(Person previousState, PersonNameChanged event) {
 		super(previousState, event);
-		this.naam = event.getNaam();
+		this.name = event.getName();
 		this.ssn=previousState.getSsn();
 	}
 
 	@Override
-	public Persoon getSnapshot() {
-		return new Persoon(this);
+	public Person getSnapshot() {
+		return new Person(this);
 	}
 
-	public Persoon RegistreerPersoon(String ssn, String naam) {
-		return (Persoon) this.applyEvent(new PersoonGeregistreerd(getId(), ssn, naam));
+	public Person registerPerson(String ssn, String name) {
+		return (Person) this.applyEvent(new PersonRegistered(getId(), ssn, name));
 	}
 
-	public Persoon WijzigNaam(String naam) {
-		return (Persoon) this.applyEvent(new PersoonNaamGewijzigd(getId(), naam));
+	public Person changeName(String name) {
+		return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
 	}
 
 
 	@Override
 	public IDispatcher getDispatcher() {
 		return new DispatcherBuilder()
-				.dispatch(PersoonGeregistreerd.class, (m) -> new Persoon(this, m))
-				.dispatch(PersoonNaamGewijzigd.class, (p) -> new Persoon(this, p))
+				.dispatch(PersonRegistered.class, (m) -> new Person(this, m))
+				.dispatch(PersonNameChanged.class, (p) -> new Person(this, p))
 				.build();
 	}
 

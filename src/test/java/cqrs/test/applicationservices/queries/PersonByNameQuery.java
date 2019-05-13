@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cqrs.test.domain.events;
+package cqrs.test.applicationservices.queries;
 
-import cqrs.framework.AbstractDomainEvent;
+import cqrs.concepts.applicationservices.IQuery;
 
-import java.util.UUID;
-
-public class PersoonNaamGewijzigd extends AbstractDomainEvent {
-
-    private final String naam;
-
-    public PersoonNaamGewijzigd(UUID aggregateId, String name) {
-        super(aggregateId);
-        this.naam = name;
+public class PersonByNameQuery implements IQuery {
+    public PersonByNameQuery(String name){
+        this.name=name;
     }
 
-    public String getNaam() {
-        return naam;
+    private final String name;
+
+    public String getName() {
+        return name;
     }
 }

@@ -14,20 +14,26 @@
 
 package cqrs.infrastructure;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import cqrs.concepts.applicationservices.IRepository;
 import cqrs.concepts.domainmodel.IAggregateRoot;
 import cqrs.concepts.domainmodel.IDomainEvent;
 import cqrs.concepts.infra.IDataSource;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T> {
+
+
+
 	private final IDataSource ds;
 	
 	public SQLEventStore(IDataSource ds) {
@@ -38,12 +44,12 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 		
 		try {
 			Statement statement = ds.getConnection().createStatement();
-			String schemaDDL = "CREATE SCHEMA IF NOT EXISTS EVENTSTORE;\r\n"
-					+ "DROP TABLE IF EXISTS EVENTSTORE.AGGREGATE;\r\n"
-					+ "CREATE TABLE IF NOT EXISTS  EVENTSTORE.AGGREGATE(ID UUID PRIMARY KEY, CLASSNAME VARCHAR(255));\r\n"
-					+ "DROP TABLE IF EXISTS EVENTSTORE.EVENT;\r\n"
-					+ "CREATE TABLE IF NOT EXISTS  EVENTSTORE.EVENT(ID UUID PRIMARY KEY,  AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA VARCHAR(MAX),"
-					+ "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENTSTORE.AGGREGATE(ID));";
+			String schemaDDL = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
+					+ "DROP TABLE IF EXISTS EVENT_STORE.AGGREGATE;\r\n"
+					+ "CREATE TABLE IF NOT EXISTS  EVENT_STORE.AGGREGATE(ID UUID PRIMARY KEY, CLASSNAME VARCHAR(255));\r\n"
+					+ "DROP TABLE IF EXISTS EVENT_STORE.EVENT;\r\n"
+					+ "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY,  AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA VARCHAR(MAX),"
+					+ "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENT_STORE.AGGREGATE(ID));";
 			statement.executeUpdate(schemaDDL);
 		} catch (SQLException ex) {
 			Logger.getLogger(SQLEventStore.class.getName()).log(Level.SEVERE, ex.getMessage());
@@ -52,7 +58,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 
 	@Override
 	public void create(IAggregateRoot<T> obj) {
-		String sqlStmt = "INSERT INTO EVENTSTORE.AGGREGATE (ID, CLASSNAME) VALUES ('"
+		String sqlStmt = "INSERT INTO EVENT_STORE.AGGREGATE (ID, CLASSNAME) VALUES ('"
 				+ obj.getId() +"','" + obj.getClass().getName() + "');";
 		sqlStmt=sqlStmt+eventInserts(obj);
 		try {
@@ -66,7 +72,10 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 
 	private String eventInserts(IAggregateRoot<T> obj) {
 		StringBuilder b=new StringBuilder();
-		obj.getEvents().forEach(s-> b.append("INSERT INTO EVENTSTORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('").append(s.getEventId()).append("','").append(obj.getId()).append("','").append(s.getTimestamp()).append("','").append(s.getClass().getName()).append("','").append(new Gson().toJson(s)).append("');\r\n"));
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+		Gson gson = gsonBuilder.create();
+		obj.getEvents().forEach(s-> b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('").append(s.getEventId()).append("','").append(obj.getId()).append("','").append(s.getTimestamp()).append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n"));
 		return b.toString();
 	}
 	
@@ -87,15 +96,34 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 
 		try {
 			Statement statement = ds.getConnection().createStatement();
-			ResultSet a=statement.executeQuery("SELECT CLASSNAME, DATA FROM EVENTSTORE.EVENT WHERE AGGREGATE_ID='"+aggregate.getId()+"' ORDER BY TIMESTAMP;");
-			Gson g=new Gson();
-			while (a.next()) {
-				aggregate= aggregate.applyEvent((IDomainEvent) g.fromJson(a.getString(2), Class.forName(a.getString(1))));
+			ResultSet a=statement.executeQuery("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID='"+aggregate.getId()+"' ORDER BY TIMESTAMP;");
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+			Gson gson = gsonBuilder.create();			while (a.next()) {
+				aggregate= aggregate.applyEvent((IDomainEvent) gson.fromJson(a.getString(2), Class.forName(a.getString(1))));
 			}
 			return aggregate.getSnapshot();
 		} catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage());
 			throw  new RuntimeException(ex);
 		}
+	}
+}
+
+class LocalDateTimeSerializer implements JsonSerializer< LocalDateTime > {
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
+
+	@Override
+	public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+		return new JsonPrimitive(formatter.format(localDateTime));
+	}
+}
+
+class LocalDateTimeDeserializer implements JsonDeserializer < LocalDateTime > {
+	@Override
+	public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+			throws JsonParseException {
+		return LocalDateTime.parse(json.getAsString(),
+				DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
 	}
 }

@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cqrs.test.domain.events;
+package cqrs.test.applicationservices.queryresults;
 
-import cqrs.framework.AbstractDomainEvent;
+import cqrs.concepts.applicationservices.IQueryResult;
+import cqrs.test.domain.state.Person;
 
-public class PersoonAangemeld extends AbstractDomainEvent {
-	
-	private final String ssn;
-	private final String naam;
-	public PersoonAangemeld(String ssn, String naam){
-		this.ssn=ssn;
-		this.naam = naam;
-	}
+public class PersonQueryResult implements IQueryResult {
+    private final Person person;
+    public PersonQueryResult(Person person){
+        this.person=person;
+    }
 
-	public String getNaam() {
-		return naam;
-	}
-	public String getSsn() {
-		return ssn;
-	}
-
+    public Person getPerson() {
+        return person;
+    }
 }

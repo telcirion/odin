@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.invoke.MethodHandles;
 
+import cqrs.test.applicationservices.queries.PersonByNameQuery;
+import cqrs.test.applicationservices.queryhandlers.PersonQueryHandler;
+import cqrs.test.applicationservices.queryresults.PersonQueryResult;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,56 +38,69 @@ import cqrs.framework.ProcessorHost;
 import cqrs.framework.SimpleMessageBus;
 import cqrs.infrastructure.H2DBServer;
 import cqrs.infrastructure.SQLEventStore;
-import cqrs.test.applicationservices.commandhandlers.PersoonCommandHandler;
-import cqrs.test.applicationservices.processmanagers.AanmeldingProcessManager;
-import cqrs.test.domain.events.PersoonAangemeld;
+import cqrs.test.applicationservices.commandhandlers.PersonCommandHandler;
+import cqrs.test.applicationservices.processmanagers.SignUpPersonProcessManager;
+import cqrs.test.domain.events.PersonSignUpReceived;
 
 class MessageHandlerTest {
 
-	private static final String EVENTQUEUE ="vm:eventqueue";
-	private static final String COMMANDQUEUE ="vm:commandqueue";
+	private static final String EVENT_QUEUE ="vm:eventQueue";
+	private static final String COMMAND_QUEUE ="vm:commandQueue";
 
 	@Test
 	void test() {
 		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 		H2DBServer.startServer();
+		if(H2DBServer.isRunning()){
+			logger.info("Database seems to be running.");
+		} else {
+			logger.info("Database seems not to be running.");
+		}
+
 		IRepositoryFactory f=  new IRepositoryFactory() {
 			@Override
 			public <T extends IAggregateRoot<T>> IRepository<T> getRepository() {
-				return new SQLEventStore<>(new HikariCPTestDataSource());
+				return new SQLEventStore<>(new TestDataSource());
 			}
 		};
 
 		IMessageBusFactory messageBusFactory= SimpleMessageBus::new;
 
-		ISendMessage<IDomainEvent> bus1=new SimpleMessageBus<>(EVENTQUEUE);
+		ISendMessage<IDomainEvent> bus1=new SimpleMessageBus<>(EVENT_QUEUE);
 		IDirectory dir=new Directory();
-		dir.registerHandler(new AanmeldingProcessManager(COMMANDQUEUE, messageBusFactory));
-		dir.registerHandler(new PersoonCommandHandler(EVENTQUEUE, messageBusFactory, f));
+		dir.registerHandler(new SignUpPersonProcessManager(COMMAND_QUEUE, messageBusFactory));
+		dir.registerHandler(new PersonCommandHandler(EVENT_QUEUE, messageBusFactory, f));
 		
 		//create db
-		SQLEventStore.createDatabase(new HikariCPTestDataSource());
+		SQLEventStore.createDatabase(new TestDataSource());
 
-		//start processmanager
-		IProcessorHost h=new ProcessorHost(EVENTQUEUE,dir);
-		logger.info("ProcessManager aangemaakt, wacht op verwerking.");
+		//start processManager
+		IProcessorHost h=new ProcessorHost(EVENT_QUEUE,dir);
+		logger.info("ProcessManager created, wait for processing.");
 
-		//start commandhandler
-		new ProcessorHost(COMMANDQUEUE,dir);
-		logger.info("CommandHandler aangemaakt, wacht op verwerking.");
+		//start commandHandler
+		new ProcessorHost(COMMAND_QUEUE,dir);
+		logger.info("CommandHandler created, wait for processing.");
 		
-		//stuur eerste event
-		bus1.send(new PersoonAangemeld("1234567892","pietje"));
-		bus1.send(new PersoonAangemeld("1234567893","jantje"));
+		//send first event
+		bus1.send(new PersonSignUpReceived("1234567892","Peter"));
+		bus1.send(new PersonSignUpReceived("1234567893","John"));
 
-		logger.info("Domainevent verstuurd.");
+		logger.info("DomainEvent send.");
 		
-		//na twee events zijn we klaar
+		//after processing 4 events, we're done.
 		//noinspection StatementWithEmptyBody
 		while (h.getCalled()<4);
-		logger.info("alle domainevents verwerkt.");
+		logger.info("All DomainEvents were processed.");
 
+		//let's try a query
+		PersonQueryHandler queryHandler=new PersonQueryHandler();
+		PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("no name"));
+		if(personQueryResult !=null){
+			logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
+					" and ssn: " + personQueryResult.getPerson().getSsn());
+		}
 		assertTrue(true);
 		H2DBServer.stopServer();
 	}

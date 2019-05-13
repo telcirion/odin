@@ -15,25 +15,19 @@
 package cqrs.test.domain.events;
 
 import cqrs.framework.AbstractDomainEvent;
+
 import java.util.UUID;
 
-public class PersoonGeregistreerd extends AbstractDomainEvent {
-	private final String ssn;
-	private final String naam;
+public class PersonNameChanged extends AbstractDomainEvent {
 
+    private final String name;
 
-	public PersoonGeregistreerd(UUID aggregateId, String ssn,String name){
-		super(aggregateId);
-		this.ssn=ssn;
-		this.naam =name;
-	}
+    public PersonNameChanged(UUID aggregateId, String name) {
+        super(aggregateId);
+        this.name = name;
+    }
 
-	public String getSsn() {
-		return ssn;
-	}
-
-	public String getNaam() {
-		return naam;
-	}
+    public String getName() {
+        return name;
+    }
 }
-

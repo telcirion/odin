@@ -34,20 +34,18 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 		this.ds=ds;
 	}
 	
-	private static String getSchemaDDL(){
-		return "CREATE SCHEMA IF NOT EXISTS EVENTSTORE;\r\n"
+	private static String schemaDDL="CREATE SCHEMA IF NOT EXISTS EVENTSTORE;\r\n"
 		+ "DROP TABLE IF EXISTS EVENTSTORE.AGGREGATE;\r\n"
 		+ "CREATE TABLE IF NOT EXISTS  EVENTSTORE.AGGREGATE(ID UUID PRIMARY KEY, CLASSNAME VARCHAR(255));\r\n"
 		+ "DROP TABLE IF EXISTS EVENTSTORE.EVENT;\r\n"
 		+ "CREATE TABLE IF NOT EXISTS  EVENTSTORE.EVENT(ID UUID PRIMARY KEY,  AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA VARCHAR(MAX),"
 		+ "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENTSTORE.AGGREGATE(ID));";
-	}
 
 	public static void createDatabase(IDataSource ds) {
-		String sqlStmt = getSchemaDDL();
+		
 		try {
 			Statement statement = ds.getConnection().createStatement();
-			statement.executeUpdate(sqlStmt);
+			statement.executeUpdate(schemaDDL);
 		} catch (SQLException ex) {
 			Logger.getLogger(SQLEventStore.class.getName()).log(Level.SEVERE, ex.getMessage());
 		}

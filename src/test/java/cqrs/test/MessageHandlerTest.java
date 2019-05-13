@@ -58,7 +58,7 @@ class MessageHandlerTest {
 			logger.info("Database seems not to be running.");
 		}
 
-		IRepositoryFactory f=  new IRepositoryFactory() {
+		IRepositoryFactory repositoryFactory=  new IRepositoryFactory() {
 			@Override
 			public <T extends IAggregateRoot<T>> IRepository<T> getRepository() {
 				return new SQLEventStore<>(new TestDataSource());
@@ -67,16 +67,16 @@ class MessageHandlerTest {
 
 		IMessageBusFactory messageBusFactory= SimpleMessageBus::new;
 
-		ISendMessage<IDomainEvent> bus1=new SimpleMessageBus<>(EVENT_QUEUE);
+		ISendMessage<IDomainEvent> eventBus=new SimpleMessageBus<>(EVENT_QUEUE);
 		IDirectory dir=new Directory();
 		dir.registerHandler(new SignUpPersonProcessManager(COMMAND_QUEUE, messageBusFactory));
-		dir.registerHandler(new PersonCommandHandler(EVENT_QUEUE, messageBusFactory, f));
+		dir.registerHandler(new PersonCommandHandler(EVENT_QUEUE, messageBusFactory, repositoryFactory));
 		
 		//create db
-		new SQLEventStore(new TestDataSource()).createDatabase();
+		new SQLEventStore<>(new TestDataSource()).createDatabase();
 
 		//start processManager
-		IProcessorHost h=new ProcessorHost(EVENT_QUEUE,dir);
+		IProcessorHost processorHost=new ProcessorHost(EVENT_QUEUE,dir);
 		logger.info("ProcessManager created, wait for processing.");
 
 		//start commandHandler
@@ -84,14 +84,14 @@ class MessageHandlerTest {
 		logger.info("CommandHandler created, wait for processing.");
 		
 		//send first event
-		bus1.send(new PersonSignUpReceived("1234567892","Peter"));
-		bus1.send(new PersonSignUpReceived("1234567893","John"));
+		eventBus.send(new PersonSignUpReceived("1234567892","Peter"));
+		eventBus.send(new PersonSignUpReceived("1234567893","John"));
 
 		logger.info("DomainEvent send.");
 		
 		//after processing 4 events, we're done.
 		//noinspection StatementWithEmptyBody
-		while (h.getCalled()<4);
+		while (processorHost.getCalled()<4);
 		logger.info("All DomainEvents were processed.");
 
 		//let's try a query

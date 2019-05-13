@@ -73,7 +73,7 @@ class MessageHandlerTest {
 		dir.registerHandler(new PersonCommandHandler(EVENT_QUEUE, messageBusFactory, f));
 		
 		//create db
-		SQLEventStore.createDatabase(new TestDataSource());
+		new SQLEventStore(new TestDataSource()).createDatabase();
 
 		//start processManager
 		IProcessorHost h=new ProcessorHost(EVENT_QUEUE,dir);

@@ -20,19 +20,20 @@ import cqrs.concepts.domainmodel.IAggregateRoot;
 import cqrs.concepts.domainmodel.IDomainEvent;
 import cqrs.concepts.infra.IDataSource;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T> {
 
-
+	private final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final IDataSource ds;
 	
@@ -40,7 +41,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 		this.ds=ds;
 	}
 
-	public static void createDatabase(IDataSource ds) {
+	public void createDatabase() {
 		
 		try {
 			Statement statement = ds.getConnection().createStatement();
@@ -52,7 +53,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 					+ "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENT_STORE.AGGREGATE(ID));";
 			statement.executeUpdate(schemaDDL);
 		} catch (SQLException ex) {
-			Logger.getLogger(SQLEventStore.class.getName()).log(Level.SEVERE, ex.getMessage());
+			logger.error(ex.getMessage());
 		}
 	}
 
@@ -65,7 +66,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 			Statement statement = ds.getConnection().createStatement();
 			statement.executeUpdate(sqlStmt);
 		} catch (SQLException ex) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage());
+			logger.error(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}
@@ -86,7 +87,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 			Statement statement = ds.getConnection().createStatement();
 			statement.executeUpdate(eventInserts(obj));
 		} catch (SQLException ex) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage());
+			logger.error(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}
@@ -104,18 +105,16 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 			}
 			return aggregate.getSnapshot();
 		} catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage());
+			logger.error(ex.getMessage());
 			throw  new RuntimeException(ex);
 		}
 	}
 }
 
 class LocalDateTimeSerializer implements JsonSerializer< LocalDateTime > {
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
-
 	@Override
 	public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-		return new JsonPrimitive(formatter.format(localDateTime));
+		return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime));
 	}
 }
 
@@ -124,6 +123,6 @@ class LocalDateTimeDeserializer implements JsonDeserializer < LocalDateTime > {
 	public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
 		return LocalDateTime.parse(json.getAsString(),
-				DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
+				DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 	}
 }

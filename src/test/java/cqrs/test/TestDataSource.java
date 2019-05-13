@@ -41,7 +41,4 @@ public class TestDataSource implements IDataSource {
 	public Connection getConnection() throws SQLException {
 		return ds.getConnection();
 	}
-
-	public TestDataSource() {
-	}
 }

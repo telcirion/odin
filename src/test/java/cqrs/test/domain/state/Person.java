@@ -19,8 +19,11 @@ package cqrs.test.domain.state;
 import java.util.UUID;
 
 import cqrs.concepts.common.IDispatcher;
+import cqrs.concepts.common.IMessageHandler;
 import cqrs.framework.AbstractAggregateRoot;
 import cqrs.framework.DispatcherBuilder;
+import cqrs.test.applicationservices.commands.ChangePersonName;
+import cqrs.test.applicationservices.commands.RegisterPerson;
 import cqrs.test.domain.events.PersonRegistered;
 import cqrs.test.domain.events.PersonNameChanged;
 
@@ -87,6 +90,12 @@ public class Person extends AbstractAggregateRoot<Person> {
 				.build();
 	}
 
+	@Override
+	public <T,Z extends IMessageHandler> Z getDispatcher2(T msg) {
+		return match(PersonRegistered.class, (m) -> new Person(this, m),msg)
+				.match(PersonNameChanged.class, (p) -> new Person(this, p),msg);
+
+	}
 }
 
 

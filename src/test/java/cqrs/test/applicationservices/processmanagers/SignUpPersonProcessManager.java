@@ -18,6 +18,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
 import cqrs.concepts.domainmodel.IDomainEvent;
+import cqrs.framework.AbstractMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +26,12 @@ import cqrs.concepts.applicationservices.ICommand;
 import cqrs.concepts.applicationservices.IMessageBusFactory;
 import cqrs.concepts.applicationservices.IProcessManager;
 import cqrs.concepts.applicationservices.ISendMessage;
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageHandler;
-import cqrs.framework.DispatcherBuilder;
 import cqrs.test.applicationservices.commands.RegisterPerson;
 import cqrs.test.domain.events.PersonSignUpReceived;
 import cqrs.test.domain.events.PersonRegistered;
 
-public class SignUpPersonProcessManager implements IProcessManager {
+public class SignUpPersonProcessManager extends AbstractMessageHandler implements IProcessManager {
 	private final String outboundEndpoint;
     private final IMessageBusFactory messageBusFactory;
 	public SignUpPersonProcessManager(String outboundEndpoint, IMessageBusFactory messageBusFactory){
@@ -41,11 +40,9 @@ public class SignUpPersonProcessManager implements IProcessManager {
 	}
 
     @Override
-	public IDispatcher getDispatcher() {
-		return new DispatcherBuilder()
-				.dispatch(PersonSignUpReceived.class, this::handle)
-				.dispatch(PersonRegistered.class, this::handle)
-				.build();
+	public <T,Z extends IMessageHandler> Z getDispatcher2(T msg){
+		return match(PersonSignUpReceived.class, this::handle, msg)
+				.match(PersonRegistered.class, this::handle,msg);
 	}
 
 	private IMessageHandler handle(PersonSignUpReceived msg){

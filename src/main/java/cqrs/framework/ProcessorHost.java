@@ -46,7 +46,7 @@ public class ProcessorHost implements IProcessorHost {
 	}
 
 	private void process(Object m) {
-		directory.getDispatchers(m.getClass()).forEach(s -> s.dispatch(m));
+		directory.getDispatchers().forEach(s -> s.dispatch(m));
 		synchronized (this) {
 			called++;
 		}

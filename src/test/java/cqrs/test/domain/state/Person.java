@@ -18,12 +18,8 @@ package cqrs.test.domain.state;
 
 import java.util.UUID;
 
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageHandler;
 import cqrs.framework.AbstractAggregateRoot;
-import cqrs.framework.DispatcherBuilder;
-import cqrs.test.applicationservices.commands.ChangePersonName;
-import cqrs.test.applicationservices.commands.RegisterPerson;
 import cqrs.test.domain.events.PersonRegistered;
 import cqrs.test.domain.events.PersonNameChanged;
 
@@ -81,14 +77,6 @@ public class Person extends AbstractAggregateRoot<Person> {
 		return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
 	}
 
-
-	@Override
-	public IDispatcher getDispatcher() {
-		return new DispatcherBuilder()
-				.dispatch(PersonRegistered.class, (m) -> new Person(this, m))
-				.dispatch(PersonNameChanged.class, (p) -> new Person(this, p))
-				.build();
-	}
 
 	@Override
 	public <T,Z extends IMessageHandler> Z getDispatcher2(T msg) {

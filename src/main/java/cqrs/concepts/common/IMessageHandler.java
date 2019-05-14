@@ -15,9 +15,7 @@
 package cqrs.concepts.common;
 
 public interface IMessageHandler {
-	IDispatcher getDispatcher();
-	default <T,Z extends IMessageHandler> Z getDispatcher2(T msg){ return null;}
-	default <T,Z extends IMessageHandler> Z dispatch(T msg){ return null;}
-	default <T,Y,Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {return null;}
-
+	<T,Z extends IMessageHandler> Z getDispatcher2(T msg);
+	<T,Z extends IMessageHandler> Z dispatch(T msg);
+	<T,Y,Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg);
 }

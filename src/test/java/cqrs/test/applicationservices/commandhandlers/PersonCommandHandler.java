@@ -17,19 +17,18 @@ package cqrs.test.applicationservices.commandhandlers;
 import java.lang.invoke.MethodHandles;
 
 import cqrs.concepts.applicationservices.*;
+import cqrs.framework.AbstractMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageHandler;
 import cqrs.concepts.domainmodel.IDomainEvent;
-import cqrs.framework.DispatcherBuilder;
 import cqrs.framework.SimpleMessageBus;
 import cqrs.test.applicationservices.commands.RegisterPerson;
 import cqrs.test.applicationservices.commands.ChangePersonName;
 import cqrs.test.domain.state.Person;
 
-public class PersonCommandHandler implements ICommandHandler {
+public class PersonCommandHandler extends AbstractMessageHandler implements ICommandHandler {
     private final String outboundEndpoint;
     private final IRepositoryFactory repositoryFactory;
     private final IMessageBusFactory messageBusFactory;
@@ -78,12 +77,13 @@ public class PersonCommandHandler implements ICommandHandler {
         return this;
     }
 
+
     @Override
-    public IDispatcher getDispatcher() {
-        return new DispatcherBuilder()
-                .dispatch(RegisterPerson.class, this::handle)
-                .dispatch(ChangePersonName.class, this::handle)
-                .build();
+    public <T,Z extends IMessageHandler> Z getDispatcher2(T msg) {
+        return match(RegisterPerson.class, this::handle, msg)
+                .match(ChangePersonName.class, this::handle, msg);
+
     }
+
 
 }

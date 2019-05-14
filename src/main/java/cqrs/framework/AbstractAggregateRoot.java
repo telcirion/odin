@@ -14,7 +14,6 @@
 
 package cqrs.framework;
 
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.domainmodel.IAggregateRoot;
 import cqrs.concepts.domainmodel.IDomainEvent;
 

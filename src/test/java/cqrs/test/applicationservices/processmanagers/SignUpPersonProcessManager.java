@@ -17,13 +17,12 @@ package cqrs.test.applicationservices.processmanagers;
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
+import cqrs.concepts.applicationservices.ICommand;
 import cqrs.concepts.domainmodel.IDomainEvent;
 import cqrs.framework.AbstractMessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cqrs.concepts.applicationservices.ICommand;
-import cqrs.concepts.applicationservices.IMessageBusFactory;
 import cqrs.concepts.applicationservices.IProcessManager;
 import cqrs.concepts.applicationservices.ISendMessage;
 import cqrs.concepts.common.IMessageHandler;
@@ -32,11 +31,10 @@ import cqrs.test.domain.events.PersonSignUpReceived;
 import cqrs.test.domain.events.PersonRegistered;
 
 public class SignUpPersonProcessManager extends AbstractMessageHandler implements IProcessManager {
-	private final String outboundEndpoint;
-    private final IMessageBusFactory messageBusFactory;
-	public SignUpPersonProcessManager(String outboundEndpoint, IMessageBusFactory messageBusFactory){
-		this.outboundEndpoint=outboundEndpoint;
-		this.messageBusFactory=messageBusFactory;
+
+    private final ISendMessage<ICommand> commandBus;
+	public SignUpPersonProcessManager(ISendMessage<ICommand> commandBus){
+		this.commandBus=commandBus;
 	}
 
     @Override
@@ -47,9 +45,9 @@ public class SignUpPersonProcessManager extends AbstractMessageHandler implement
 
 	private IMessageHandler handle(PersonSignUpReceived msg){
 		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-		logger.info("Event " +msg.getClass().getSimpleName() + " received, command to: "+outboundEndpoint+".");
-		ISendMessage<ICommand> bus1=messageBusFactory.getMessageBus(outboundEndpoint);
-		bus1.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(),msg.getName()));
+		logger.info("Event " +msg.getClass().getSimpleName() + " received");
+
+		commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(),msg.getName()));
 		return this;
 	}
 	

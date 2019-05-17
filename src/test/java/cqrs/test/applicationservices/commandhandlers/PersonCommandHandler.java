@@ -14,44 +14,39 @@
 
 package cqrs.test.applicationservices.commandhandlers;
 
-import java.lang.invoke.MethodHandles;
-
 import cqrs.concepts.applicationservices.*;
+import cqrs.concepts.common.IMessageHandler;
+import cqrs.concepts.domainmodel.IDomainEvent;
 import cqrs.framework.AbstractMessageHandler;
+import cqrs.test.applicationservices.commands.ChangePersonName;
+import cqrs.test.applicationservices.commands.RegisterPerson;
+import cqrs.test.domain.state.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cqrs.concepts.common.IMessageHandler;
-import cqrs.concepts.domainmodel.IDomainEvent;
-import cqrs.framework.SimpleMessageBus;
-import cqrs.test.applicationservices.commands.RegisterPerson;
-import cqrs.test.applicationservices.commands.ChangePersonName;
-import cqrs.test.domain.state.Person;
+import java.lang.invoke.MethodHandles;
 
 public class PersonCommandHandler extends AbstractMessageHandler implements ICommandHandler {
-    private final String outboundEndpoint;
-    private final IRepositoryFactory repositoryFactory;
-    private final IMessageBusFactory messageBusFactory;
 
-    public PersonCommandHandler(String outboundEndpoint, IMessageBusFactory messageBusFactory, IRepositoryFactory repositoryFactory) {
-        this.outboundEndpoint = outboundEndpoint;
+    private final IRepositoryFactory repositoryFactory;
+    private final ISendMessage<IDomainEvent> messageBus;
+
+    public PersonCommandHandler(ISendMessage<IDomainEvent> messageBus, IRepositoryFactory repositoryFactory) {
+        this.messageBus=messageBus;
         this.repositoryFactory = repositoryFactory;
-        this.messageBusFactory = messageBusFactory;
     }
 
     private IMessageHandler handle(RegisterPerson registerPerson) {
         final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
         logger.info("Command " + registerPerson.getClass().getSimpleName() + " received for aggregateId:"
-                + ((ICommand)registerPerson).getTargetId() + ", event to: " + outboundEndpoint);
-
-        ISendMessage<IDomainEvent> bus1 =messageBusFactory.getMessageBus(outboundEndpoint);
+                + ((ICommand)registerPerson).getTargetId());
 
         IRepository<Person> personRepository = repositoryFactory.getRepository();
         var person = new Person(registerPerson.getTargetId())
                 .registerPerson(registerPerson.getSsn(), registerPerson.getName());
         personRepository.create(person);
         person.getEvents().forEach(s -> {
-            bus1.send(s);
+            messageBus.send(s);
             logger.info("EventId: " + s.getEventId());
         });
         return this;
@@ -61,17 +56,14 @@ public class PersonCommandHandler extends AbstractMessageHandler implements ICom
         final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
         logger.info("Command " + changePersonName.getClass().getSimpleName() + " received for aggregateId:"
                 + changePersonName.getTargetId()
-                + ", revision: " + ((ICommand)changePersonName).getTargetVersion(),
-                ", event to: " + outboundEndpoint);
-
-        ISendMessage<IDomainEvent> bus1 = new SimpleMessageBus<>(outboundEndpoint);
+                + ", revision: " + ((ICommand)changePersonName).getTargetVersion());
 
         IRepository<Person> personRepository = repositoryFactory.getRepository();
         Person person = personRepository.get(new Person(changePersonName.getTargetId()))
                 .changeName(changePersonName.getName());
         personRepository.update(person);
         person.getEvents().forEach(s -> {
-            bus1.send(s);
+            messageBus.send(s);
             logger.info("EventId: " + s.getEventId());
         });
         return this;

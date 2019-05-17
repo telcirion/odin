@@ -70,7 +70,6 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> extends
 
 	@Override
 	public IAggregateRoot<T>  applyEvent(IDomainEvent event) {
-		//return this.dispatcher.dispatch(event);
 		return this.dispatch(event);
 	}
 

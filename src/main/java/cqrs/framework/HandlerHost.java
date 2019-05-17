@@ -15,25 +15,25 @@
 package cqrs.framework;
 
 import cqrs.concepts.infra.IDirectory;
-import cqrs.concepts.infra.IProcessorHost;
+import cqrs.concepts.infra.IHandlerHost;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 
-public class ProcessorHost implements IProcessorHost {
+public class HandlerHost implements IHandlerHost {
 	private int called = 0;
 
 	private final IDirectory directory;
 
 
-	public ProcessorHost(String inEndpoint, IDirectory handlers) {
+	public HandlerHost(String inEndpoint, IDirectory handlers) {
 
 		CamelContext ctx = new DefaultCamelContext();
 		this.directory=handlers;
 		RouteBuilder builder = new RouteBuilder() {
 			public void configure() {
 				errorHandler(deadLetterChannel("mock:error"));
-				from(inEndpoint).process().body(ProcessorHost.this::process);
+				from(inEndpoint).process().body(HandlerHost.this::process);
 			}
 		};
 

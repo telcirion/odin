@@ -14,6 +14,6 @@
 
 package cqrs.concepts.infra;
 
-public interface IProcessorHost {
+public interface IHandlerHost {
     int getCalled();
 }

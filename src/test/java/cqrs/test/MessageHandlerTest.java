@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.invoke.MethodHandles;
 
+import cqrs.concepts.applicationservices.ICommand;
 import cqrs.test.applicationservices.queries.PersonByNameQuery;
 import cqrs.test.applicationservices.queryhandlers.PersonQueryHandler;
 import cqrs.test.applicationservices.queryresults.PersonQueryResult;
@@ -25,16 +26,15 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cqrs.concepts.applicationservices.IMessageBusFactory;
 import cqrs.concepts.applicationservices.IRepository;
 import cqrs.concepts.applicationservices.IRepositoryFactory;
 import cqrs.concepts.applicationservices.ISendMessage;
 import cqrs.concepts.domainmodel.IAggregateRoot;
 import cqrs.concepts.domainmodel.IDomainEvent;
 import cqrs.concepts.infra.IDirectory;
-import cqrs.concepts.infra.IProcessorHost;
+import cqrs.concepts.infra.IHandlerHost;
 import cqrs.framework.Directory;
-import cqrs.framework.ProcessorHost;
+import cqrs.framework.HandlerHost;
 import cqrs.framework.SimpleMessageBus;
 import cqrs.infrastructure.H2DBServer;
 import cqrs.infrastructure.SQLEventStore;
@@ -65,22 +65,22 @@ class MessageHandlerTest {
 			}
 		};
 
-		IMessageBusFactory messageBusFactory= SimpleMessageBus::new;
-
 		ISendMessage<IDomainEvent> eventBus=new SimpleMessageBus<>(EVENT_QUEUE);
+		ISendMessage<ICommand> commandBus=new SimpleMessageBus<>(COMMAND_QUEUE);
+
 		IDirectory dir=new Directory();
-		dir.registerHandler(new SignUpPersonProcessManager(COMMAND_QUEUE, messageBusFactory));
-		dir.registerHandler(new PersonCommandHandler(EVENT_QUEUE, messageBusFactory, repositoryFactory));
+		dir.registerHandler(new SignUpPersonProcessManager(commandBus));
+		dir.registerHandler(new PersonCommandHandler(eventBus, repositoryFactory));
 		
 		//create db
 		new SQLEventStore<>(new TestDataSource()).createDatabase();
 
 		//start processManager
-		IProcessorHost processorHost=new ProcessorHost(EVENT_QUEUE,dir);
+		IHandlerHost processorHost=new HandlerHost(EVENT_QUEUE,dir);
 		logger.info("ProcessManager created, wait for processing.");
 
 		//start commandHandler
-		new ProcessorHost(COMMAND_QUEUE,dir);
+		new HandlerHost(COMMAND_QUEUE,dir);
 		logger.info("CommandHandler created, wait for processing.");
 		
 		//send first event

@@ -30,6 +30,7 @@ public class PersonCommandHandler extends AbstractMessageHandler implements ICom
 
     private final IRepositoryFactory repositoryFactory;
     private final ISendMessage<IDomainEvent> messageBus;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PersonCommandHandler(ISendMessage<IDomainEvent> messageBus, IRepositoryFactory repositoryFactory) {
         this.messageBus=messageBus;
@@ -37,35 +38,23 @@ public class PersonCommandHandler extends AbstractMessageHandler implements ICom
     }
 
     private IMessageHandler handle(RegisterPerson registerPerson) {
-        final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-        logger.info("Command " + registerPerson.getClass().getSimpleName() + " received for aggregateId:"
-                + ((ICommand)registerPerson).getTargetId());
+        this.log(registerPerson);
 
         IRepository<Person> personRepository = repositoryFactory.getRepository();
         var person = new Person(registerPerson.getTargetId())
                 .registerPerson(registerPerson.getSsn(), registerPerson.getName());
         personRepository.create(person);
-        person.getEvents().forEach(s -> {
-            messageBus.send(s);
-            logger.info("EventId: " + s.getEventId());
-        });
+        person.getEvents().forEach(s -> messageBus.send(s));
         return this;
     }
 
     private IMessageHandler handle(ChangePersonName changePersonName) {
-        final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-        logger.info("Command " + changePersonName.getClass().getSimpleName() + " received for aggregateId:"
-                + changePersonName.getTargetId()
-                + ", revision: " + ((ICommand)changePersonName).getTargetVersion());
-
+        this.log(changePersonName);
         IRepository<Person> personRepository = repositoryFactory.getRepository();
         Person person = personRepository.get(new Person(changePersonName.getTargetId()))
                 .changeName(changePersonName.getName());
         personRepository.update(person);
-        person.getEvents().forEach(s -> {
-            messageBus.send(s);
-            logger.info("EventId: " + s.getEventId());
-        });
+        person.getEvents().forEach(s -> messageBus.send(s));
         return this;
     }
 
@@ -76,6 +65,13 @@ public class PersonCommandHandler extends AbstractMessageHandler implements ICom
                 .match(ChangePersonName.class, this::handle, msg);
 
     }
-
+    private void log(ICommand command) {
+        LOGGER.info(
+                "Command {} received for aggregateId: {}, revision: {}",
+                command.getClass().getSimpleName(),
+                command.getTargetId(),
+                command.getTargetVersion()
+        );
+    }
 
 }

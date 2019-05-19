@@ -76,6 +76,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
 		Gson gson = gsonBuilder.create();
+		// TODO refactor this 333 chars long line.
 		obj.getEvents().forEach(s-> b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('").append(s.getEventId()).append("','").append(obj.getId()).append("','").append(s.getTimestamp()).append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n"));
 		return b.toString();
 	}

@@ -14,8 +14,6 @@
 
 package cqrs.framework;
 
-import cqrs.concepts.common.IDispatcher;
-import cqrs.concepts.common.IMessageAction;
 import cqrs.concepts.common.IMessageHandler;
 import cqrs.concepts.infra.IDirectory;
 
@@ -25,11 +23,8 @@ import java.util.List;
 public class Directory implements IDirectory {
 	
 	class DispatcherEntry {
-		final Object msg;
-		final IDispatcher dispatcher;
-		DispatcherEntry(Object msg, IDispatcher dispatcher) {
-			super();
-			this.msg = msg;
+		final IMessageHandler dispatcher;
+		DispatcherEntry(IMessageHandler dispatcher) {
 			this.dispatcher = dispatcher;
 		}
 	}
@@ -37,16 +32,14 @@ public class Directory implements IDirectory {
 	private final List<DispatcherEntry> directory=new ArrayList<>();
 	
 	@Override
-	public <T> List<IDispatcher> getDispatchers(Class<T> t) {
-		List<IDispatcher> l =new ArrayList<>();
-		directory.stream().filter(s -> s.msg.equals(t)).forEach(a -> l.add(a.dispatcher));
+	public List<IMessageHandler> getDispatchers() {
+		List<IMessageHandler> l =new ArrayList<>();
+		directory.forEach(a -> l.add(a.dispatcher));
 		return l;
 	}
 
 	@Override
 	public <T extends IMessageHandler> void registerHandler(T messageHandler) {
-		var a=messageHandler.getDispatcher();
-		var b=a.getSupportedMessageTypes();
-		b.forEach((Class<?> s, IMessageAction<?> m) -> directory.add(new DispatcherEntry(s,a)));
+		directory.add(new DispatcherEntry(messageHandler));
 	}
 }

@@ -1,11 +1,11 @@
 // Copyright 2019 Peter Jansen
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,25 +14,26 @@
 
 package cqrs.framework;
 
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageAction;
+import cqrs.concepts.common.IMessageHandler;
 
-import java.util.Map;
+/**
+ *
+ * @author peter
+ */
+public abstract class AbstractMessageHandler implements IMessageHandler {
 
-class Dispatcher implements IDispatcher {
-	private final  Map<Class<?>, IMessageAction<?>> msgActions;
-	Dispatcher(Map<Class<?>, IMessageAction<?>> msgActions){
-		this.msgActions=msgActions;
-	}
+    @Override
+    public <T,Z extends IMessageHandler> Z dispatch(T msg) {
 
-	@Override
-	@SuppressWarnings( { "unchecked" } )
-	public <T,M> T dispatch(M msg) {
-		return (T)((IMessageAction<M>) msgActions.get(msg.getClass())).executeAction(msg);
-	}
-
-	@Override
-	public Map<Class<?>, IMessageAction<?>> getSupportedMessageTypes() {
-		return this.msgActions;
-	}
+        return this.getDispatcher2(msg);
+    }
+    @Override
+    @SuppressWarnings( { "unchecked" })
+    public <T,Y,Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
+        if(msg.getClass().equals(msgClazz)){
+            return (Z)msgAction.executeAction((T)msg);
+        }
+        return (Z)this;
+    }
 }

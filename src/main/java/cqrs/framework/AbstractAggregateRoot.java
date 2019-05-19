@@ -14,7 +14,6 @@
 
 package cqrs.framework;
 
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.domainmodel.IAggregateRoot;
 import cqrs.concepts.domainmodel.IDomainEvent;
 
@@ -26,9 +25,9 @@ import java.util.UUID;
  *
  * @author peter
  */
-public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> implements IAggregateRoot<T> {
+public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> extends AbstractMessageHandler implements IAggregateRoot<T> {
 
-	private final IDispatcher dispatcher;
+	//private final IDispatcher dispatcher;
 	private final IAggregateRoot<T> previousState;
 	private final UUID version;
 
@@ -40,14 +39,14 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
 		this.previousState=null;
 		this.appliedDomainEvent=null;
 		this.version=null;
-		this.dispatcher =this.getDispatcher();
+		//this.dispatcher =this.getDispatcher();
 	}
 	// snapshot constructor.
 	protected AbstractAggregateRoot(AbstractAggregateRoot<T> aggregateRoot){
 		this.id=aggregateRoot.id;
 		this.previousState=null;
 		this.appliedDomainEvent=null;
-		this.dispatcher =this.getDispatcher();
+		//this.dispatcher =this.getDispatcher();
 		this.version=aggregateRoot.version;
 	}
 
@@ -55,7 +54,7 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
 		this.id=previousState.getId();
 		this.previousState=previousState;
 		this.appliedDomainEvent=appliedDomainEvent;
-		this.dispatcher =this.getDispatcher();
+		//this.dispatcher =this.getDispatcher();
 		this.version=appliedDomainEvent.getEventId();
 	}
 
@@ -71,7 +70,7 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
 
 	@Override
 	public IAggregateRoot<T>  applyEvent(IDomainEvent event) {
-		return this.dispatcher.dispatch(event);
+		return this.dispatch(event);
 	}
 
 	@Override

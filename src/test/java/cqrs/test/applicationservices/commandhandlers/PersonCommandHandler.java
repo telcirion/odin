@@ -21,12 +21,11 @@ package cqrs.test.applicationservices.commandhandlers;
 // Also: long explicit import lists are a code smell.
 // Too many class dependencies means it is likely to have too many responsibilities.
 // In this case still fine, but being explicit makes it clear when it starts to smell.
+
 import cqrs.concepts.applicationservices.*;
-import cqrs.concepts.common.IDispatcher;
 import cqrs.concepts.common.IMessageHandler;
 import cqrs.concepts.domainmodel.IDomainEvent;
-import cqrs.framework.DispatcherBuilder;
-import cqrs.framework.SimpleMessageBus;
+import cqrs.framework.AbstractMessageHandler;
 import cqrs.test.applicationservices.commands.ChangePersonName;
 import cqrs.test.applicationservices.commands.RegisterPerson;
 import cqrs.test.domain.state.Person;
@@ -38,90 +37,53 @@ import java.lang.invoke.MethodHandles;
 // TODO add some documentation on this class,
 // e.g. why does it implement commandhandler, what can you use it for?
 // especially important becuase it looks like it is an example implementation.
-public class PersonCommandHandler implements ICommandHandler {
 
-    // I've moved the logging here, it only needs to be done once, and cluttered the other methods
+public class PersonCommandHandler extends AbstractMessageHandler implements ICommandHandler {
+
+    private final IRepositoryFactory repositoryFactory;
+    private final ISendMessage<IDomainEvent> messageBus;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // TODO Add some documentation on what these fields are used for.
-    private final String outboundEndpoint;
-    private final IMessageBusFactory messageBusFactory;
-    private final IRepository<Person> personRepo;
-
-    // TODO add documentation on how to instantiate objects of this class
-    public PersonCommandHandler(
-            String outboundEndpoint,
-            IMessageBusFactory messageBusFactory,
-            IRepositoryFactory repositoryFactory
-            // Now the parameters fit on a screen,
-            // even in GitHub (about 120 chars / line; see: https://stackoverflow.com/q/22207920)
-    ) {
-        this.outboundEndpoint = outboundEndpoint;
-        this.messageBusFactory = messageBusFactory;
-        // I've moved the person repo creation here, since it cluttered the other methods
-        // and I don't think new instances are needed every time.
-        this.personRepo = repositoryFactory.getRepository();
-    }
-
-    // TODO add documentation on what this method is or does
-    // Preferably add that documentation to the interface this class is implementating.
-    @Override
-    public IDispatcher getDispatcher() {
-        return new DispatcherBuilder()
-                .dispatch(RegisterPerson.class, this::handle)
-                .dispatch(ChangePersonName.class, this::handle)
-                .build();
+    public PersonCommandHandler(ISendMessage<IDomainEvent> messageBus, IRepositoryFactory repositoryFactory) {
+        this.messageBus=messageBus;
+        this.repositoryFactory = repositoryFactory;
     }
 
     private IMessageHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
 
-        // I'm not sure why this bus is requested from the bus factory,
-        // while the bus in the other `handle` method uses a constructor.
-        // Is creating/retrieving the bus, part of this method's responsibility?
-        // TODO: if no reason to have multiple ways, refactor to one way and possibly move to a field.
-        ISendMessage<IDomainEvent> bus1 = this.messageBusFactory.getMessageBus(this.outboundEndpoint);
-
         var person = new Person(registerPerson.getTargetId())
                 .registerPerson(registerPerson.getSsn(), registerPerson.getName());
-        this.personRepo.create(person);
-        person.getEvents().forEach(s -> send(bus1, s));
+        personRepository.create(person);
+        person.getEvents().forEach(s -> messageBus.send(s));
         return this;
     }
 
     private IMessageHandler handle(ChangePersonName changePersonName) {
         // I reference the log method on `this` instance,
         // such that the reader always understands what kind of method is being used
-        // similar to the `getDispatcher` method declaring which `handle` methods to use (this.handle).
         this.log(changePersonName);
-
-        // This is the other way mentioned in the to-do above.
-        // TODO remove comment.
-        ISendMessage<IDomainEvent> bus1 = new SimpleMessageBus<>(this.outboundEndpoint);
-
-        var person = this.personRepo.get(new Person(changePersonName.getTargetId()))
+        IRepository<Person> personRepository = repositoryFactory.getRepository();
+        Person person = personRepository.get(new Person(changePersonName.getTargetId()))
                 .changeName(changePersonName.getName());
-        this.personRepo.update(person);
-        // TODO: move this next line, it is duplicated in both methods, and likely in all message handlers
-        person.getEvents().forEach(s -> send(bus1, s));
+        personRepository.update(person);
+        person.getEvents().forEach(s -> messageBus.send(s));
         return this;
     }
 
-    // This code was duplicated in both handlers
-    private void send(ISendMessage<IDomainEvent> bus1, IDomainEvent event) {
-        bus1.send(event);
-        LOGGER.info("EventId: {}", event.getEventId());
-    }
 
-    // This code was duplicated in both handlers
+    @Override
+    public <T,Z extends IMessageHandler> Z getDispatcher2(T msg) {
+        return match(RegisterPerson.class, this::handle, msg)
+                .match(ChangePersonName.class, this::handle, msg);
+
+    }
     private void log(ICommand command) {
         LOGGER.info(
-                "Command {} received for aggregateId: {}, revision: {}, event to: {}",
+                "Command {} received for aggregateId: {}, revision: {}",
                 command.getClass().getSimpleName(),
                 command.getTargetId(),
-                command.getTargetVersion(),
-                this.outboundEndpoint
+                command.getTargetVersion()
         );
     }
-
 }

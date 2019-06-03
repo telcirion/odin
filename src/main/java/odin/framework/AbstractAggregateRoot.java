@@ -27,7 +27,6 @@ import java.util.UUID;
  */
 public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> implements IAggregateRoot<T> {
 
-	//private final IDispatcher dispatcher;
 	private final IAggregateRoot<T> previousState;
 	private final UUID version;
 

@@ -114,7 +114,7 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 			return aggregate.getSnapshot();
 		} catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
 			logger.error(ex.getMessage());
-			throw  new RuntimeException(ex);
+			return null;
 		} finally {
 			try {
 				if(resultSet!=null) resultSet.close();

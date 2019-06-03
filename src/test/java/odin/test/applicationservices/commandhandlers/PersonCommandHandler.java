@@ -29,7 +29,7 @@ import java.lang.invoke.MethodHandles;
 
 // TODO add some documentation on this class,
 // e.g. why does it implement commandhandler, what can you use it for?
-// especially important becuase it looks like it is an example implementation.
+// especially important because it looks like it is an example implementation.
 
 public class PersonCommandHandler implements ICommandHandler {
 
@@ -49,23 +49,18 @@ public class PersonCommandHandler implements ICommandHandler {
         var person = new Person(registerPerson.getTargetId())
                 .registerPerson(registerPerson.getSsn(), registerPerson.getName());
         personRepository.create(person);
-        // TODO make the base class do this.
         person.getEvents().forEach(messageBus::send);
         return this;
     }
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
-        // I reference the log method on `this` instance,
-        // such that the reader always understands what kind of method is being used
         this.log(changePersonName);
         Person person = personRepository.get(new Person(changePersonName.getTargetId()))
                 .changeName(changePersonName.getName());
         personRepository.update(person);
-
         person.getEvents().forEach(messageBus::send);
         return this;
     }
-
 
     @Override
     public <T,Z extends IMessageHandler> Z getDispatcher(T msg) {

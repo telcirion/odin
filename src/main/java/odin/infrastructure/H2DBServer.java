@@ -22,10 +22,14 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 
-public class H2DBServer {
+public final class H2DBServer {
 	private static Server webServer;
     private static Server server;
     private static boolean running = false;
+
+    private H2DBServer(){
+        // this class may not be instantiated
+    }
 
     public static void startServer() {
     	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

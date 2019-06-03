@@ -39,14 +39,12 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
 		this.previousState=null;
 		this.appliedDomainEvent=null;
 		this.version=null;
-		//this.dispatcher =this.getDispatcher();
 	}
 	// snapshot constructor.
 	protected AbstractAggregateRoot(AbstractAggregateRoot<T> aggregateRoot){
 		this.id=aggregateRoot.id;
 		this.previousState=null;
 		this.appliedDomainEvent=null;
-		//this.dispatcher =this.getDispatcher();
 		this.version=aggregateRoot.version;
 	}
 
@@ -54,7 +52,6 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
 		this.id=previousState.getId();
 		this.previousState=previousState;
 		this.appliedDomainEvent=appliedDomainEvent;
-		//this.dispatcher =this.getDispatcher();
 		this.version=appliedDomainEvent.getEventId();
 	}
 

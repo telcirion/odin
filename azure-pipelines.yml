@@ -1,0 +1,46 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'Ubuntu 16.04'
+  
+steps:
+- task: DownloadSecureFile@1
+  displayName: 'Download secure file'
+  inputs:
+    secureFile: 'settings.xml'
+
+- task: Maven@3
+  displayName: 'Maven pom.xml'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    options: '--settings $(Agent.TempDirectory)/settings.xml'
+    jdkVersionOption: 1.12
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    sonarQubeRunAnalysis: true
+    sqMavenPluginVersionChoice: 'latest'
+    goals: 'deploy -Dbuildversion=$(Build.BuildNumber)'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**/odin-framework*.jar'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+# Publish Code Coverage Results
+# Publish Cobertura or JaCoCo code coverage results from a build
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'JaCoCo' # Options: cobertura, jaCoCo
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/**/jacoco.xml
+    reportDirectory: $(System.DefaultWorkingDirectory)/**/site/jacoco
+    additionalCodeCoverageFiles: $(System.DefaultWorkingDirectory)/**/jacoco.exec
+    #failIfCoverageEmpty: false # Optional
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'

@@ -44,12 +44,9 @@ class SimpleDomainTest {
     void test() {
         final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-        H2DBServer.startServer();
-        if(H2DBServer.isRunning()){
-            logger.info("Database seems to be running.");
-        } else {
-            logger.info("Database seems not to be running.");
-        }
+        H2DBServer databaseServer=new H2DBServer();
+        databaseServer.startServer();
+
         SQLEventStore<Person> personRepository=new SQLEventStore<>(new TestDataSource());
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
 
@@ -84,6 +81,6 @@ class SimpleDomainTest {
                     " and ssn: " + personQueryResult.getPerson().getSsn());
         }
         assertTrue(true);
-        H2DBServer.stopServer();
+        databaseServer.stopServer();
     }
 }

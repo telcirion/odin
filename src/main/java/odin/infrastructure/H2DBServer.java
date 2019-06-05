@@ -22,30 +22,28 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 
-public final class H2DBServer {
-	private static Server webServer;
-    private static Server server;
-    private static boolean running = false;
+public class H2DBServer {
+	private Server webServer;
+    private Server server;
+    private boolean running = false;
 
-    private H2DBServer(){
-        // this class may not be instantiated
-    }
-
-    public static void startServer() {
+    public boolean startServer() {
     	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
         if (!isRunning()) {
             try {
                 webServer = Server.createWebServer("-webAllowOthers", "-webPort", "8082").start(); // (4a)
                 server = Server.createTcpServer("-tcpAllowOthers").start()  ;  // (4b)
                 running = true;
+                logger.info("H2 database server started.");
             } catch (SQLException ex) {
                 logger.error(ex.getMessage());
             }
         }
+        return running;
 
     }
 
-    public static void stopServer() {
+    public void stopServer() {
         if (running) {
             server.stop();
             webServer.stop();
@@ -53,7 +51,7 @@ public final class H2DBServer {
         }
      }
 
-    public static boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 }

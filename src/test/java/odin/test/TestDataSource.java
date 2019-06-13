@@ -27,8 +27,10 @@ public class TestDataSource implements IDataSource {
 	private static final HikariDataSource ds;
 
 	static {
+		//config.setJdbcUrl("jdbc:postgresql://localhost/postgres");
+		//config.setUsername("postgres");
+		//config.setPassword("docker");
 		config.setJdbcUrl("jdbc:h2:mem:test");
-		//config.setJdbcUrl("jdbc:h2:tcp://localhost/~/odin-sample-test");
 		config.setUsername("sa");
 		config.setPassword("");
 		config.addDataSourceProperty("cachePrepStmts", "true");

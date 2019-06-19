@@ -12,18 +12,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.applicationservices.queryresults;
+package odin.test.readmodel;
 
-import odin.concepts.applicationservices.IQueryResult;
-import odin.test.readmodel.Person;
 
-public class PersonQueryResult implements IQueryResult {
-    private final Person person;
-    public PersonQueryResult(Person person){
-        this.person=person;
-    }
+import java.util.UUID;
 
-    public Person getPerson() {
-        return person;
-    }
+/**
+ *
+ * @author peter
+ */
+
+public class Person {
+
+	final private String name;
+	final private String ssn;
+	final private UUID id;
+	
+	public String getSsn() {
+		return ssn;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public UUID getId() {
+		return id;
+	}
+
+	public Person(UUID id, String name, String ssn) {
+		this.id=id;
+		this.name = name;
+		this.ssn=ssn;
+	}
 }
+
+

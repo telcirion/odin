@@ -1,0 +1,73 @@
+/* Copyright 2019 Peter Jansen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package odin.test.applicationservices.denormalizers;
+
+
+import odin.concepts.applicationservices.IDenormalizer;
+import odin.concepts.common.IMessageHandler;
+import odin.concepts.domainmodel.IDomainEvent;
+import odin.test.domain.events.PersonNameChanged;
+import odin.test.domain.events.PersonRegistered;
+import odin.test.readmodel.Person;
+import odin.test.readmodel.PersonList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
+
+public class PersonDenormalizer implements IDenormalizer<PersonList> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final PersonList personList=new PersonList();
+    
+    private IDenormalizer<PersonList> handle(PersonRegistered personRegistered) {
+        this.log(personRegistered);
+        Person person=new Person(personRegistered.getAggregateId(),
+        		personRegistered.getName(),
+        		personRegistered.getSsn());
+        personList.add(person);
+        return this;
+    }
+
+    private IDenormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
+        this.log(personNameChanged);
+        Person person=new Person(personNameChanged.getAggregateId(),
+        		personNameChanged.getName(),
+        		null);
+        personList.updateName(person);
+        return this;
+    }
+
+    @Override
+    public <T,Z extends IMessageHandler> Z getDispatcher(T msg) {
+        return match(PersonRegistered.class, this::handle, msg)
+                .match(PersonNameChanged.class, this::handle, msg);
+
+    }
+    
+    private void log(IDomainEvent event) {
+        LOGGER.info(
+                "DomainEvent {} received for aggregateId: {}",
+                event.getClass().getSimpleName(),
+                event.getAggregateId()
+        );
+    }
+
+    @Override
+    public PersonList getReadModel() {
+        return personList;
+    }
+}

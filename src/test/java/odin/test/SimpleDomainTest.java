@@ -28,6 +28,8 @@ import odin.infrastructure.H2DBServer;
 import odin.infrastructure.SQLEventStore;
 import odin.infrastructure.SimpleMessageBus;
 import odin.test.applicationservices.commandhandlers.PersonCommandHandler;
+import odin.test.applicationservices.commands.ChangePersonName;
+import odin.test.applicationservices.denormalizers.PersonDenormalizer;
 import odin.test.applicationservices.processmanagers.SignUpPersonProcessManager;
 import odin.test.applicationservices.queries.PersonByNameQuery;
 import odin.test.applicationservices.queryhandlers.PersonQueryHandler;
@@ -55,9 +57,11 @@ class SimpleDomainTest {
 
         //start processManager
         var signUpPersonProcessManager=new SignUpPersonProcessManager(commandBus);
+        var personDenormalizer=new PersonDenormalizer();
+
         ((IConsumeMessage)eventBus).consume(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
-
+        //TODO make the denormalizer also consume the events
         //start commandHandler
         ((IConsumeMessage)commandBus).consume(new PersonCommandHandler(eventBus, personRepository));
         logger.info("CommandHandler created, wait for processing.");
@@ -74,12 +78,18 @@ class SimpleDomainTest {
         logger.info("All DomainEvents were processed.");
 
         //let's try signUpPersonProcessManager query
-        PersonQueryHandler queryHandler=new PersonQueryHandler();
-        PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("no name"));
+        PersonQueryHandler queryHandler=new PersonQueryHandler(personDenormalizer.getReadModel());
+        PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("John"));
         if(personQueryResult !=null){
             logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
                     " and ssn: " + personQueryResult.getPerson().getSsn());
+        
+            //and then change the person's name
+            commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
         }
+
+        //wait for name to be changed.
+        //TODO wait for name to be changed
         assertTrue(true);
         databaseServer.stopServer();
     }

@@ -12,18 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.applicationservices.queryresults;
+package odin.concepts.applicationservices;
 
-import odin.concepts.applicationservices.IQueryResult;
-import odin.test.readmodel.Person;
+import odin.concepts.common.IMessageHandler;
 
-public class PersonQueryResult implements IQueryResult {
-    private final Person person;
-    public PersonQueryResult(Person person){
-        this.person=person;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
+public interface IDenormalizer<T> extends IMessageHandler {
+    T getReadModel();
 }

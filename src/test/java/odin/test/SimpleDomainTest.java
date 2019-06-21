@@ -39,8 +39,8 @@ import odin.test.domain.state.Person;
 
 class SimpleDomainTest {
 
-    private static final String EVENT_QUEUE ="vm:eventQueue";
-    private static final String COMMAND_QUEUE ="vm:commandQueue";
+    private static final String EVENT_QUEUE ="activemq:eventQueue?jmsMessageType=Object";
+    private static final String COMMAND_QUEUE ="activemq:commandQueue?jmsMessageType=Object";
 
     @Test
     void test() {
@@ -57,7 +57,8 @@ class SimpleDomainTest {
 
         //start processManager
         var signUpPersonProcessManager=new SignUpPersonProcessManager(commandBus);
-        var personDenormalizer=new PersonDenormalizer();
+        //var personDenormalizer=new PersonDenormalizer();
+
 
         ((IConsumeMessage)eventBus).consume(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
@@ -78,18 +79,21 @@ class SimpleDomainTest {
         logger.info("All DomainEvents were processed.");
 
         //let's try signUpPersonProcessManager query
-        PersonQueryHandler queryHandler=new PersonQueryHandler(personDenormalizer.getReadModel());
-        PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("John"));
-        if(personQueryResult !=null){
-            logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
-                    " and ssn: " + personQueryResult.getPerson().getSsn());
+        //PersonQueryHandler queryHandler=new PersonQueryHandler(personDenormalizer.getReadModel());
+        //PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("John"));
+        //if(personQueryResult !=null){
+        //   logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
+        //            " and ssn: " + personQueryResult.getPerson().getSsn());
         
             //and then change the person's name
-            commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
-        }
+         //   commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
+       // }
 
         //wait for name to be changed.
         //TODO wait for name to be changed
+        
+        ((IConsumeMessage)eventBus).stop();
+        ((IConsumeMessage)commandBus).stop();
         assertTrue(true);
         databaseServer.stopServer();
     }

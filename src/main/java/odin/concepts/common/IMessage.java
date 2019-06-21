@@ -14,5 +14,7 @@
  */
 package odin.concepts.common;
 
-public interface IMessage {
+import java.io.Serializable;
+
+public interface IMessage extends Serializable{
 }

@@ -18,4 +18,6 @@ import odin.concepts.common.IMessageHandler;
 
 public interface IConsumeMessage {
     void consume(IMessageHandler messageHandler);
+
+	void stop();
 }

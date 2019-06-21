@@ -24,6 +24,7 @@ import java.lang.invoke.MethodHandles;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import static org.apache.activemq.camel.component.ActiveMQComponent.activeMQComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +35,10 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
 	private final CamelContext ctx;
 
 	public SimpleMessageBus(String endpoint){
+		System.setProperty("org.apache.activemq.SERIALIZABLE_PACKAGES","*");
 		ctx=new DefaultCamelContext();
 		ctx.setStreamCaching(true);
+		ctx.addComponent("activemq", activeMQComponent("vm://localhost?broker.persistent=false"));
 		this.endpoint=endpoint;
 	}
 
@@ -60,5 +63,12 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
 			logger.error(e.getMessage());
 		}
 	}
-
+	@Override
+	public void stop() {
+		try {
+			ctx.stop();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
 }

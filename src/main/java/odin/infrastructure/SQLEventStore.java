@@ -22,6 +22,7 @@ import odin.concepts.infra.IDataSource;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -99,11 +100,12 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 
 	@Override
 	public T get(IAggregateRoot<T> aggregate) {
-		Statement statement=null;
+		PreparedStatement statement=null;
 		ResultSet resultSet=null;
 		try {
-			statement = ds.getConnection().createStatement();
-			resultSet=statement.executeQuery("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID='"+aggregate.getId()+"' ORDER BY TIMESTAMP;");
+			statement = ds.getConnection().prepareStatement("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
+			statement.setString(1, aggregate.getId().toString());
+			resultSet=statement.executeQuery();
 			GsonBuilder gsonBuilder = new GsonBuilder();
 			gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
 			Gson gson = gsonBuilder.create();			

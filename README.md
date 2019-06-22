@@ -1,5 +1,5 @@
 [![Build Status](https://dev.azure.com/telcirion/Playground/_apis/build/status/telcirion.odin?branchName=master)](https://dev.azure.com/telcirion/Playground/_build/latest?definitionId=10&branchName=master)
-[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=alert_status)](https://sonarcloud.io/dashboard?id=telcirion_odin)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=coverage)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 # ODIN-Framework
 A framework for DDD and EDA.
 ## Introduction

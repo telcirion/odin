@@ -20,6 +20,7 @@ import java.util.UUID;
 
 public class ChangePersonName extends AbstractCommand {
 
+    private static final long serialVersionUID = 1L;
     private final String name;
 
     public ChangePersonName(String name, UUID targetId, UUID targetVersion) {

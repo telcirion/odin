@@ -12,25 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.domain.events;
+package odin.concepts.applicationservices;
 
-import odin.framework.AbstractDomainEvent;
+import odin.concepts.common.IMessageHandler;
 
-public class PersonSignUpReceived extends AbstractDomainEvent {
-	
-	private static final long serialVersionUID = 1L;
-	private final String ssn;
-	private final String name;
-	public PersonSignUpReceived(String ssn, String name){
-		this.ssn=ssn;
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-	public String getSsn() {
-		return ssn;
-	}
-
+public interface IDenormalizer<T> extends IMessageHandler {
+    T getReadModel();
 }

@@ -27,10 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 
-// TODO add some documentation on this class,
-// e.g. why does it implement commandhandler, what can you use it for?
-// especially important because it looks like it is an example implementation.
-
 public class PersonCommandHandler implements ICommandHandler {
 
     private final ISendMessage messageBus;

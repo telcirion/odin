@@ -15,7 +15,7 @@
 package odin.test.applicationservices.queryresults;
 
 import odin.concepts.applicationservices.IQueryResult;
-import odin.test.domain.state.Person;
+import odin.test.readmodel.Person;
 
 public class PersonQueryResult implements IQueryResult {
     private final Person person;

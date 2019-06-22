@@ -20,6 +20,7 @@ import java.util.UUID;
 
 public class RegisterPerson extends AbstractCommand {
 
+	private static final long serialVersionUID = 1L;
 	private final String name;
 	private final String ssn;
 

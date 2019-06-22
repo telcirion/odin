@@ -12,25 +12,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.domain.events;
+package odin.test.readmodel;
 
-import odin.framework.AbstractDomainEvent;
 
-public class PersonSignUpReceived extends AbstractDomainEvent {
+import java.util.UUID;
+
+/**
+ *
+ * @author peter
+ */
+
+public class Person {
+
+	final private String name;
+	final private String ssn;
+	final private UUID id;
 	
-	private static final long serialVersionUID = 1L;
-	private final String ssn;
-	private final String name;
-	public PersonSignUpReceived(String ssn, String name){
-		this.ssn=ssn;
-		this.name = name;
+	public String getSsn() {
+		return ssn;
 	}
 
 	public String getName() {
 		return name;
 	}
-	public String getSsn() {
-		return ssn;
+	
+	public UUID getId() {
+		return id;
 	}
 
+	public Person(UUID id, String name, String ssn) {
+		this.id=id;
+		this.name = name;
+		this.ssn=ssn;
+	}
 }
+
+

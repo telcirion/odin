@@ -17,13 +17,15 @@ package odin.test.applicationservices.queryhandlers;
 import odin.concepts.applicationservices.IQueryHandler;
 import odin.test.applicationservices.queries.PersonByNameQuery;
 import odin.test.applicationservices.queryresults.PersonQueryResult;
-import odin.test.domain.state.Person;
-
-import java.util.UUID;
+import odin.test.readmodel.PersonList;
 
 public class PersonQueryHandler implements IQueryHandler {
+    private PersonList personList;
+    public PersonQueryHandler(PersonList personList){
+        this.personList=personList;
+    };
+
     public PersonQueryResult query(PersonByNameQuery query){
-        Person p=new Person (UUID.randomUUID());
-        return new PersonQueryResult(p.registerPerson("123",query.getName()+ " (not really found)"));
+        return new PersonQueryResult(personList.findPerson(query.getName()));
     }
 }

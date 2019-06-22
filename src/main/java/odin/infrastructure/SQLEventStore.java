@@ -104,7 +104,6 @@ public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T
 		try {
 			statement = ds.getConnection().createStatement();
 			resultSet=statement.executeQuery("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID='"+aggregate.getId()+"' ORDER BY TIMESTAMP;");
-			statement.close();
 			GsonBuilder gsonBuilder = new GsonBuilder();
 			gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
 			Gson gson = gsonBuilder.create();			

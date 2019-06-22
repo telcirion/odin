@@ -31,14 +31,8 @@ import odin.test.domain.events.PersonRegistered;
 public class SignUpPersonProcessManager implements IProcessManager {
 
     private final ISendMessage commandBus;
-	private int numberOfPersonRegisteredReceived=0;
-
-	public int getNumberOfPersonRegisteredReceived() {
-		synchronized(this){
-			return numberOfPersonRegisteredReceived;
-		}
-	}
-
+	
+	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public SignUpPersonProcessManager(ISendMessage commandBus){
 		this.commandBus=commandBus;
@@ -51,7 +45,6 @@ public class SignUpPersonProcessManager implements IProcessManager {
 	}
 
 	private IMessageHandler handle(PersonSignUpReceived msg){
-		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 		logger.info("Event " +msg.getClass().getSimpleName() + " received");
 
 		commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(),msg.getName()));
@@ -59,14 +52,11 @@ public class SignUpPersonProcessManager implements IProcessManager {
 	}
 	
 	private IMessageHandler handle(PersonRegistered msg){
-		final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 		logger.info("Event " +msg.getClass().getSimpleName() + " received.");
 		logger.info("Message aggregateId: "+ ((IDomainEvent)msg).getAggregateId()
 				+ " message ssn value: "+ msg.getSsn()
 				+ " message name value: "+ msg.getName());
-		synchronized (this){
-			numberOfPersonRegisteredReceived++;
-		}
+
 		return this;
 	}
 }

@@ -20,6 +20,7 @@ import java.util.UUID;
 
 public abstract class AbstractCommand implements ICommand {
 
+    private static final long serialVersionUID = 1L;
     private final UUID targetId;
     private final UUID targetVersion;
 

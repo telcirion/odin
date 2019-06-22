@@ -40,7 +40,7 @@ public class PersonList {
 		synchronized (this) {
 
 			for (var p : persons.values()) {
-				if (p.getName() == name) {
+				if (p.getName().equals(name)) {
 					return p;
 				}
 			}

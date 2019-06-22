@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.IConsumeMessage;
-import odin.concepts.applicationservices.ISendMessage;
 import odin.infrastructure.H2DBServer;
 import odin.infrastructure.SQLEventStore;
 import odin.infrastructure.SimpleMessageBus;
@@ -39,7 +37,7 @@ import odin.test.domain.state.Person;
 
 class SimpleDomainTest {
 
-    private static final String EVENT_QUEUE ="activemq:eventQueue?jmsMessageType=Object";
+    private static final String EVENT_TOPIC ="activemq:topic:eventQueue?jmsMessageType=Object";
     private static final String COMMAND_QUEUE ="activemq:commandQueue?jmsMessageType=Object";
 
     @Test
@@ -52,19 +50,22 @@ class SimpleDomainTest {
         SQLEventStore<Person> personRepository=new SQLEventStore<>(new TestDataSource());
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
 
-        ISendMessage eventBus=new SimpleMessageBus(EVENT_QUEUE);
-        ISendMessage commandBus=new SimpleMessageBus(COMMAND_QUEUE);
+        SimpleMessageBus eventBus=new SimpleMessageBus(EVENT_TOPIC);
+        SimpleMessageBus commandBus=new SimpleMessageBus(COMMAND_QUEUE);
+        SimpleMessageBus denormalizeBus=new SimpleMessageBus(EVENT_TOPIC);
 
         //start processManager
         var signUpPersonProcessManager=new SignUpPersonProcessManager(commandBus);
-        //var personDenormalizer=new PersonDenormalizer();
-
-
-        ((IConsumeMessage)eventBus).consume(signUpPersonProcessManager);
+        eventBus.consume(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
-        //TODO make the denormalizer also consume the events
+
+        //start denormalizer
+        var personDenormalizer=new PersonDenormalizer();
+        denormalizeBus.consume(personDenormalizer);
+        logger.info("Denormalizer created, wait for processing.");
+
         //start commandHandler
-        ((IConsumeMessage)commandBus).consume(new PersonCommandHandler(eventBus, personRepository));
+        commandBus.consume(new PersonCommandHandler(eventBus, personRepository));
         logger.info("CommandHandler created, wait for processing.");
 
         //send first event
@@ -75,26 +76,36 @@ class SimpleDomainTest {
 
         //after processing 2 registrations, we're done.
         //noinspection StatementWithEmptyBody
-        while (signUpPersonProcessManager.getNumberOfPersonRegisteredReceived()<2);
-        logger.info("All DomainEvents were processed.");
+        while (personDenormalizer.getNumberOfPersonRegisteredReceived()<2);
+        logger.info("All DomainEvents (PersonRegistered) were processed by the denormalizer.");
 
         //let's try signUpPersonProcessManager query
-        //PersonQueryHandler queryHandler=new PersonQueryHandler(personDenormalizer.getReadModel());
-        //PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("John"));
-        //if(personQueryResult !=null){
-        //   logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
-        //            " and ssn: " + personQueryResult.getPerson().getSsn());
+        PersonQueryHandler queryHandler=new PersonQueryHandler(personDenormalizer.getReadModel());
+        PersonQueryResult personQueryResult=queryHandler.query(new PersonByNameQuery("John"));
+        if(personQueryResult !=null){
+           logger.info("Person found with name: "+personQueryResult.getPerson().getName() +
+                    " and ssn: " + personQueryResult.getPerson().getSsn());
         
             //and then change the person's name
-         //   commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
-       // }
+            commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
+        }
 
         //wait for name to be changed.
-        //TODO wait for name to be changed
+        //noinspection StatementWithEmptyBody
+        while (personDenormalizer.getNumberOfPersonNameChangedReceived()<1);
+        logger.info("All DomainEvents (PersonNameChanged) were processed by the denormalizer.");
         
-        ((IConsumeMessage)eventBus).stop();
-        ((IConsumeMessage)commandBus).stop();
-        assertTrue(true);
+        //and check if the name is changed
+        PersonQueryResult anotherPersonQueryResult=queryHandler.query(new PersonByNameQuery("Nico"));
+        if(anotherPersonQueryResult !=null){
+           logger.info("Person found with name: "+anotherPersonQueryResult.getPerson().getName() +
+                    " and ssn: " + anotherPersonQueryResult.getPerson().getSsn());
+        }
+
+        eventBus.stop();
+        commandBus.stop();
+        denormalizeBus.stop();
+        assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
         databaseServer.stopServer();
     }
 }

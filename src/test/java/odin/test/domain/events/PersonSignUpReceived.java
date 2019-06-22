@@ -18,6 +18,7 @@ import odin.framework.AbstractDomainEvent;
 
 public class PersonSignUpReceived extends AbstractDomainEvent {
 	
+	private static final long serialVersionUID = 1L;
 	private final String ssn;
 	private final String name;
 	public PersonSignUpReceived(String ssn, String name){

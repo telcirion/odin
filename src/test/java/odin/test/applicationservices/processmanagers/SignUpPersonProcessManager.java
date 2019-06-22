@@ -31,15 +31,8 @@ import odin.test.domain.events.PersonRegistered;
 public class SignUpPersonProcessManager implements IProcessManager {
 
     private final ISendMessage commandBus;
-	private int numberOfPersonRegisteredReceived=0;
+	
 	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-	public int getNumberOfPersonRegisteredReceived() {
-		synchronized(this){
-			return numberOfPersonRegisteredReceived;
-		}
-	}
-
 
 	public SignUpPersonProcessManager(ISendMessage commandBus){
 		this.commandBus=commandBus;
@@ -63,9 +56,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
 		logger.info("Message aggregateId: "+ ((IDomainEvent)msg).getAggregateId()
 				+ " message ssn value: "+ msg.getSsn()
 				+ " message name value: "+ msg.getName());
-		synchronized (this){
-			numberOfPersonRegisteredReceived++;
-		}
+
 		return this;
 	}
 }

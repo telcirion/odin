@@ -21,7 +21,8 @@ import java.util.UUID;
 
 public abstract class AbstractDomainEvent implements IDomainEvent {
 
-	private final UUID id=UUID.randomUUID();
+	private static final long serialVersionUID = 1L;
+	private final UUID id = UUID.randomUUID();
 	private final UUID aggregateId;
 	private final LocalDateTime timestamp;
 

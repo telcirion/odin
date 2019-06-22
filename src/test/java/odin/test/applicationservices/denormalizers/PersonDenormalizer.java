@@ -30,7 +30,18 @@ import java.lang.invoke.MethodHandles;
 
 public class PersonDenormalizer implements IDenormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
+	private int numberOfPersonRegisteredReceived=0;
+	private int numberOfPersonNameChangedReceived=0;
+	public int getNumberOfPersonRegisteredReceived() {
+		synchronized(this){
+			return numberOfPersonRegisteredReceived;
+		}
+    }
+    public int getNumberOfPersonNameChangedReceived() {
+		synchronized(this){
+			return numberOfPersonNameChangedReceived;
+		}
+	}
     private final PersonList personList=new PersonList();
     
     private IDenormalizer<PersonList> handle(PersonRegistered personRegistered) {
@@ -39,6 +50,9 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
         		personRegistered.getName(),
         		personRegistered.getSsn());
         personList.add(person);
+        synchronized (this){
+			numberOfPersonRegisteredReceived++;
+		}
         return this;
     }
 
@@ -48,6 +62,9 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
         		personNameChanged.getName(),
         		null);
         personList.updateName(person);
+        synchronized (this){
+			numberOfPersonNameChangedReceived++;
+		}
         return this;
     }
 

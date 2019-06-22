@@ -20,6 +20,7 @@ import java.util.UUID;
 
 public class PersonNameChanged extends AbstractDomainEvent {
 
+    private static final long serialVersionUID = 1L;
     private final String name;
 
     public PersonNameChanged(UUID aggregateId, String name) {

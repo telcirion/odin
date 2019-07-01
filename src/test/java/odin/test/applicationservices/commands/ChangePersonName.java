@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.commands;
 
 import odin.framework.AbstractCommand;
@@ -27,6 +28,7 @@ public class ChangePersonName extends AbstractCommand {
         super(targetId, targetVersion);
         this.name = name;
     }
+
     public String getName() {
         return this.name;
     }

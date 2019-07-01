@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.infrastructure;
 
-import com.google.gson.*;
 import odin.concepts.applicationservices.IRepository;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
@@ -28,120 +28,134 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+public class SqlEventStore<T extends IAggregateRoot<T>> implements IRepository<T> {
 
-public class SQLEventStore<T extends IAggregateRoot<T>> implements IRepository<T> {
+    private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final IDataSource ds;
 
-	private final IDataSource ds;
-	
-	public SQLEventStore(IDataSource ds) {
-		this.ds=ds;
-	}
+    public SqlEventStore(IDataSource ds) {
+        this.ds = ds;
+    }
 
-	private void executeSQLUpdate(String sqlString){
-		Statement statement=null;
-		try {
-			statement = ds.getConnection().createStatement();
-			statement.executeUpdate(sqlString);
-		} catch (SQLException ex) {
-			logger.error(ex.getMessage());
+    private void executeSqlUpdate(String sqlString) {
+        Statement statement = null;
+        try {
+            statement = ds.getConnection().createStatement();
+            statement.executeUpdate(sqlString);
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage());
 
-		} finally {
-			try {
-				if(statement!=null) statement.close();
-			} catch (SQLException ex) {
-				logger.error(ex.getMessage());
-			}
-		}
-	}
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+        }
+    }
 
-	public void createDatabase() {
-		String schemaDDL = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
-			+ "DROP TABLE IF EXISTS EVENT_STORE.AGGREGATE CASCADE;\r\n"
-			+ "CREATE TABLE IF NOT EXISTS  EVENT_STORE.AGGREGATE(ID UUID PRIMARY KEY, CLASSNAME VARCHAR(255));\r\n"
-			+ "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
-			+ "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY,  AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT,"
-			+ "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENT_STORE.AGGREGATE(ID));";
-		executeSQLUpdate(schemaDDL);
-	}
+    public void createDatabase() {
+        String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
+                + "DROP TABLE IF EXISTS EVENT_STORE.AGGREGATE CASCADE;\r\n"
+                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.AGGREGATE(ID UUID PRIMARY KEY, "
+                + "CLASSNAME VARCHAR(255));\r\n" + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
+                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
+                + "AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT,"
+                + "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENT_STORE.AGGREGATE(ID));";
+        executeSqlUpdate(createSchema);
+    }
 
-	@Override
-	public void create(IAggregateRoot<T> obj) {
-		String sqlStmt = "INSERT INTO EVENT_STORE.AGGREGATE (ID, CLASSNAME) VALUES ('"
-				+ obj.getId() +"','" + obj.getClass().getName() + "');";
-		sqlStmt=sqlStmt+eventInserts(obj);
-		executeSQLUpdate(sqlStmt);
-	}
+    @Override
+    public void create(IAggregateRoot<T> obj) {
+        String sqlStmt = "INSERT INTO EVENT_STORE.AGGREGATE (ID, CLASSNAME) VALUES ('" + obj.getId() + "','"
+                + obj.getClass().getName() + "');";
+        sqlStmt = sqlStmt + eventInserts(obj);
+        executeSqlUpdate(sqlStmt);
+    }
 
-	private String eventInserts(IAggregateRoot<T> obj) {
-		StringBuilder b=new StringBuilder();
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-		Gson gson = gsonBuilder.create();
-		obj.getEvents().forEach(s-> b.append("INSERT INTO EVENT_STORE.EVENT "
-			+ "(ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('") 
-			.append(s.getEventId())
-			.append("','").append(obj.getId())
-			.append("','").append(s.getTimestamp())
-			.append("','").append(s.getClass().getName())
-			.append("','").append(gson.toJson(s))
-			.append("');\r\n"));
-		return b.toString();
-	}
-	
-	@Override
-	public void update(IAggregateRoot<T> obj) {
-		executeSQLUpdate(eventInserts(obj));
-	}
+    private String eventInserts(IAggregateRoot<T> obj) {
+        StringBuilder b = new StringBuilder();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        Gson gson = gsonBuilder.create();
+        obj.getEvents().forEach(s -> b
+                .append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
+                .append(s.getEventId()).append("','").append(obj.getId()).append("','").append(s.getTimestamp())
+                .append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n"));
+        return b.toString();
+    }
 
-	@Override
-	public T get(IAggregateRoot<T> aggregate) {
-		PreparedStatement statement=null;
-		ResultSet resultSet=null;
-		try {
-			statement = ds.getConnection().prepareStatement("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
-			statement.setString(1, aggregate.getId().toString());
-			resultSet=statement.executeQuery();
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-			Gson gson = gsonBuilder.create();			
-			while (resultSet.next()) {
-				aggregate= aggregate.applyEvent((IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
-			}
-			return aggregate.getSnapshot();
-		} catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
-			logger.error(ex.getMessage());
-			return null;
-		} finally {
-			try {
-				if(resultSet!=null) resultSet.close();
-			} catch (SQLException ex) {
-				logger.error(ex.getMessage());
-			}
-			try {
-				if(statement!=null) statement.close();
-			} catch (SQLException ex) {
-				logger.error(ex.getMessage());
-			}	
-		}
-	}
-}
+    @Override
+    public void update(IAggregateRoot<T> obj) {
+        executeSqlUpdate(eventInserts(obj));
+    }
 
-class LocalDateTimeSerializer implements JsonSerializer< LocalDateTime > {
-	@Override
-	public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-		return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime));
-	}
-}
+    @Override
+    public T get(IAggregateRoot<T> aggregate) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = ds.getConnection().prepareStatement(
+                    "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
+            statement.setString(1, aggregate.getId().toString());
+            resultSet = statement.executeQuery();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+            Gson gson = gsonBuilder.create();
+            while (resultSet.next()) {
+                aggregate = aggregate.applyEvent(
+                        (IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
+            }
+            return aggregate.getSnapshot();
+        } catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
+            logger.error(ex.getMessage());
+            return null;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+        }
+    }
 
-class LocalDateTimeDeserializer implements JsonDeserializer < LocalDateTime > {
-	@Override
-	public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-		return LocalDateTime.parse(json.getAsString(),
-				DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-	}
+    class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
+        @Override
+        public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+            return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime));
+        }
+    }
+
+    class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        }
+    }
 }

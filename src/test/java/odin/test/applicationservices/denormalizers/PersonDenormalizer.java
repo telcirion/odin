@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.applicationservices.denormalizers;
 
+package odin.test.applicationservices.denormalizers;
 
 import odin.concepts.applicationservices.IDenormalizer;
 import odin.concepts.common.IMessageHandler;
@@ -30,57 +30,53 @@ import java.lang.invoke.MethodHandles;
 
 public class PersonDenormalizer implements IDenormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-	private int numberOfPersonRegisteredReceived=0;
-	private int numberOfPersonNameChangedReceived=0;
-	public int getNumberOfPersonRegisteredReceived() {
-		synchronized(this){
-			return numberOfPersonRegisteredReceived;
-		}
+    private int numberOfPersonRegisteredReceived = 0;
+    private int numberOfPersonNameChangedReceived = 0;
+
+    public int getNumberOfPersonRegisteredReceived() {
+        synchronized (this) {
+            return numberOfPersonRegisteredReceived;
+        }
     }
+
     public int getNumberOfPersonNameChangedReceived() {
-		synchronized(this){
-			return numberOfPersonNameChangedReceived;
-		}
-	}
-    private final PersonList personList=new PersonList();
-    
+        synchronized (this) {
+            return numberOfPersonNameChangedReceived;
+        }
+    }
+
+    private final PersonList personList = new PersonList();
+
     private IDenormalizer<PersonList> handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
-        Person person=new Person(personRegistered.getAggregateId(),
-        		personRegistered.getName(),
-        		personRegistered.getSsn());
+        Person person = new Person(personRegistered.getAggregateId(), personRegistered.getName(),
+                personRegistered.getSsn());
         personList.add(person);
-        synchronized (this){
-			numberOfPersonRegisteredReceived++;
-		}
+        synchronized (this) {
+            numberOfPersonRegisteredReceived++;
+        }
         return this;
     }
 
     private IDenormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
-        Person person=new Person(personNameChanged.getAggregateId(),
-        		personNameChanged.getName(),
-        		null);
+        Person person = new Person(personNameChanged.getAggregateId(), personNameChanged.getName(), null);
         personList.updateName(person);
-        synchronized (this){
-			numberOfPersonNameChangedReceived++;
-		}
+        synchronized (this) {
+            numberOfPersonNameChangedReceived++;
+        }
         return this;
     }
 
     @Override
-    public <T,Z extends IMessageHandler> Z getDispatcher(T msg) {
-        return match(PersonRegistered.class, this::handle, msg)
-                .match(PersonNameChanged.class, this::handle, msg);
+    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+        return match(PersonRegistered.class, this::handle, msg).match(PersonNameChanged.class, this::handle, msg);
 
     }
-    
+
     private void log(IDomainEvent event) {
-        LOGGER.info(
-                "DomainEvent {} received for aggregateId: {}",
-                event.getClass().getSimpleName(),
-                event.getAggregateId()
-        );
+        LOGGER.info("DomainEvent {} received for aggregateId: {}", event.getClass().getSimpleName(),
+                event.getAggregateId());
     }
 
     @Override

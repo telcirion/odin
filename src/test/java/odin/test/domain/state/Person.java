@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.domain.state;
 
+package odin.test.domain.state;
 
 import java.util.UUID;
 
@@ -29,60 +29,58 @@ import odin.test.domain.events.PersonNameChanged;
 
 public class Person extends AbstractAggregateRoot<Person> {
 
-	final private String name;
-	final private String ssn;
-	public String getSsn() {
-		return ssn;
-	}
+    private final String name;
+    private final String ssn;
 
-	public String getName() {
-		return name;
-	}
+    public String getSsn() {
+        return ssn;
+    }
 
-	public Person(UUID id) {
-		super(id);
-		this.name = null;
-		this.ssn=null;
-	}
+    public String getName() {
+        return name;
+    }
 
-	private Person(Person person) {
-		super(person);
-		this.name = person.getName();
-		this.ssn= person.getSsn();
-	}
+    public Person(UUID id) {
+        super(id);
+        this.name = null;
+        this.ssn = null;
+    }
 
-	private Person(Person previousState, PersonRegistered event) {
-		super(previousState, event);
-		this.name = event.getName();
-		this.ssn= event.getSsn();
-	}
+    private Person(Person person) {
+        super(person);
+        this.name = person.getName();
+        this.ssn = person.getSsn();
+    }
 
-	private Person(Person previousState, PersonNameChanged event) {
-		super(previousState, event);
-		this.name = event.getName();
-		this.ssn=previousState.getSsn();
-	}
+    private Person(Person previousState, PersonRegistered event) {
+        super(previousState, event);
+        this.name = event.getName();
+        this.ssn = event.getSsn();
+    }
 
-	@Override
-	public Person getSnapshot() {
-		return new Person(this);
-	}
+    private Person(Person previousState, PersonNameChanged event) {
+        super(previousState, event);
+        this.name = event.getName();
+        this.ssn = previousState.getSsn();
+    }
 
-	public Person registerPerson(String ssn, String name) {
-		return (Person) this.applyEvent(new PersonRegistered(getId(), ssn, name));
-	}
+    @Override
+    public Person getSnapshot() {
+        return new Person(this);
+    }
 
-	public Person changeName(String name) {
-		return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
-	}
+    public Person registerPerson(String ssn, String name) {
+        return (Person) this.applyEvent(new PersonRegistered(getId(), ssn, name));
+    }
 
+    public Person changeName(String name) {
+        return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
+    }
 
-	@Override
-	public <T,Z extends IMessageHandler> Z getDispatcher(T msg) {
-		return match(PersonRegistered.class, (m) -> new Person(this, m),msg)
-				.match(PersonNameChanged.class, (p) -> new Person(this, p),msg);
+    @Override
+    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+        return match(PersonRegistered.class, (m) -> new Person(this, m), msg).match(PersonNameChanged.class,
+                (p) -> new Person(this, p), msg);
 
-	}
+    }
 }
-
-

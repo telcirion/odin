@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.concepts.domainmodel;
 
 import odin.concepts.common.IMessageHandler;
@@ -20,8 +21,11 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IAggregateRoot<T extends IAggregateRoot<T>> extends IMessageHandler {
-	UUID getId();
-	List<IDomainEvent> getEvents();
-	IAggregateRoot<T> applyEvent(IDomainEvent event);
-	T getSnapshot();
+    UUID getId();
+    
+    List<IDomainEvent> getEvents();
+    
+    IAggregateRoot<T> applyEvent(IDomainEvent event);
+
+    T getSnapshot();
 }

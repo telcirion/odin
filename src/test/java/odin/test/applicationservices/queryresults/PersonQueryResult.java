@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.queryresults;
 
 import odin.concepts.applicationservices.IQueryResult;
@@ -19,8 +20,9 @@ import odin.test.readmodel.Person;
 
 public class PersonQueryResult implements IQueryResult {
     private final Person person;
-    public PersonQueryResult(Person person){
-        this.person=person;
+
+    public PersonQueryResult(Person person) {
+        this.person = person;
     }
 
     public Person getPerson() {

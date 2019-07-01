@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.commands;
 
 import odin.framework.AbstractCommand;
@@ -20,21 +21,22 @@ import java.util.UUID;
 
 public class RegisterPerson extends AbstractCommand {
 
-	private static final long serialVersionUID = 1L;
-	private final String name;
-	private final String ssn;
+    private static final long serialVersionUID = 1L;
+    private final String name;
+    private final String ssn;
 
-    public RegisterPerson(UUID targetId, String ssn, String name){
-		super (targetId, null);
-    	this.name =name;
-		this.ssn=ssn;
+    public RegisterPerson(UUID targetId, String ssn, String name) {
+        super(targetId, null);
+        this.name = name;
+        this.ssn = ssn;
 
     }
 
-	public String getSsn() {
-		return ssn;
-	}
-	public String getName() {
-		return name;
-	}
+    public String getSsn() {
+        return ssn;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

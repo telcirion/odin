@@ -21,9 +21,26 @@
         <jacoco.version>0.8.4</jacoco.version>
         <surefire.version>2.19</surefire.version>
         <junit-surefire-provider.version>1.0.0</junit-surefire-provider.version>
+        <checkstyle-maven-plugin.version>3.1.0</checkstyle-maven-plugin.version>
     </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-maven-plugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
@@ -95,14 +112,14 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
-       
+        
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgres.version}</version>
             <scope>test</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -121,7 +138,7 @@
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
         </dependency>
-
+        
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-camel</artifactId>
@@ -147,5 +164,5 @@
             <artifactId>activation</artifactId>
             <version>${javax-activation.version}</version>
         </dependency>
-       </dependencies>
+    </dependencies>
 </project>

@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.framework;
 
 import odin.concepts.domainmodel.IDomainEvent;
@@ -21,33 +22,33 @@ import java.util.UUID;
 
 public abstract class AbstractDomainEvent implements IDomainEvent {
 
-	private static final long serialVersionUID = 1L;
-	private final UUID id = UUID.randomUUID();
-	private final UUID aggregateId;
-	private final LocalDateTime timestamp;
+    private static final long serialVersionUID = 1L;
+    private final UUID id = UUID.randomUUID();
+    private final UUID aggregateId;
+    private final LocalDateTime timestamp;
 
-	protected AbstractDomainEvent(){
-		this.aggregateId=null;
-		this.timestamp=LocalDateTime.now();
-	}
+    protected AbstractDomainEvent() {
+        this.aggregateId = null;
+        this.timestamp = LocalDateTime.now();
+    }
 
-	protected AbstractDomainEvent(UUID aggregateId) {
-		this.aggregateId=aggregateId;
-		this.timestamp=LocalDateTime.now();
-	}
+    protected AbstractDomainEvent(UUID aggregateId) {
+        this.aggregateId = aggregateId;
+        this.timestamp = LocalDateTime.now();
+    }
 
-	@Override
-	public UUID getEventId() {
-		return id;
-	}
+    @Override
+    public UUID getEventId() {
+        return id;
+    }
 
-	@Override
-	public UUID getAggregateId() {
-		return aggregateId;
-	}
+    @Override
+    public UUID getAggregateId() {
+        return aggregateId;
+    }
 
-	@Override
-	public LocalDateTime getTimestamp() {
-		return timestamp;
-	}
+    @Override
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 }

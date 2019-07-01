@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.framework;
 
 import odin.concepts.applicationservices.ICommand;
@@ -24,15 +25,16 @@ public abstract class AbstractCommand implements ICommand {
     private final UUID targetId;
     private final UUID targetVersion;
 
-    protected AbstractCommand(UUID targetId, UUID targetVersion){
-        this.targetId=targetId;
-        this.targetVersion=targetVersion;
+    protected AbstractCommand(UUID targetId, UUID targetVersion) {
+        this.targetId = targetId;
+        this.targetVersion = targetVersion;
     }
 
     @Override
     public UUID getTargetId() {
         return targetId;
     }
+
     @Override
     public UUID getTargetVersion() {
         return targetVersion;

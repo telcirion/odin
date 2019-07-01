@@ -12,27 +12,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.infrastructure;
 
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 
-public class H2DBServer {
-	private Server webServer;
+public class H2Server {
+    private Server webServer;
     private Server server;
     private boolean running = false;
 
     public boolean startServer() {
-    	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+        final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
         if (!isRunning()) {
             try {
-                webServer = Server.createWebServer("-webAllowOthers", "-webPort", "8082").start(); // (4a)
-                server = Server.createTcpServer("-tcpAllowOthers").start()  ;  // (4b)
+                webServer = Server.createWebServer("-webAllowOthers", "-webPort", "8082").start();
+                server = Server.createTcpServer("-tcpAllowOthers").start();
                 running = true;
                 logger.info("H2 database server started.");
             } catch (SQLException ex) {
@@ -49,7 +49,7 @@ public class H2DBServer {
             webServer.stop();
             running = false;
         }
-     }
+    }
 
     public boolean isRunning() {
         return running;

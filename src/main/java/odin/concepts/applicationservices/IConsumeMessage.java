@@ -12,12 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.concepts.applicationservices;
 
 import odin.concepts.common.IMessageHandler;
 
 public interface IConsumeMessage {
     void consume(IMessageHandler messageHandler);
-
-	void stop();
+    
+    void stop();
 }

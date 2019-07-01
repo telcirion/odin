@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.concepts.infra;
 
 import java.sql.Connection;
@@ -19,6 +20,6 @@ import java.sql.SQLException;
 
 public interface IDataSource {
 
-	Connection getConnection() throws SQLException;
+    Connection getConnection() throws SQLException;
 
 }

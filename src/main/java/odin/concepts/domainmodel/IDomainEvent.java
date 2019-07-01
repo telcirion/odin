@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.concepts.domainmodel;
 
 import odin.concepts.common.IMessage;
@@ -20,7 +21,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface IDomainEvent extends IMessage {
-	UUID getEventId();
-	UUID getAggregateId();
-	LocalDateTime getTimestamp();
+    UUID getEventId();
+
+    UUID getAggregateId();
+
+    LocalDateTime getTimestamp();
 }

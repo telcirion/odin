@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.queryhandlers;
 
 import odin.concepts.applicationservices.IQueryHandler;
@@ -21,11 +22,12 @@ import odin.test.readmodel.PersonList;
 
 public class PersonQueryHandler implements IQueryHandler {
     private PersonList personList;
-    public PersonQueryHandler(PersonList personList){
-        this.personList=personList;
-    };
 
-    public PersonQueryResult query(PersonByNameQuery query){
+    public PersonQueryHandler(PersonList personList) {
+        this.personList = personList;
+    }
+
+    public PersonQueryResult query(PersonByNameQuery query) {
         return new PersonQueryResult(personList.findPerson(query.getName()));
     }
 }

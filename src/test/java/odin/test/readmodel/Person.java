@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package odin.test.readmodel;
 
+package odin.test.readmodel;
 
 import java.util.UUID;
 
@@ -24,27 +24,25 @@ import java.util.UUID;
 
 public class Person {
 
-	final private String name;
-	final private String ssn;
-	final private UUID id;
-	
-	public String getSsn() {
-		return ssn;
-	}
+    private final String name;
+    private final String ssn;
+    private final UUID id;
 
-	public String getName() {
-		return name;
-	}
-	
-	public UUID getId() {
-		return id;
-	}
+    public String getSsn() {
+        return ssn;
+    }
 
-	public Person(UUID id, String name, String ssn) {
-		this.id=id;
-		this.name = name;
-		this.ssn=ssn;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Person(UUID id, String name, String ssn) {
+        this.id = id;
+        this.name = name;
+        this.ssn = ssn;
+    }
 }
-
-

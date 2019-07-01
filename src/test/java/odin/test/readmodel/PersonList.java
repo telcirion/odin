@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.readmodel;
 
 import java.util.HashMap;
@@ -19,33 +20,33 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PersonList {
-	private final Map<UUID, Person> persons = new HashMap<>();
+    private final Map<UUID, Person> persons = new HashMap<>();
 
-	public void add(Person person) {
-		synchronized (this) {
-			this.persons.put(person.getId(), person);
-		}
-	}
+    public void add(Person person) {
+        synchronized (this) {
+            this.persons.put(person.getId(), person);
+        }
+    }
 
-	public void updateName(Person person) {
-		synchronized (this) {
+    public void updateName(Person person) {
+        synchronized (this) {
 
-			Person oldPerson = this.persons.get(person.getId());
-			Person newPerson = new Person(person.getId(), person.getName(), oldPerson.getSsn());
-			this.persons.replace(person.getId(), newPerson);
-		}
-	}
+            Person oldPerson = this.persons.get(person.getId());
+            Person newPerson = new Person(person.getId(), person.getName(), oldPerson.getSsn());
+            this.persons.replace(person.getId(), newPerson);
+        }
+    }
 
-	public Person findPerson(String name) {
-		synchronized (this) {
+    public Person findPerson(String name) {
+        synchronized (this) {
 
-			for (var p : persons.values()) {
-				if (p.getName().equals(name)) {
-					return p;
-				}
-			}
-			return null;
-		}
-	}
+            for (var p : persons.values()) {
+                if (p.getName().equals(name)) {
+                    return p;
+                }
+            }
+            return null;
+        }
+    }
 
 }

@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.processmanagers;
 
 import java.lang.invoke.MethodHandles;
@@ -31,32 +32,30 @@ import odin.test.domain.events.PersonRegistered;
 public class SignUpPersonProcessManager implements IProcessManager {
 
     private final ISendMessage commandBus;
-	
-	final Logger logger=LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public SignUpPersonProcessManager(ISendMessage commandBus){
-		this.commandBus=commandBus;
-	}
+    final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    public SignUpPersonProcessManager(ISendMessage commandBus) {
+        this.commandBus = commandBus;
+    }
 
     @Override
-	public <T,Z extends IMessageHandler> Z getDispatcher(T msg){
-		return match(PersonSignUpReceived.class, this::handle, msg)
-				.match(PersonRegistered.class, this::handle,msg);
-	}
+    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+        return match(PersonSignUpReceived.class, this::handle, msg).match(PersonRegistered.class, this::handle, msg);
+    }
 
-	private IMessageHandler handle(PersonSignUpReceived msg){
-		logger.info("Event " +msg.getClass().getSimpleName() + " received");
+    private IMessageHandler handle(PersonSignUpReceived msg) {
+        logger.info("Event " + msg.getClass().getSimpleName() + " received");
 
-		commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(),msg.getName()));
-		return this;
-	}
-	
-	private IMessageHandler handle(PersonRegistered msg){
-		logger.info("Event " +msg.getClass().getSimpleName() + " received.");
-		logger.info("Message aggregateId: "+ ((IDomainEvent)msg).getAggregateId()
-				+ " message ssn value: "+ msg.getSsn()
-				+ " message name value: "+ msg.getName());
+        commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(), msg.getName()));
+        return this;
+    }
 
-		return this;
-	}
+    private IMessageHandler handle(PersonRegistered msg) {
+        logger.info("Event " + msg.getClass().getSimpleName() + " received.");
+        logger.info("Message aggregateId: " + ((IDomainEvent) msg).getAggregateId() + " message ssn value: "
+                + msg.getSsn() + " message name value: " + msg.getName());
+
+        return this;
+    }
 }

@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.queries;
 
 import odin.concepts.applicationservices.IQuery;
 
 public class PersonByNameQuery implements IQuery {
-    public PersonByNameQuery(String name){
-        this.name=name;
+    public PersonByNameQuery(String name) {
+        this.name = name;
     }
 
     private final String name;

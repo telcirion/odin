@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.domain.events;
 
 import odin.framework.AbstractDomainEvent;
-
 import java.util.UUID;
 
 public class PersonNameChanged extends AbstractDomainEvent {

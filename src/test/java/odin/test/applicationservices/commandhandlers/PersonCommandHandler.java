@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.applicationservices.commandhandlers;
 
 import odin.concepts.applicationservices.ICommand;
@@ -35,15 +36,15 @@ public class PersonCommandHandler implements ICommandHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PersonCommandHandler(ISendMessage messageBus, IRepository<Person> personRepository) {
-        this.messageBus=messageBus;
-        this.personRepository=personRepository;
+        this.messageBus = messageBus;
+        this.personRepository = personRepository;
     }
 
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
 
-        var person = new Person(registerPerson.getTargetId())
-                .registerPerson(registerPerson.getSsn(), registerPerson.getName());
+        var person = new Person(registerPerson.getTargetId()).registerPerson(registerPerson.getSsn(),
+                registerPerson.getName());
         personRepository.create(person);
         person.getEvents().forEach(messageBus::send);
         return this;
@@ -59,17 +60,13 @@ public class PersonCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public <T,Z extends IMessageHandler> Z getDispatcher(T msg) {
-        return match(RegisterPerson.class, this::handle, msg)
-                .match(ChangePersonName.class, this::handle, msg);
+    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+        return match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
 
     }
+
     private void log(ICommand command) {
-        LOGGER.info(
-                "Command {} received for aggregateId: {}, revision: {}",
-                command.getClass().getSimpleName(),
-                command.getTargetId(),
-                command.getTargetVersion()
-        );
+        LOGGER.info("Command {} received for aggregateId: {}, revision: {}", command.getClass().getSimpleName(),
+                command.getTargetId(), command.getTargetVersion());
     }
 }

@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -23,24 +24,24 @@ import java.sql.SQLException;
 
 public class TestDataSource implements IDataSource {
 
-	private static final HikariConfig config = new HikariConfig();
-	private static final HikariDataSource ds;
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
 
-	static {
-		//config.setJdbcUrl("jdbc:postgresql://localhost/postgres");
-		//config.setUsername("postgres");
-		//config.setPassword("docker");
-		config.setJdbcUrl("jdbc:h2:mem:test");
-		config.setUsername("sa");
-		config.setPassword("");
-		config.addDataSourceProperty("cachePrepStmts", "true");
-		config.addDataSourceProperty("prepStmtCacheSize", "250");
-		config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-		ds = new HikariDataSource(config);
-	}
+    static {
+        //config.setJdbcUrl("jdbc:postgresql://localhost/postgres");
+        //config.setUsername("postgres");
+        //config.setPassword("docker");
+        config.setJdbcUrl("jdbc:h2:mem:test");
+        config.setUsername("sa");
+        config.setPassword("");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds = new HikariDataSource(config);
+    }
 
-	@Override
-	public Connection getConnection() throws SQLException {
-		return ds.getConnection();
-	}
+    @Override
+    public Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    }
 }

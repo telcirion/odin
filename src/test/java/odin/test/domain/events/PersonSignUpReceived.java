@@ -12,25 +12,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.test.domain.events;
 
 import odin.framework.AbstractDomainEvent;
 
 public class PersonSignUpReceived extends AbstractDomainEvent {
-	
-	private static final long serialVersionUID = 1L;
-	private final String ssn;
-	private final String name;
-	public PersonSignUpReceived(String ssn, String name){
-		this.ssn=ssn;
-		this.name = name;
-	}
 
-	public String getName() {
-		return name;
-	}
-	public String getSsn() {
-		return ssn;
-	}
+    private static final long serialVersionUID = 1L;
+    private final String ssn;
+    private final String name;
+
+    public PersonSignUpReceived(String ssn, String name) {
+        this.ssn = ssn;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
 
 }

@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package odin.concepts.applicationservices;
 
 import odin.concepts.domainmodel.IAggregateRoot;
@@ -22,6 +23,8 @@ import odin.concepts.domainmodel.IAggregateRoot;
  */
 public interface IRepository<T extends IAggregateRoot<T>> {
     void create(IAggregateRoot<T> obj);
+
     void update(IAggregateRoot<T> obj);
+
     T get(IAggregateRoot<T> obj);
 }

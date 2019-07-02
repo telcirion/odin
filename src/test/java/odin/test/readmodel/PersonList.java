@@ -40,7 +40,7 @@ public class PersonList {
     public Person findPerson(String name) {
         synchronized (this) {
 
-            for (var p : persons.values()) {
+            for (Person p : persons.values()) {
                 if (p.getName().equals(name)) {
                     return p;
                 }

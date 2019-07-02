@@ -17,10 +17,6 @@ package odin.concepts.applicationservices;
 
 import odin.concepts.domainmodel.IAggregateRoot;
 
-/**
- *
- * @author peter
- */
 public interface IRepository<T extends IAggregateRoot<T>> {
     void create(IAggregateRoot<T> obj);
 

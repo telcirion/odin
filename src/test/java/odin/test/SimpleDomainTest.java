@@ -56,12 +56,12 @@ class SimpleDomainTest {
         SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
 
         // start processManager
-        var signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
+        SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
         eventBus.consume(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
 
         // start denormalizer
-        var personDenormalizer = new PersonDenormalizer();
+        PersonDenormalizer personDenormalizer = new PersonDenormalizer();
         denormalizeBus.consume(personDenormalizer);
         logger.info("Denormalizer created, wait for processing.");
 

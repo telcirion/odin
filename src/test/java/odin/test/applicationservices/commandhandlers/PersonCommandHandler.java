@@ -43,7 +43,7 @@ public class PersonCommandHandler implements ICommandHandler {
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
 
-        var person = new Person(registerPerson.getTargetId()).registerPerson(registerPerson.getSsn(),
+        Person person = new Person(registerPerson.getTargetId()).registerPerson(registerPerson.getSsn(),
                 registerPerson.getName());
         personRepository.create(person);
         person.getEvents().forEach(messageBus::send);

@@ -22,10 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- *
- * @author peter
- */
 public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> implements IAggregateRoot<T> {
 
     private final IAggregateRoot<T> previousState;
@@ -59,7 +55,7 @@ public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> impleme
     @Override
     public List<IDomainEvent> getEvents() {
         if (previousState != null) {
-            var i = previousState.getEvents();
+            List<IDomainEvent> i = previousState.getEvents();
             i.add(appliedDomainEvent);
             return i;
         }

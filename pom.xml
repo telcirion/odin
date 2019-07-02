@@ -19,7 +19,7 @@
         <jaxb-api.version>2.2.11</jaxb-api.version>
         <javax-activation.version>1.1.1</javax-activation.version>
         <jacoco.version>0.8.4</jacoco.version>
-        <surefire.version>2.19</surefire.version>
+        <surefire.version>2.22.2</surefire.version>
         <junit-surefire-provider.version>1.0.0</junit-surefire-provider.version>
         <checkstyle-maven-plugin.version>3.1.0</checkstyle-maven-plugin.version>
     </properties>

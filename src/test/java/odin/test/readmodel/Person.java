@@ -17,11 +17,6 @@ package odin.test.readmodel;
 
 import java.util.UUID;
 
-/**
- *
- * @author peter
- */
-
 public class Person {
 
     private final String name;

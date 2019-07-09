@@ -22,11 +22,6 @@ import odin.framework.AbstractAggregateRoot;
 import odin.test.domain.events.PersonRegistered;
 import odin.test.domain.events.PersonNameChanged;
 
-/**
- *
- * @author peter
- */
-
 public class Person extends AbstractAggregateRoot<Person> {
 
     private final String name;

@@ -30,6 +30,7 @@
                 <version>${checkstyle-maven-plugin.version}</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
                 <executions>
                     <execution>

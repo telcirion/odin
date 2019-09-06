@@ -23,7 +23,7 @@ steps:
     testResultsFiles: '**/TEST-*.xml'
     sonarQubeRunAnalysis: true
     sqMavenPluginVersionChoice: 'latest'
-    goals: 'deploy -Dbuildversion=$(Build.BuildNumber)'
+    goals: 'package -Dbuildversion=$(Build.BuildNumber)'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'

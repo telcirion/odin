@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class AbstractAggregateRoot<T extends IAggregateRoot<T>> implements IAggregateRoot<T> {
+public abstract class AbstractAggregateRoot<T> implements IAggregateRoot<T> {
 
     private final IAggregateRoot<T> previousState;
     private final UUID version;

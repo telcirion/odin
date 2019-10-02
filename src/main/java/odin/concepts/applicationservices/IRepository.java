@@ -17,10 +17,10 @@ package odin.concepts.applicationservices;
 
 import odin.concepts.domainmodel.IAggregateRoot;
 
-public interface IRepository<T extends IAggregateRoot<T>> {
+public interface IRepository<T> {
     void create(IAggregateRoot<T> obj);
 
-    void update(IAggregateRoot<T> obj);
+    void update(IAggregateRoot<T>  obj);
 
-    T get(IAggregateRoot<T> obj);
+    T  get(IAggregateRoot<T>  obj);
 }

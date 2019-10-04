@@ -25,7 +25,7 @@ public interface IMessageHandler {
     @SuppressWarnings({ "unchecked" })
     default <T, Y, Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
         if (msg.getClass().equals(msgClazz)) {
-            msgAction.executeAction((T) msg);
+            return (Z) msgAction.executeAction((T) msg);
         }
         return (Z) this;
     }

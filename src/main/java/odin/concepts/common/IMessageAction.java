@@ -17,5 +17,5 @@ package odin.concepts.common;
 
 @FunctionalInterface
 public interface IMessageAction<T> {
-    void executeAction(T msg);
+    IMessageHandler executeAction(T msg);
 }

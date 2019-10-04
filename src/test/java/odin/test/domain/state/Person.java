@@ -74,8 +74,8 @@ public class Person extends AbstractAggregateRoot<Person> {
 
     @Override
     public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
-        return match(PersonRegistered.class, (m) -> new Person(this, m), msg).match(PersonNameChanged.class,
-                (p) -> new Person(this, p), msg);
+        return match(PersonRegistered.class, (m) -> new Person(this, m), msg)
+                .match(PersonNameChanged.class, (p) -> new Person(this, p), msg);
 
     }
 }

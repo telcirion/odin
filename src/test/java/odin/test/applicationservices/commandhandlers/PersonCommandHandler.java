@@ -52,8 +52,7 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        Person person = 
-        personRepository.get(new Person(changePersonName.getTargetId()))
+        Person person = personRepository.get(new Person(changePersonName.getTargetId()))
                 .changeName(changePersonName.getName());
         personRepository.update(person);
         person.getEvents().forEach(messageBus::send);

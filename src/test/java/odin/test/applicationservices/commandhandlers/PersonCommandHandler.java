@@ -15,18 +15,19 @@
 
 package odin.test.applicationservices.commandhandlers;
 
-import odin.concepts.applicationservices.ICommand;
-import odin.concepts.applicationservices.ICommandHandler;
-import odin.concepts.applicationservices.IRepository;
-import odin.concepts.applicationservices.ISendMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.test.applicationservices.commands.ChangePersonName;
-import odin.test.applicationservices.commands.RegisterPerson;
-import odin.test.domain.state.Person;
+import java.lang.invoke.MethodHandles;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
+import odin.concepts.applicationservices.ICommand;
+import odin.concepts.applicationservices.ICommandHandler;
+import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.ISendMessage;
+import odin.test.applicationservices.commands.ChangePersonName;
+import odin.test.applicationservices.commands.RegisterPerson;
+import odin.test.domain.state.Person;
 
 public class PersonCommandHandler implements ICommandHandler {
 

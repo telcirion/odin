@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.concepts.applicationservices;
+package odin.concepts.common;
 
 import odin.concepts.common.IMessage;
 

@@ -13,10 +13,8 @@
  * limitations under the License.
  */
 
-package odin.concepts.applicationservices;
+package odin.concepts.domainmodel;
 
-import odin.concepts.domainmodel.IAggregateRoot;
-
-public interface IRepository<T> {
-    T  get(IAggregateRoot<T>  obj);
+public interface ISendDomainEvent {
+    void send(IDomainEvent event);
 }

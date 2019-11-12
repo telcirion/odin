@@ -18,15 +18,17 @@ package odin.infrastructure;
 import static org.apache.activemq.camel.component.ActiveMQComponent.activeMQComponent;
 
 import java.lang.invoke.MethodHandles;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import odin.concepts.applicationservices.IConsumeMessage;
-import odin.concepts.applicationservices.ISendMessage;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.ISendMessage;
 
 public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

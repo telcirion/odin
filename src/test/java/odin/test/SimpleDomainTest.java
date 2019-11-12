@@ -45,15 +45,14 @@ class SimpleDomainTest {
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+        final SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
+        final SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
+        final SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
+
         H2Server databaseServer = new H2Server();
         databaseServer.startServer();
-
-        SqlEventStore<Person> personRepository = new SqlEventStore<>(new TestDataSource());
+        SqlEventStore<Person> personRepository = new SqlEventStore<>(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
-
-        SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
-        SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
-        SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
 
         // start processManager
         SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
@@ -66,7 +65,7 @@ class SimpleDomainTest {
         logger.info("Denormalizer created, wait for processing.");
 
         // start commandHandler
-        commandBus.consume(new PersonCommandHandler(eventBus, personRepository));
+        commandBus.consume(new PersonCommandHandler(personRepository));
         logger.info("CommandHandler created, wait for processing.");
 
         // send first event
@@ -111,6 +110,7 @@ class SimpleDomainTest {
         commandBus.stop();
         denormalizeBus.stop();
         assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
+        personRepository.dump();
         databaseServer.stopServer();
     }
 }

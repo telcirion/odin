@@ -18,16 +18,16 @@ package odin.test.applicationservices.processmanagers;
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
-import odin.concepts.domainmodel.IDomainEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.concepts.applicationservices.IProcessManager;
-import odin.concepts.applicationservices.ISendMessage;
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.ISendMessage;
+import odin.concepts.domainmodel.IDomainEvent;
 import odin.test.applicationservices.commands.RegisterPerson;
-import odin.test.domain.events.PersonSignUpReceived;
 import odin.test.domain.events.PersonRegistered;
+import odin.test.domain.events.PersonSignUpReceived;
 
 public class SignUpPersonProcessManager implements IProcessManager {
 

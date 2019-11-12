@@ -15,47 +15,42 @@
 
 package odin.test.applicationservices.commandhandlers;
 
-import odin.concepts.applicationservices.ICommand;
-import odin.concepts.applicationservices.ICommandHandler;
-import odin.concepts.applicationservices.IRepository;
-import odin.concepts.applicationservices.ISendMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.test.applicationservices.commands.ChangePersonName;
-import odin.test.applicationservices.commands.RegisterPerson;
-import odin.test.domain.state.Person;
+import java.lang.invoke.MethodHandles;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
+import odin.concepts.applicationservices.ICommand;
+import odin.concepts.applicationservices.ICommandHandler;
+import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.IMessageHandler;
+import odin.concepts.domainmodel.ISendDomainEvent;
+import odin.test.applicationservices.commands.ChangePersonName;
+import odin.test.applicationservices.commands.RegisterPerson;
+import odin.test.domain.state.Person;
 
 public class PersonCommandHandler implements ICommandHandler {
 
-    private final ISendMessage messageBus;
     private final IRepository<Person> personRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public PersonCommandHandler(ISendMessage messageBus, IRepository<Person> personRepository) {
-        this.messageBus = messageBus;
+    public PersonCommandHandler(IRepository<Person> personRepository) {
         this.personRepository = personRepository;
     }
 
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
 
-        Person person = new Person(registerPerson.getTargetId()).registerPerson(registerPerson.getSsn(),
-                registerPerson.getName());
-        personRepository.create(person);
-        person.getEvents().forEach(messageBus::send);
+        new Person(registerPerson.getTargetId(), (ISendDomainEvent)personRepository)
+                .registerPerson(registerPerson.getSsn(), registerPerson.getName());
         return this;
     }
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        Person person = personRepository.get(new Person(changePersonName.getTargetId()))
+        personRepository.get(new Person(changePersonName.getTargetId(), (ISendDomainEvent)personRepository))
                 .changeName(changePersonName.getName());
-        personRepository.update(person);
-        person.getEvents().forEach(messageBus::send);
         return this;
     }
 

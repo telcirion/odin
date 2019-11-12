@@ -16,8 +16,10 @@
 package odin.infrastructure;
 
 import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.ISendMessage;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.ISendDomainEvent;
 import odin.concepts.infra.IDataSource;
 
 import java.lang.invoke.MethodHandles;
@@ -42,13 +44,15 @@ import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SqlEventStore<T> implements IRepository<T> {
+public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IDataSource ds;
+    private final ISendMessage eventBus;
 
-    public SqlEventStore(IDataSource ds) {
+    public SqlEventStore(IDataSource ds, ISendMessage eventBus) {
+        this.eventBus = eventBus;
         this.ds = ds;
     }
 
@@ -73,38 +77,21 @@ public class SqlEventStore<T> implements IRepository<T> {
 
     public void createDatabase() {
         String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
-                + "DROP TABLE IF EXISTS EVENT_STORE.AGGREGATE CASCADE;\r\n"
-                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.AGGREGATE(ID UUID PRIMARY KEY, "
-                + "CLASSNAME VARCHAR(255));\r\n" + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
+                + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
                 + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
-                + "AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT,"
-                + "FOREIGN KEY (AGGREGATE_ID) REFERENCES EVENT_STORE.AGGREGATE(ID));";
+                + "AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
         executeSqlUpdate(createSchema);
     }
 
-    @Override
-    public void create(IAggregateRoot<T> obj) {
-        String sqlStmt = "INSERT INTO EVENT_STORE.AGGREGATE (ID, CLASSNAME) VALUES ('" + obj.getId() + "','"
-                + obj.getClass().getName() + "');";
-        sqlStmt = sqlStmt + eventInserts(obj);
-        executeSqlUpdate(sqlStmt);
-    }
-
-    private String eventInserts(IAggregateRoot<T> obj) {
+    private String eventInserts(IDomainEvent s) {
         StringBuilder b = new StringBuilder();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         Gson gson = gsonBuilder.create();
-        obj.getEvents().forEach(s -> b
-                .append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getEventId()).append("','").append(obj.getId()).append("','").append(s.getTimestamp())
-                .append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n"));
+        b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
+                .append(s.getEventId()).append("','").append(s.getAggregateId()).append("','").append(s.getTimestamp())
+                .append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n");
         return b.toString();
-    }
-
-    @Override
-    public void update(IAggregateRoot<T> obj) {
-        executeSqlUpdate(eventInserts(obj));
     }
 
     @Override
@@ -120,7 +107,7 @@ public class SqlEventStore<T> implements IRepository<T> {
             gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
             Gson gson = gsonBuilder.create();
             while (resultSet.next()) {
-                aggregate = aggregate.applyEvent(
+                aggregate = aggregate.dispatch(
                         (IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
             }
             return aggregate.getSnapshot();
@@ -157,5 +144,11 @@ public class SqlEventStore<T> implements IRepository<T> {
         public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
             return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
+    }
+
+    @Override
+    public void send(IDomainEvent event) {
+        executeSqlUpdate(eventInserts(event));
+        eventBus.send(event);
     }
 }

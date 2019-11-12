@@ -17,13 +17,10 @@ package odin.concepts.domainmodel;
 
 import odin.concepts.common.IMessageHandler;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface IAggregateRoot<T> extends IMessageHandler {
     UUID getId();
-    
-    List<IDomainEvent> getEvents();
     
     IAggregateRoot<T> applyEvent(IDomainEvent event);
 

@@ -15,55 +15,40 @@
 
 package odin.framework;
 
+import java.util.UUID;
+
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import odin.concepts.domainmodel.ISendDomainEvent;
 
 public abstract class AbstractAggregateRoot<T> implements IAggregateRoot<T> {
 
-    private final IAggregateRoot<T> previousState;
+    private final ISendDomainEvent eventSender;
     private final UUID version;
-
-    private final IDomainEvent appliedDomainEvent;
     private final UUID id;
 
-    protected AbstractAggregateRoot(UUID id) {
+    protected AbstractAggregateRoot(UUID id, ISendDomainEvent eventSender) {
         this.id = id;
-        this.previousState = null;
-        this.appliedDomainEvent = null;
         this.version = null;
+        this.eventSender = eventSender;
     }
 
     // snapshot constructor.
     protected AbstractAggregateRoot(AbstractAggregateRoot<T> aggregateRoot) {
         this.id = aggregateRoot.id;
-        this.previousState = null;
-        this.appliedDomainEvent = null;
         this.version = aggregateRoot.version;
+        this.eventSender = aggregateRoot.eventSender;
     }
 
     protected AbstractAggregateRoot(AbstractAggregateRoot<T> previousState, IDomainEvent appliedDomainEvent) {
         this.id = previousState.getId();
-        this.previousState = previousState;
-        this.appliedDomainEvent = appliedDomainEvent;
         this.version = appliedDomainEvent.getEventId();
-    }
-
-    @Override
-    public List<IDomainEvent> getEvents() {
-        if (previousState != null) {
-            List<IDomainEvent> i = previousState.getEvents();
-            i.add(appliedDomainEvent);
-            return i;
-        }
-        return new ArrayList<>();
+        this.eventSender = previousState.eventSender;
     }
 
     @Override
     public IAggregateRoot<T> applyEvent(IDomainEvent event) {
+        eventSender.send(event); // tell the world you've chaanged
         return this.dispatch(event);
     }
 

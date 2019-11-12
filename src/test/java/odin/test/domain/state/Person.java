@@ -18,6 +18,7 @@ package odin.test.domain.state;
 import java.util.UUID;
 
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.domainmodel.ISendDomainEvent;
 import odin.framework.AbstractAggregateRoot;
 import odin.test.domain.events.PersonRegistered;
 import odin.test.domain.events.PersonNameChanged;
@@ -35,8 +36,8 @@ public class Person extends AbstractAggregateRoot<Person> {
         return name;
     }
 
-    public Person(UUID id) {
-        super(id);
+    public Person(UUID id, ISendDomainEvent eventSender) {
+        super(id, eventSender);
         this.name = null;
         this.ssn = null;
     }

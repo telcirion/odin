@@ -161,8 +161,9 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
                     + "ORDER BY AGGREGATE_ID,TIMESTAMP;");
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                logger.info(String.format("%s %s %s %s\r\n", resultSet.getString(1), resultSet.getString(2), 
-                        resultSet.getString(3), resultSet.getString(4)));
+                String row = String.format("%s %s %s %s%n", resultSet.getString(1), resultSet.getString(2), 
+                        resultSet.getString(3), resultSet.getString(4));
+                logger.info(row);
             }            
         } catch (SQLException | JsonSyntaxException ex) {
             logger.error(ex.getMessage());

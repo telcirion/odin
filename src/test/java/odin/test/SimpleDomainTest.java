@@ -45,9 +45,9 @@ class SimpleDomainTest {
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-        SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
-        SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
-        SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
+        final SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
+        final SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
+        final SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
 
         H2Server databaseServer = new H2Server();
         databaseServer.startServer();
@@ -110,6 +110,7 @@ class SimpleDomainTest {
         commandBus.stop();
         denormalizeBus.stop();
         assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
+        personRepository.dump();
         databaseServer.stopServer();
     }
 }

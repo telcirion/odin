@@ -151,4 +151,37 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
         executeSqlUpdate(eventInserts(event));
         eventBus.send(event);
     }
+
+    public void dump() {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = ds.getConnection().prepareStatement(
+                    "SELECT AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA FROM EVENT_STORE.EVENT "
+                    + "ORDER BY AGGREGATE_ID,TIMESTAMP;");
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                logger.info(String.format("%s %s %s %s\r\n", resultSet.getString(1), resultSet.getString(2), 
+                        resultSet.getString(3), resultSet.getString(4)));
+            }            
+        } catch (SQLException | JsonSyntaxException ex) {
+            logger.error(ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+        }
+    }
+
 }

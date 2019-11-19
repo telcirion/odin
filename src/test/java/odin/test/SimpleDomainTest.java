@@ -110,7 +110,6 @@ class SimpleDomainTest {
         commandBus.stop();
         denormalizeBus.stop();
         assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
-        personRepository.dump();
         databaseServer.stopServer();
     }
 }

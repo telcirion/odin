@@ -26,7 +26,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -98,22 +97,50 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
     }
 
     @Override
-    public T get(IAggregateRoot<T> aggregate) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = gsonBuilder.create();
-        ArrayList<IAggregateRoot<T>> l = new ArrayList<>();
-        l.add(aggregate);
-        executeSqlQuery("SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID='" + aggregate.getId()
-                + "' ORDER BY TIMESTAMP;", resultSet -> {
-                    try {
-                        l.add(l.get(l.size() - 1).dispatch(
-                                (IDomainEvent) gson.fromJson(resultSet.get(1), Class.forName(resultSet.get(0)))));
-                    } catch (JsonSyntaxException | ClassNotFoundException ex) {
-                        logger.error(ex.getMessage());
-                    }
-                });
-        return l.get(l.size() - 1).getSnapshot();
+    public T get(final IAggregateRoot<T> aggregate) {
+        ArrayList<IAggregateRoot<T>> aggregates = new ArrayList<>();
+        aggregates.add(aggregate);
+        List<IDomainEvent> resultSet = getEventList(aggregate);
+        resultSet.forEach(s -> aggregates.add(aggregates.get(aggregates.size() - 1).dispatch(s)));
+        return aggregates.get(aggregates.size() - 1).getSnapshot();
+    }
+
+    private List<IDomainEvent> getEventList(IAggregateRoot<T> aggregate) {
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        ArrayList<IDomainEvent> eventList = new ArrayList<>();
+        try {
+            statement = ds.getConnection().prepareStatement(
+                    "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
+            statement.setString(1, aggregate.getId().toString());
+            resultSet = statement.executeQuery();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+            Gson gson = gsonBuilder.create();
+            while (resultSet.next()) {
+                eventList.add(
+                        (IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
+            }
+            return eventList;
+        } catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
+            logger.error(ex.getMessage());
+            return null;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                logger.error(ex.getMessage());
+            }
+        }
     }
 
     class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
@@ -135,53 +162,4 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
         executeSqlUpdate(eventInserts(event));
         eventBus.send(event);
     }
-
-    @FunctionalInterface
-    public interface IRowAction {
-        void executeAction(List<String> msg);
-    }
-
-    private void executeSqlQuery(String query, IRowAction rowAction) {
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            statement = ds.getConnection().prepareStatement(query);
-            resultSet = statement.executeQuery();
-            ResultSetMetaData rsMetaData = resultSet.getMetaData();
-            while (resultSet.next()) {
-                List<String> list = new ArrayList<>();
-                for (int i = 0; i < rsMetaData.getColumnCount(); i++) {
-                    list.add(resultSet.getString(i + 1));
-                }
-                rowAction.executeAction(list);
-            }
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-            } catch (SQLException ex) {
-                logger.error(ex.getMessage());
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                logger.error(ex.getMessage());
-            }
-        }
-    }
-
-    public void dump() {
-        executeSqlQuery("SELECT AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA FROM EVENT_STORE.EVENT "
-                + "ORDER BY AGGREGATE_ID,TIMESTAMP;", resultSet -> {
-                    String row = String.format("%s %s %s %s%n", resultSet.get(0), resultSet.get(1), resultSet.get(2),
-                            resultSet.get(3));
-                    logger.info(row);
-                });
-    }
-
 }

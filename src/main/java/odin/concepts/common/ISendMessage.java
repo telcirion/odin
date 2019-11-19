@@ -15,8 +15,6 @@
 
 package odin.concepts.common;
 
-import odin.concepts.common.IMessage;
-
 public interface ISendMessage {
     void send(IMessage m);
 }

@@ -124,7 +124,7 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
             return eventList;
         } catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
             logger.error(ex.getMessage());
-            return null;
+            return new ArrayList<>();
         } finally {
             try {
                 if (resultSet != null) {

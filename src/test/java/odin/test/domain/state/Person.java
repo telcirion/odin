@@ -18,15 +18,14 @@ package odin.test.domain.state;
 import java.util.UUID;
 
 import odin.concepts.common.IMessageHandler;
-import odin.concepts.domainmodel.ISendDomainEvent;
 import odin.framework.AbstractAggregateRoot;
-import odin.test.domain.events.PersonRegistered;
 import odin.test.domain.events.PersonNameChanged;
+import odin.test.domain.events.PersonRegistered;
 
-public class Person extends AbstractAggregateRoot<Person> {
+public class Person extends AbstractAggregateRoot {
 
-    private final String name;
-    private final String ssn;
+    private String name;
+    private String ssn;
 
     public String getSsn() {
         return ssn;
@@ -36,47 +35,36 @@ public class Person extends AbstractAggregateRoot<Person> {
         return name;
     }
 
-    public Person(UUID id, ISendDomainEvent eventSender) {
-        super(id, eventSender);
+    public Person(final UUID id) {
+        super(id);
         this.name = null;
         this.ssn = null;
     }
 
-    private Person(Person person) {
-        super(person);
-        this.name = person.getName();
-        this.ssn = person.getSsn();
-    }
-
-    private Person(Person previousState, PersonRegistered event) {
-        super(previousState, event);
+    private Person rPerson(final Person previousState, final PersonRegistered event) {     
         this.name = event.getName();
         this.ssn = event.getSsn();
+        return this;
     }
 
-    private Person(Person previousState, PersonNameChanged event) {
-        super(previousState, event);
+    private Person cPerson(final Person previousState, final PersonNameChanged event) {
         this.name = event.getName();
         this.ssn = previousState.getSsn();
+        return this;
     }
 
-    @Override
-    public Person getSnapshot() {
-        return new Person(this);
-    }
-
-    public Person registerPerson(String ssn, String name) {
+    public Person registerPerson(final String ssn, final String name) {
         return (Person) this.applyEvent(new PersonRegistered(getId(), ssn, name));
     }
 
-    public Person changeName(String name) {
+    public Person changeName(final String name) {
         return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
-        return match(PersonRegistered.class, (m) -> new Person(this, m), msg)
-                .match(PersonNameChanged.class, (p) -> new Person(this, p), msg);
+    public <T, Z extends IMessageHandler> Z dispatch(final T msg) {
+        return match(PersonRegistered.class, (m) -> rPerson(this, m), msg)
+                .match(PersonNameChanged.class, (p) ->cPerson(this, p), msg);
 
     }
 }

@@ -69,7 +69,7 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+    public <T, Z extends IMessageHandler> Z dispatch(T msg) {
         return match(PersonRegistered.class, this::handle, msg).match(PersonNameChanged.class, this::handle, msg);
 
     }

@@ -24,7 +24,6 @@ import odin.concepts.applicationservices.ICommand;
 import odin.concepts.applicationservices.ICommandHandler;
 import odin.concepts.applicationservices.IRepository;
 import odin.concepts.common.IMessageHandler;
-import odin.concepts.domainmodel.ISendDomainEvent;
 import odin.test.applicationservices.commands.ChangePersonName;
 import odin.test.applicationservices.commands.RegisterPerson;
 import odin.test.domain.state.Person;
@@ -41,23 +40,23 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
-
-        new Person(registerPerson.getTargetId(), (ISendDomainEvent)personRepository)
+        Person p = new Person(registerPerson.getTargetId())
                 .registerPerson(registerPerson.getSsn(), registerPerson.getName());
+        personRepository.save(p);
         return this;
     }
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        personRepository.get(new Person(changePersonName.getTargetId(), (ISendDomainEvent)personRepository))
-                .changeName(changePersonName.getName());
+        Person p = personRepository.load(new Person(changePersonName.getTargetId()));
+        p.changeName(changePersonName.getName());
+        personRepository.save(p);
         return this;
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+    public <T, Z extends IMessageHandler> Z dispatch(T msg) {
         return match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
-
     }
 
     private void log(ICommand command) {

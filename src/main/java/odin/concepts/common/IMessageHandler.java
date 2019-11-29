@@ -17,10 +17,7 @@ package odin.concepts.common;
 
 public interface IMessageHandler {
 
-    default <T, Z extends IMessageHandler> Z dispatch(T msg) {
 
-        return this.getDispatcher(msg);
-    }
 
     @SuppressWarnings({ "unchecked" })
     default <T, Y, Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
@@ -30,5 +27,5 @@ public interface IMessageHandler {
         return (Z) this;
     }
 
-    <T, Z extends IMessageHandler> Z getDispatcher(T msg);
+    <T, Z extends IMessageHandler> Z dispatch(T msg);
 }

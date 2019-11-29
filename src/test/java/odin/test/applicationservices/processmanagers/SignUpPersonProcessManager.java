@@ -40,7 +40,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z getDispatcher(T msg) {
+    public <T, Z extends IMessageHandler> Z dispatch(T msg) {
         return match(PersonSignUpReceived.class, this::handle, msg).match(PersonRegistered.class, this::handle, msg);
     }
 

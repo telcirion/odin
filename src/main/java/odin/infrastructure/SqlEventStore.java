@@ -19,7 +19,6 @@ import odin.concepts.applicationservices.IRepository;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.concepts.domainmodel.ISendDomainEvent;
 import odin.concepts.infra.IDataSource;
 
 import java.lang.invoke.MethodHandles;
@@ -46,24 +45,24 @@ import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
+public class SqlEventStore<T extends IAggregateRoot> implements IRepository<T>{
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IDataSource ds;
     private final ISendMessage eventBus;
 
-    public SqlEventStore(IDataSource ds, ISendMessage eventBus) {
+    public SqlEventStore(final IDataSource ds, final ISendMessage eventBus) {
         this.eventBus = eventBus;
         this.ds = ds;
     }
 
-    private void executeSqlUpdate(String sqlString) {
+    private void executeSqlUpdate(final String sqlString) {
         Statement statement = null;
         try {
             statement = ds.getConnection().createStatement();
             statement.executeUpdate(sqlString);
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             logger.error(ex.getMessage());
 
         } finally {
@@ -71,25 +70,25 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ex) {
+            } catch (final SQLException ex) {
                 logger.error(ex.getMessage());
             }
         }
     }
 
     public void createDatabase() {
-        String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
+        final String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
                 + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
                 + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
                 + "AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
         executeSqlUpdate(createSchema);
     }
 
-    private String eventInserts(IDomainEvent s) {
-        StringBuilder b = new StringBuilder();
-        GsonBuilder gsonBuilder = new GsonBuilder();
+    private String generateInsert(final IDomainEvent s) {
+        final StringBuilder b = new StringBuilder();
+        final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        Gson gson = gsonBuilder.create();
+        final Gson gson = gsonBuilder.create();
         b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
                 .append(s.getEventId()).append("','").append(s.getAggregateId()).append("','").append(s.getTimestamp())
                 .append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n");
@@ -97,26 +96,26 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
     }
 
     @Override
-    public T get(final IAggregateRoot<T> aggregate) {
-        ArrayList<IAggregateRoot<T>> aggregates = new ArrayList<>();
+    public T load(T aggregate) {
+        final ArrayList<T> aggregates = new ArrayList<>();
         aggregates.add(aggregate);
-        List<IDomainEvent> resultSet = getEventList(aggregate);
+        final List<IDomainEvent> resultSet = getEventList(aggregate);
         resultSet.forEach(s -> aggregates.add(aggregates.get(aggregates.size() - 1).dispatch(s)));
-        return aggregates.get(aggregates.size() - 1).getSnapshot();
+        return aggregates.get(aggregates.size() - 1);
     }
 
-    private List<IDomainEvent> getEventList(IAggregateRoot<T> aggregate) {
+    private List<IDomainEvent> getEventList(final IAggregateRoot aggregate) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        ArrayList<IDomainEvent> eventList = new ArrayList<>();
+        final ArrayList<IDomainEvent> eventList = new ArrayList<>();
         try {
             statement = ds.getConnection().prepareStatement(
                     "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
             statement.setString(1, aggregate.getId().toString());
             resultSet = statement.executeQuery();
-            GsonBuilder gsonBuilder = new GsonBuilder();
+            final GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-            Gson gson = gsonBuilder.create();
+            final Gson gson = gsonBuilder.create();
             while (resultSet.next()) {
                 eventList.add(
                         (IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
@@ -130,14 +129,14 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
                 if (resultSet != null) {
                     resultSet.close();
                 }
-            } catch (SQLException ex) {
+            } catch (final SQLException ex) {
                 logger.error(ex.getMessage());
             }
             try {
                 if (statement != null) {
                     statement.close();
                 }
-            } catch (SQLException ex) {
+            } catch (final SQLException ex) {
                 logger.error(ex.getMessage());
             }
         }
@@ -145,21 +144,25 @@ public class SqlEventStore<T> implements IRepository<T>, ISendDomainEvent {
 
     class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
         @Override
-        public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+        public JsonElement serialize(final LocalDateTime localDateTime, final Type srcType,
+                final JsonSerializationContext context) {
             return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime));
         }
     }
 
     class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
         @Override
-        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        public LocalDateTime deserialize(final JsonElement json, final Type typeOfT,
+                final JsonDeserializationContext context) {
             return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
     }
 
     @Override
-    public void send(IDomainEvent event) {
-        executeSqlUpdate(eventInserts(event));
-        eventBus.send(event);
+    public void save(T obj) {
+        obj.getAddedEvents().forEach(e -> { 
+            executeSqlUpdate(generateInsert(e));
+            eventBus.send(e);
+        });
     }
 }

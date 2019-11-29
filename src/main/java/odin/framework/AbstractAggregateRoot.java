@@ -15,40 +15,31 @@
 
 package odin.framework;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.concepts.domainmodel.ISendDomainEvent;
 
-public abstract class AbstractAggregateRoot<T> implements IAggregateRoot<T> {
+public abstract class AbstractAggregateRoot implements IAggregateRoot {
 
-    private final ISendDomainEvent eventSender;
-    private final UUID version;
+    private final List<IDomainEvent> addedEvents;
     private final UUID id;
-
-    protected AbstractAggregateRoot(UUID id, ISendDomainEvent eventSender) {
+    
+    protected AbstractAggregateRoot(UUID id) {
         this.id = id;
-        this.version = null;
-        this.eventSender = eventSender;
-    }
-
-    // snapshot constructor.
-    protected AbstractAggregateRoot(AbstractAggregateRoot<T> aggregateRoot) {
-        this.id = aggregateRoot.id;
-        this.version = aggregateRoot.version;
-        this.eventSender = aggregateRoot.eventSender;
-    }
-
-    protected AbstractAggregateRoot(AbstractAggregateRoot<T> previousState, IDomainEvent appliedDomainEvent) {
-        this.id = previousState.getId();
-        this.version = appliedDomainEvent.getEventId();
-        this.eventSender = previousState.eventSender;
+        this.addedEvents = new ArrayList<>();
     }
 
     @Override
-    public IAggregateRoot<T> applyEvent(IDomainEvent event) {
-        eventSender.send(event); // tell the world you've chaanged
+    public List<IDomainEvent> getAddedEvents() {
+        return addedEvents;
+    }
+
+    @Override
+    public IAggregateRoot applyEvent(IDomainEvent event) {
+        this.addedEvents.add(event);
         return this.dispatch(event);
     }
 

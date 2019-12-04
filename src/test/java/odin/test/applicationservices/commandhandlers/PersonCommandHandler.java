@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import odin.concepts.applicationservices.ICommand;
 import odin.concepts.applicationservices.ICommandHandler;
 import odin.concepts.applicationservices.IRepository;
-import odin.concepts.common.IMessageHandler;
 import odin.test.applicationservices.commands.ChangePersonName;
 import odin.test.applicationservices.commands.RegisterPerson;
 import odin.test.domain.state.Person;
@@ -40,23 +39,24 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
-        Person p = new Person(registerPerson.getTargetId())
-                .registerPerson(registerPerson.getSsn(), registerPerson.getName());
+        Person p = new Person(registerPerson.getTargetId());
+        p.registerPerson(registerPerson.getSsn(), registerPerson.getName());
         personRepository.save(p);
         return this;
     }
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        Person p = personRepository.load(new Person(changePersonName.getTargetId()));
+        Person p = new Person(changePersonName.getTargetId());
+        personRepository.load(p);
         p.changeName(changePersonName.getName());
         personRepository.save(p);
         return this;
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z dispatch(T msg) {
-        return match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
+    public <T> void dispatch(T msg) {
+        match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
     }
 
     private void log(ICommand command) {

@@ -22,10 +22,10 @@ public interface IMessageHandler {
     @SuppressWarnings({ "unchecked" })
     default <T, Y, Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
         if (msg.getClass().equals(msgClazz)) {
-            return (Z) msgAction.executeAction((T) msg);
+            msgAction.executeAction((T) msg);
         }
         return (Z) this;
     }
 
-    <T, Z extends IMessageHandler> Z dispatch(T msg);
+    <T> void dispatch(T msg);
 }

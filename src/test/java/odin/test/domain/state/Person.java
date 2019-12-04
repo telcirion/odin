@@ -17,7 +17,6 @@ package odin.test.domain.state;
 
 import java.util.UUID;
 
-import odin.concepts.common.IMessageHandler;
 import odin.framework.AbstractAggregateRoot;
 import odin.test.domain.events.PersonNameChanged;
 import odin.test.domain.events.PersonRegistered;
@@ -41,30 +40,27 @@ public class Person extends AbstractAggregateRoot {
         this.ssn = null;
     }
 
-    private Person rPerson(final Person previousState, final PersonRegistered event) {     
+    private void rPerson(final PersonRegistered event) {     
         this.name = event.getName();
         this.ssn = event.getSsn();
-        return this;
     }
 
-    private Person cPerson(final Person previousState, final PersonNameChanged event) {
+    private void cPerson(final PersonNameChanged event) {
         this.name = event.getName();
-        this.ssn = previousState.getSsn();
-        return this;
     }
 
-    public Person registerPerson(final String ssn, final String name) {
-        return (Person) this.applyEvent(new PersonRegistered(getId(), ssn, name));
+    public void registerPerson(final String ssn, final String name) {
+        this.applyEvent(new PersonRegistered(getId(), ssn, name));
     }
 
-    public Person changeName(final String name) {
-        return (Person) this.applyEvent(new PersonNameChanged(getId(), name));
+    public void changeName(final String name) {
+        this.applyEvent(new PersonNameChanged(getId(), name));
     }
 
     @Override
-    public <T, Z extends IMessageHandler> Z dispatch(final T msg) {
-        return match(PersonRegistered.class, (m) -> rPerson(this, m), msg)
-                .match(PersonNameChanged.class, (p) ->cPerson(this, p), msg);
+    public <T> void dispatch(final T msg) {
+        match(PersonRegistered.class, (m) -> rPerson(m), msg)
+                .match(PersonNameChanged.class, (p) ->cPerson(p), msg);
 
     }
 }

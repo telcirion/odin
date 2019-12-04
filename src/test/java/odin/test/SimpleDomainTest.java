@@ -81,9 +81,9 @@ class SimpleDomainTest {
         }
         logger.info("All DomainEvents (PersonRegistered) were processed by the denormalizer.");
 
-        // let's try signUpPersonProcessManager query
+        // let's try a person query
         PersonQueryHandler queryHandler = new PersonQueryHandler(personDenormalizer.getReadModel());
-        PersonQueryResult personQueryResult = queryHandler.query(new PersonByNameQuery("John"));
+        PersonQueryResult personQueryResult = queryHandler.query(new PersonByNameQuery("Peter"));
         if (personQueryResult != null) {
             logger.info("Person found with name: " + personQueryResult.getPerson().getName() + " and ssn: "
                     + personQueryResult.getPerson().getSsn());

@@ -23,6 +23,6 @@ import java.util.UUID;
 public interface IAggregateRoot extends IMessageHandler {
     UUID getId();
     List<IDomainEvent> getAddedEvents();
-    IAggregateRoot applyEvent(IDomainEvent event);
+    void applyEvent(IDomainEvent event);
 
 }

@@ -96,12 +96,9 @@ public class SqlEventStore<T extends IAggregateRoot> implements IRepository<T>{
     }
 
     @Override
-    public T load(T aggregate) {
-        final ArrayList<T> aggregates = new ArrayList<>();
-        aggregates.add(aggregate);
+    public void load(T aggregate) {
         final List<IDomainEvent> resultSet = getEventList(aggregate);
-        resultSet.forEach(s -> aggregates.add(aggregates.get(aggregates.size() - 1).dispatch(s)));
-        return aggregates.get(aggregates.size() - 1);
+        resultSet.forEach(s -> aggregate.applyEvent(s));
     }
 
     private List<IDomainEvent> getEventList(final IAggregateRoot aggregate) {

@@ -19,5 +19,6 @@ import odin.concepts.domainmodel.IAggregateRoot;
 
 public interface IRepository<T extends IAggregateRoot> {
     void load(T obj);
+    
     void save(T obj);
 }

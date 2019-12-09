@@ -40,16 +40,16 @@ public class Person extends AbstractAggregateRoot {
         this.ssn = null;
     }
 
-    private void rPerson(final PersonRegistered event) {     
+    private void registered(final PersonRegistered event) {     
         this.name = event.getName();
         this.ssn = event.getSsn();
     }
 
-    private void cPerson(final PersonNameChanged event) {
+    private void changedName(final PersonNameChanged event) {
         this.name = event.getName();
     }
 
-    public void registerPerson(final String ssn, final String name) {
+    public void register(final String ssn, final String name) {
         this.applyEvent(new PersonRegistered(getId(), ssn, name));
     }
 
@@ -59,8 +59,8 @@ public class Person extends AbstractAggregateRoot {
 
     @Override
     public <T> void dispatch(final T msg) {
-        match(PersonRegistered.class, (m) -> rPerson(m), msg)
-                .match(PersonNameChanged.class, (p) ->cPerson(p), msg);
+        match(PersonRegistered.class, (m) -> registered(m), msg)
+                .match(PersonNameChanged.class, (p) -> changedName(p), msg);
 
     }
 }

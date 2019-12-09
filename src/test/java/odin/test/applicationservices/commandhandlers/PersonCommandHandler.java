@@ -40,7 +40,7 @@ public class PersonCommandHandler implements ICommandHandler {
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
         Person p = new Person(registerPerson.getTargetId());
-        p.registerPerson(registerPerson.getSsn(), registerPerson.getName());
+        p.register(registerPerson.getSsn(), registerPerson.getName());
         personRepository.save(p);
         return this;
     }

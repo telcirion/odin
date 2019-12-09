@@ -33,6 +33,8 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>checkstyle</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>

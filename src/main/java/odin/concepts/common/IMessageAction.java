@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,5 +17,5 @@ package odin.concepts.common;
 
 @FunctionalInterface
 public interface IMessageAction<T> {
-    void executeAction(T msg);
+    IMessageHandler executeAction(T msg);
 }

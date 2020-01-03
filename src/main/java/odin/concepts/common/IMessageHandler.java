@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
 
 package odin.concepts.common;
 
+@SuppressWarnings({ "unchecked" })
 public interface IMessageHandler {
 
-
-
-    @SuppressWarnings({ "unchecked" })
-    default <T, Y, Z extends IMessageHandler> Z match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
+    default <T, Y> IMessageHandler match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
         if (msg.getClass().equals(msgClazz)) {
-            msgAction.executeAction((T) msg);
+            return msgAction.executeAction((T) msg);
         }
-        return (Z) this;
+        return this;
     }
 
-    <T> void dispatch(T msg);
+    <T> IMessageHandler dispatch(T msg);
+
+    default <T> T get() {
+        return (T)this;
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package odin.test.domain.state;
 
 import java.util.UUID;
 
+import odin.concepts.common.IMessageHandler;
 import odin.framework.AbstractAggregateRoot;
 import odin.test.domain.events.PersonNameChanged;
 import odin.test.domain.events.PersonRegistered;
@@ -40,13 +41,15 @@ public class Person extends AbstractAggregateRoot {
         this.ssn = null;
     }
 
-    private void registered(final PersonRegistered event) {     
+    private Person registered(final PersonRegistered event) {     
         this.name = event.getName();
         this.ssn = event.getSsn();
+        return this;
     }
 
-    private void changedName(final PersonNameChanged event) {
+    private Person changedName(final PersonNameChanged event) {
         this.name = event.getName();
+        return this;
     }
 
     public void register(final String ssn, final String name) {
@@ -58,8 +61,8 @@ public class Person extends AbstractAggregateRoot {
     }
 
     @Override
-    public <T> void dispatch(final T msg) {
-        match(PersonRegistered.class, (m) -> registered(m), msg)
+    public <T> IMessageHandler dispatch(final T msg) {
+        return match(PersonRegistered.class, (m) -> registered(m), msg)
                 .match(PersonNameChanged.class, (p) -> changedName(p), msg);
 
     }

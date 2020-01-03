@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,9 +96,10 @@ public class SqlEventStore<T extends IAggregateRoot> implements IRepository<T> {
     }
 
     @Override
-    public void load(T aggregate) {
+    public T load(T aggregate) {
         final List<IDomainEvent> resultSet = getEventList(aggregate);
         resultSet.forEach(aggregate::applyEvent);
+        return aggregate.get();
     }
 
     private List<IDomainEvent> getEventList(final IAggregateRoot aggregate) {

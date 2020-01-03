@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     @Override
-    public <T> void dispatch(T msg) {
-        match(PersonSignUpReceived.class, this::handle, msg).match(PersonRegistered.class, this::handle, msg);
+    public <T> IMessageHandler dispatch(T msg) {
+        return match(PersonSignUpReceived.class, this::handle, msg).match(PersonRegistered.class, this::handle, msg);
     }
 
     private IMessageHandler handle(PersonSignUpReceived msg) {

@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import odin.concepts.applicationservices.ICommand;
 import odin.concepts.applicationservices.ICommandHandler;
 import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.IMessageHandler;
 import odin.test.applicationservices.commands.ChangePersonName;
 import odin.test.applicationservices.commands.RegisterPerson;
 import odin.test.domain.state.Person;
@@ -47,16 +48,15 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        Person p = new Person(changePersonName.getTargetId());
-        personRepository.load(p);
+        Person p = personRepository.load(new Person(changePersonName.getTargetId()));
         p.changeName(changePersonName.getName());
         personRepository.save(p);
         return this;
     }
 
     @Override
-    public <T> void dispatch(T msg) {
-        match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
+    public <T> IMessageHandler dispatch(T msg) {
+        return match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
     }
 
     private void log(ICommand command) {

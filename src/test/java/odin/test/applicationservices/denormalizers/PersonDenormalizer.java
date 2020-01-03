@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package odin.test.applicationservices.denormalizers;
 
 import odin.concepts.applicationservices.IDenormalizer;
+import odin.concepts.common.IMessageHandler;
 import odin.concepts.domainmodel.IDomainEvent;
 import odin.test.domain.events.PersonNameChanged;
 import odin.test.domain.events.PersonRegistered;
@@ -68,8 +69,8 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
     }
 
     @Override
-    public <T> void dispatch(T msg) {
-        match(PersonRegistered.class, this::handle, msg).match(PersonNameChanged.class, this::handle, msg);
+    public <T> IMessageHandler dispatch(T msg) {
+        return match(PersonRegistered.class, this::handle, msg).match(PersonNameChanged.class, this::handle, msg);
 
     }
 

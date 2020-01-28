@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.infrastructure.H2Server;
-import odin.infrastructure.SqlEventStore;
+import odin.infrastructure.SqlEventRepository;
 import odin.infrastructure.SimpleMessageBus;
 import odin.test.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.test.applicationservices.commands.ChangePersonName;
@@ -51,7 +51,7 @@ class SimpleDomainTest {
 
         H2Server databaseServer = new H2Server();
         databaseServer.startServer();
-        SqlEventStore<Person> personRepository = new SqlEventStore<>(new TestDataSource(), eventBus);
+        SqlEventRepository<Person> personRepository = new SqlEventRepository<>(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
 
         // start processManager

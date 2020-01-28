@@ -45,14 +45,14 @@ import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SqlEventStore<T extends IAggregateRoot> implements IRepository<T> {
+public class SqlEventRepository<T extends IAggregateRoot> implements IRepository<T> {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IDataSource ds;
     private final ISendMessage eventBus;
 
-    public SqlEventStore(final IDataSource ds, final ISendMessage eventBus) {
+    public SqlEventRepository(final IDataSource ds, final ISendMessage eventBus) {
         this.eventBus = eventBus;
         this.ds = ds;
     }

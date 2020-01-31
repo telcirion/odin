@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test;
+package odin.example.test.SimpleDomainTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,15 +26,15 @@ import org.slf4j.LoggerFactory;
 import odin.infrastructure.H2Server;
 import odin.infrastructure.SqlEventRepository;
 import odin.infrastructure.SimpleMessageBus;
-import odin.test.applicationservices.commandhandlers.PersonCommandHandler;
-import odin.test.applicationservices.commands.ChangePersonName;
-import odin.test.applicationservices.denormalizers.PersonDenormalizer;
-import odin.test.applicationservices.processmanagers.SignUpPersonProcessManager;
-import odin.test.applicationservices.queries.PersonByNameQuery;
-import odin.test.applicationservices.queryhandlers.PersonQueryHandler;
-import odin.test.applicationservices.queryresults.PersonQueryResult;
-import odin.test.domain.events.PersonSignUpReceived;
-import odin.test.domain.state.Person;
+import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
+import odin.example.applicationservices.commands.ChangePersonName;
+import odin.example.applicationservices.denormalizers.PersonDenormalizer;
+import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
+import odin.example.applicationservices.queries.PersonByNameQuery;
+import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
+import odin.example.applicationservices.queryresults.PersonQueryResult;
+import odin.example.domain.events.PersonSignUpReceived;
+import odin.example.domain.state.Person;
 
 class SimpleDomainTest {
 

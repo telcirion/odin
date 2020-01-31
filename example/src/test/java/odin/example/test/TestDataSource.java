@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test;
+package odin.example.test.SimpleDomainTest;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

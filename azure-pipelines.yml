@@ -21,8 +21,6 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    sonarQubeRunAnalysis: true
-    sqMavenPluginVersionChoice: 'latest'
     goals: 'package -Dbuildversion=$(Build.BuildNumber)'
 
 - task: CopyFiles@2

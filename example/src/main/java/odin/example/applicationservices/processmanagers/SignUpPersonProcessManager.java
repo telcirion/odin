@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import odin.concepts.applicationservices.IProcessManager;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
-import odin.concepts.domainmodel.IDomainEvent;
 import odin.example.applicationservices.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
@@ -45,17 +44,14 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     private IMessageHandler handle(PersonSignUpReceived msg) {
-        logger.info("Event " + msg.getClass().getSimpleName() + " received");
+        logger.info("Event {} received",  msg.getClass().getSimpleName());
 
         commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(), msg.getName()));
         return this;
     }
 
     private IMessageHandler handle(PersonRegistered msg) {
-        logger.info("Event " + msg.getClass().getSimpleName() + " received.");
-        logger.info("Message aggregateId: " + msg.getAggregateId() + " message ssn value: "
-                + msg.getSsn() + " message name value: " + msg.getName());
-
+        logger.info("Event {} received",  msg.getClass().getSimpleName());
         return this;
     }
 }

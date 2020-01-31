@@ -62,8 +62,8 @@ public class Person extends AbstractAggregateRoot {
 
     @Override
     public <T> IMessageHandler dispatch(final T msg) {
-        return match(PersonRegistered.class, (m) -> registered(m), msg)
-                .match(PersonNameChanged.class, (p) -> changedName(p), msg);
+        return match(PersonRegistered.class, this::registered, msg)
+                .match(PersonNameChanged.class, this::changedName, msg);
 
     }
 }

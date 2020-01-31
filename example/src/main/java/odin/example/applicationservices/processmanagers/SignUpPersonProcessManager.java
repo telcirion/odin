@@ -53,7 +53,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
 
     private IMessageHandler handle(PersonRegistered msg) {
         logger.info("Event " + msg.getClass().getSimpleName() + " received.");
-        logger.info("Message aggregateId: " + ((IDomainEvent) msg).getAggregateId() + " message ssn value: "
+        logger.info("Message aggregateId: " + msg.getAggregateId() + " message ssn value: "
                 + msg.getSsn() + " message name value: " + msg.getName());
 
         return this;

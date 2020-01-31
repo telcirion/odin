@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.denormalizers;
+package odin.example.applicationservices.denormalizers;
 
 import odin.concepts.applicationservices.IDenormalizer;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.test.domain.events.PersonNameChanged;
-import odin.test.domain.events.PersonRegistered;
-import odin.test.readmodel.Person;
-import odin.test.readmodel.PersonList;
+import odin.example.domain.events.PersonNameChanged;
+import odin.example.domain.events.PersonRegistered;
+import odin.example.readmodel.Person;
+import odin.example.readmodel.PersonList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

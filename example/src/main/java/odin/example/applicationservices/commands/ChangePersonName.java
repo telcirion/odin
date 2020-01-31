@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.commands;
+package odin.example.applicationservices.commands;
 
 import odin.framework.AbstractCommand;
 

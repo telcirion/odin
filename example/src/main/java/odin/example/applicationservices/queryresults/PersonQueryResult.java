@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.queryresults;
+package odin.example.applicationservices.queryresults;
 
 import odin.concepts.applicationservices.IQueryResult;
-import odin.test.readmodel.Person;
+import odin.example.readmodel.Person;
 
 public class PersonQueryResult implements IQueryResult {
     private final Person person;

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.processmanagers;
+package odin.example.applicationservices.processmanagers;
 
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;
@@ -25,9 +25,9 @@ import odin.concepts.applicationservices.IProcessManager;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.test.applicationservices.commands.RegisterPerson;
-import odin.test.domain.events.PersonRegistered;
-import odin.test.domain.events.PersonSignUpReceived;
+import odin.example.applicationservices.commands.RegisterPerson;
+import odin.example.domain.events.PersonRegistered;
+import odin.example.domain.events.PersonSignUpReceived;
 
 public class SignUpPersonProcessManager implements IProcessManager {
 

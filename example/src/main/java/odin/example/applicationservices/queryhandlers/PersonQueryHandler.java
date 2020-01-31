@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.queryhandlers;
+package odin.example.applicationservices.queryhandlers;
 
 import odin.concepts.applicationservices.IQueryHandler;
-import odin.test.applicationservices.queries.PersonByNameQuery;
-import odin.test.applicationservices.queryresults.PersonQueryResult;
-import odin.test.readmodel.PersonList;
+import odin.example.applicationservices.queries.PersonByNameQuery;
+import odin.example.applicationservices.queryresults.PersonQueryResult;
+import odin.example.readmodel.PersonList;
 
 public class PersonQueryHandler implements IQueryHandler {
     private PersonList personList;

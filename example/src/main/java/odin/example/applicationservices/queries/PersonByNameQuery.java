@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test.applicationservices.queries;
+package odin.example.applicationservices.queries;
 
 import odin.concepts.applicationservices.IQuery;
 

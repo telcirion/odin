@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-package odin.test.domain.state;
+package odin.example.domain.state;
 
 import java.util.UUID;
 
 import odin.concepts.common.IMessageHandler;
 import odin.framework.AbstractAggregateRoot;
-import odin.test.domain.events.PersonNameChanged;
-import odin.test.domain.events.PersonRegistered;
+import odin.example.domain.events.PersonNameChanged;
+import odin.example.domain.events.PersonRegistered;
 
 public class Person extends AbstractAggregateRoot {
 

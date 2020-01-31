@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.test.readmodel;
+package odin.example.readmodel;
 
 import java.util.HashMap;
 import java.util.Map;

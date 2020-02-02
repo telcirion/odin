@@ -24,6 +24,7 @@ public class PersonSignUpReceived extends AbstractDomainEvent {
     private final String name;
 
     public PersonSignUpReceived(String ssn, String name) {
+        super(null);
         this.ssn = ssn;
         this.name = name;
     }

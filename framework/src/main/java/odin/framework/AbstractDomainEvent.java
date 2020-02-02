@@ -27,11 +27,6 @@ public abstract class AbstractDomainEvent implements IDomainEvent {
     private final UUID aggregateId;
     private final LocalDateTime timestamp;
 
-    protected AbstractDomainEvent() {
-        this.aggregateId = null;
-        this.timestamp = LocalDateTime.now();
-    }
-
     protected AbstractDomainEvent(UUID aggregateId) {
         this.aggregateId = aggregateId;
         this.timestamp = LocalDateTime.now();

@@ -107,17 +107,17 @@ class AbstractAggregateRootTest {
 
     @Test
     void getAddedEvents() {
-        assertEquals(sut.getAddedEvents().size(), 2);
+        assertEquals(2, sut.getAddedEvents().size());
     }
 
     @Test
     void getId() {
-        assertEquals(sut.getId(), aggregateId);
+        assertEquals(aggregateId,sut.getId());
     }
 
     @Test
     void checkAttributeValues() {
-        assertEquals(sut.getSsn(), testSSn);
-        assertEquals(sut.getName(), secondTestName);
+        assertEquals(testSSn, sut.getSsn());
+        assertEquals(secondTestName, sut.getName());
     }
 }

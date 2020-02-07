@@ -13,7 +13,7 @@ to send a command to a command handler which targets a specific aggregate (data 
 within the domain.)
 
 This framework facilitates the above pattern by providing the presented concepts with interfaces, implementation and
-some some glue to tie it all together.
+some glue to tie it all together.
 
 # What's in a name
 Every framework needs a name. Something cool, mythical and easy to remember. There are probably way more projects that

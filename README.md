@@ -21,7 +21,7 @@ share this name, tough luck. Anyway, to quote [wikipedia](https://en.wikipedia.o
 which seems to fit nicely with the DDD concepts.
 
 ## How to use
-See example in [test](https://github.com/telcirion/odin/tree/master/src/test/java/odin/test).
+See example in [test](https://github.com/telcirion/odin/tree/master/example/src/test/java/odin/test).
 
 ## Project structure
 - **`framework\src\main\java\odin\concepts\`**, this is where the core DDD concepts are postulated as interfaces, the sub-packages are layed out conforming to the ["Onion model"](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)

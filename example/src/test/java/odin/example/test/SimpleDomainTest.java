@@ -23,9 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.infrastructure.H2Server;
-import odin.infrastructure.SqlEventRepository;
-import odin.infrastructure.SimpleMessageBus;
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.applicationservices.commands.ChangePersonName;
 import odin.example.applicationservices.denormalizers.PersonDenormalizer;
@@ -35,6 +32,8 @@ import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
+import odin.infrastructure.SimpleMessageBus;
+import odin.infrastructure.SqlEventRepository;
 
 class SimpleDomainTest {
 
@@ -49,8 +48,6 @@ class SimpleDomainTest {
         final SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
         final SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
 
-        H2Server databaseServer = new H2Server();
-        databaseServer.startServer();
         SqlEventRepository<Person> personRepository = new SqlEventRepository<>(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
 
@@ -110,6 +107,5 @@ class SimpleDomainTest {
         commandBus.stop();
         denormalizeBus.stop();
         assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
-        databaseServer.stopServer();
     }
 }

@@ -15,10 +15,10 @@
 
 package odin.framework;
 
-import odin.concepts.domainmodel.IDomainEvent;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import odin.concepts.domainmodel.IDomainEvent;
 
 public abstract class AbstractDomainEvent implements IDomainEvent {
 

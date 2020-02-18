@@ -15,9 +15,9 @@
 
 package odin.framework;
 
-import odin.concepts.applicationservices.ICommand;
-
 import java.util.UUID;
+
+import odin.concepts.applicationservices.ICommand;
 
 public abstract class AbstractCommand implements ICommand {
 

@@ -15,9 +15,9 @@
 
 package odin.example.applicationservices.commands;
 
-import odin.framework.AbstractCommand;
-
 import java.util.UUID;
+
+import odin.framework.AbstractCommand;
 
 public class RegisterPerson extends AbstractCommand {
 

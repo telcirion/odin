@@ -15,12 +15,12 @@
 
 package odin.infrastructure;
 
+import java.lang.invoke.MethodHandles;
+import java.sql.SQLException;
+
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.invoke.MethodHandles;
-import java.sql.SQLException;
 
 public class H2Server {
     private Server webServer;

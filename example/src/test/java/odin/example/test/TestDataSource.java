@@ -15,12 +15,13 @@
 
 package odin.example.test;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import odin.concepts.infra.IDataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import odin.concepts.infra.IDataSource;
 
 public class TestDataSource implements IDataSource {
 

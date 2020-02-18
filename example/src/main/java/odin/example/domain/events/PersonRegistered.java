@@ -15,8 +15,9 @@
 
 package odin.example.domain.events;
 
-import odin.framework.AbstractDomainEvent;
 import java.util.UUID;
+
+import odin.framework.AbstractDomainEvent;
 
 public class PersonRegistered extends AbstractDomainEvent {
     private static final long serialVersionUID = 1L;

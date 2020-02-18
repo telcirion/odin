@@ -15,12 +15,6 @@
 
 package odin.infrastructure;
 
-import odin.concepts.applicationservices.IRepository;
-import odin.concepts.common.ISendMessage;
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.IDomainEvent;
-import odin.concepts.infra.IDataSource;
-
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
@@ -44,6 +38,12 @@ import com.google.gson.JsonSyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.ISendMessage;
+import odin.concepts.domainmodel.IAggregateRoot;
+import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.infra.IDataSource;
 
 public class SqlEventRepository<T extends IAggregateRoot> implements IRepository<T> {
 

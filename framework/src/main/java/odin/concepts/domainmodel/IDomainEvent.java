@@ -15,10 +15,10 @@
 
 package odin.concepts.domainmodel;
 
-import odin.concepts.common.IMessage;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import odin.concepts.common.IMessage;
 
 public interface IDomainEvent extends IMessage {
     UUID getEventId();

@@ -15,10 +15,10 @@
 
 package odin.concepts.domainmodel;
 
-import odin.concepts.common.IMessageHandler;
-
 import java.util.List;
 import java.util.UUID;
+
+import odin.concepts.common.IMessageHandler;
 
 public interface IAggregateRoot extends IMessageHandler {
     UUID getId();

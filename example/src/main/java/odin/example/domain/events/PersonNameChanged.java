@@ -15,8 +15,9 @@
 
 package odin.example.domain.events;
 
-import odin.framework.AbstractDomainEvent;
 import java.util.UUID;
+
+import odin.framework.AbstractDomainEvent;
 
 public class PersonNameChanged extends AbstractDomainEvent {
 

@@ -15,6 +15,11 @@
 
 package odin.example.applicationservices.denormalizers;
 
+import java.lang.invoke.MethodHandles;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import odin.concepts.applicationservices.IDenormalizer;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.domainmodel.IDomainEvent;
@@ -22,11 +27,6 @@ import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.Person;
 import odin.example.readmodel.PersonList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.invoke.MethodHandles;
 
 public class PersonDenormalizer implements IDenormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

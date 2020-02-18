@@ -18,9 +18,9 @@ package odin.example.domain.state;
 import java.util.UUID;
 
 import odin.concepts.common.IMessageHandler;
-import odin.framework.AbstractAggregateRoot;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
+import odin.framework.AbstractAggregateRoot;
 
 public class Person extends AbstractAggregateRoot {
 

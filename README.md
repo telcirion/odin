@@ -25,6 +25,6 @@ See example in [test](https://github.com/telcirion/odin/tree/master/example/src/
 
 ## Project structure
 - **`framework\src\main\java\odin\concepts\`**, this is where the core DDD concepts are postulated as interfaces, the sub-packages are layed out conforming to the ["Onion model"](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
-- **`framework\src\main\java\odin\framework\`**, some supporting classes which implement some of interfaces requiring some state which can be inherited from.
+- **`framework\src\main\java\odin\framework\`**, some supporting abstract classes implementing interfaces that can be used to avoid logic duplication.
 - **`framework\src\main\java\odin\infrastructure\`**, some supporting classes which implement the interfaces requiring external infrastructural libraries.
 - **`example\src\test\java\odin\example\test\`**, a basic scenario test which demonstrates this framework.

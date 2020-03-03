@@ -46,7 +46,6 @@ class SimpleDomainTest {
 
         final SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
         final SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
-        final SimpleMessageBus denormalizeBus = new SimpleMessageBus(EVENT_TOPIC);
 
         SqlEventRepository<Person> personRepository = new SqlEventRepository<>(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
@@ -58,7 +57,7 @@ class SimpleDomainTest {
 
         // start denormalizer
         PersonDenormalizer personDenormalizer = new PersonDenormalizer();
-        denormalizeBus.consume(personDenormalizer);
+        eventBus.consume(personDenormalizer);
         logger.info("Denormalizer created, wait for processing.");
 
         // start commandHandler
@@ -69,7 +68,7 @@ class SimpleDomainTest {
         eventBus.send(new PersonSignUpReceived("1234567892", "Peter"));
         eventBus.send(new PersonSignUpReceived("1234567893", "John"));
 
-        logger.info("DomainEvent send.");
+        logger.info("DomainEvents send.");
 
         // after processing 2 registrations, we're done.
         // noinspection StatementWithEmptyBody
@@ -105,7 +104,6 @@ class SimpleDomainTest {
 
         eventBus.stop();
         commandBus.stop();
-        denormalizeBus.stop();
         assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
     }
 }

@@ -37,15 +37,12 @@ import odin.infrastructure.SqlEventRepository;
 
 class SimpleDomainTest {
 
-    private static final String EVENT_TOPIC = "activemq:topic:eventQueue?jmsMessageType=Object";
-    private static final String COMMAND_QUEUE = "activemq:commandQueue?jmsMessageType=Object";
-
     @Test
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-        final SimpleMessageBus eventBus = new SimpleMessageBus(EVENT_TOPIC);
-        final SimpleMessageBus commandBus = new SimpleMessageBus(COMMAND_QUEUE);
+        final SimpleMessageBus eventBus = new SimpleMessageBus(SimpleMessageBus.BusType.TOPIC);
+        final SimpleMessageBus commandBus = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
 
         SqlEventRepository<Person> personRepository = new SqlEventRepository<>(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test

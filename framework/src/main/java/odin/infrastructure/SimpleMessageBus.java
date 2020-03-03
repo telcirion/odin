@@ -18,6 +18,7 @@ package odin.infrastructure;
 import static org.apache.activemq.camel.component.ActiveMQComponent.activeMQComponent;
 
 import java.lang.invoke.MethodHandles;
+import java.util.UUID;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -36,12 +37,27 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
     private final String endpoint;
     private final CamelContext ctx;
 
-    public SimpleMessageBus(String endpoint) {
+    public enum BusType {
+        TOPIC(":topic"), QUEUE("");
+
+        private final String type;
+
+        public String getTypeString() {
+            return type;
+        }
+
+        private BusType(String type) {
+            this.type = type;
+        }
+    }
+
+    public SimpleMessageBus(BusType busType) {
         System.setProperty("org.apache.activemq.SERIALIZABLE_PACKAGES", "*");
         ctx = new DefaultCamelContext();
         ctx.setStreamCaching(true);
         ctx.addComponent("activemq", activeMQComponent("vm://localhost?broker.persistent=false"));
-        this.endpoint = endpoint;
+        this.endpoint = new StringBuilder().append("activemq").append(busType.getTypeString()).append(":")
+                .append(UUID.randomUUID()).append("?jmsMessageType=Object").toString();
     }
 
     @Override

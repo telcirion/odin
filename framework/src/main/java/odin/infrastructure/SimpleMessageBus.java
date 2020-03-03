@@ -38,7 +38,7 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
     private final CamelContext ctx;
 
     public enum BusType {
-        TOPIC(":topic"), QUEUE("");
+        TOPIC("topic"), QUEUE("queue");
 
         private final String type;
 
@@ -56,7 +56,7 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
         ctx = new DefaultCamelContext();
         ctx.setStreamCaching(true);
         ctx.addComponent("activemq", activeMQComponent("vm://localhost?broker.persistent=false"));
-        this.endpoint = new StringBuilder().append("activemq").append(busType.getTypeString()).append(":")
+        this.endpoint = new StringBuilder().append("activemq:").append(busType.getTypeString()).append(":")
                 .append(UUID.randomUUID()).append("?jmsMessageType=Object").toString();
     }
 

@@ -25,10 +25,10 @@ import odin.concepts.infra.IDataSource;
 
 public class TestDataSource implements IDataSource {
 
-    private static final HikariConfig config = new HikariConfig();
-    private static final HikariDataSource ds;
+    private final HikariConfig config = new HikariConfig();
+    private final HikariDataSource ds;
 
-    static {
+    public TestDataSource() {
         //config.setJdbcUrl("jdbc:postgresql://localhost/postgres");
         //config.setUsername("postgres");
         //config.setPassword("docker");

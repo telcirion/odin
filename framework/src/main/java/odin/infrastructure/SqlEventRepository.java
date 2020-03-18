@@ -99,7 +99,7 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
     public T load(T aggregate) {
         final List<IDomainEvent> resultSet = getEventList(aggregate);
         resultSet.forEach(aggregate::dispatch);
-        return aggregate.get();
+        return aggregate;
     }
 
     private List<IDomainEvent> getEventList(final IAggregateRoot aggregate) {

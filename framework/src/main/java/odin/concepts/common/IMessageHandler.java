@@ -26,8 +26,4 @@ public interface IMessageHandler {
     }
 
     <T> IMessageHandler dispatch(T msg);
-
-    default <T> T get() {
-        return (T)this;
-    }
 }

@@ -70,7 +70,7 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
         RouteBuilder builder = new RouteBuilder() {
             public void configure() {
                 errorHandler(deadLetterChannel("mock:error"));
-                from(endpoint).process().body(messageHandler::dispatch);
+                from(endpoint).process().body(messageHandler::handle);
             }
         };
 

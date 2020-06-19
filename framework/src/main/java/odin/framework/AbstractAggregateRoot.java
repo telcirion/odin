@@ -40,7 +40,7 @@ public abstract class AbstractAggregateRoot implements IAggregateRoot {
     @Override
     public void applyEvent(IDomainEvent event) {
         this.addedEvents.add(event);
-        this.dispatch(event);
+        this.handle(event);
     }
 
     @Override

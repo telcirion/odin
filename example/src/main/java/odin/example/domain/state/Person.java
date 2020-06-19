@@ -21,6 +21,7 @@ import odin.concepts.common.IMessageHandler;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.framework.AbstractAggregateRoot;
+import odin.framework.Matcher;
 
 public class Person extends AbstractAggregateRoot {
 
@@ -61,9 +62,9 @@ public class Person extends AbstractAggregateRoot {
     }
 
     @Override
-    public <T> IMessageHandler dispatch(final T msg) {
-        return match(PersonRegistered.class, this::registered, msg)
-                .match(PersonNameChanged.class, this::changedName, msg);
+    public <T> IMessageHandler handle(final T msg) {
+        return new Matcher(this).match(PersonRegistered.class, this::registered, msg)
+                .match(PersonNameChanged.class, this::changedName, msg).result();
 
     }
 }

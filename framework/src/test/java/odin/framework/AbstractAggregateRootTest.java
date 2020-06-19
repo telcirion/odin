@@ -98,9 +98,9 @@ class AbstractAggregateRootTest {
         }
 
         @Override
-        public <T> IMessageHandler dispatch(final T msg) {
-            return match(PersonRegistered.class, this::registered, msg).match(PersonNameChanged.class,
-                    this::changedName, msg);
+        public <T> IMessageHandler handle(final T msg) {
+            return new Matcher(this).match(PersonRegistered.class, this::registered, msg)
+                    .match(PersonNameChanged.class, this::changedName, msg).result();
 
         }
     }
@@ -112,7 +112,7 @@ class AbstractAggregateRootTest {
 
     @Test
     void getId() {
-        assertEquals(aggregateId,sut.getId());
+        assertEquals(aggregateId, sut.getId());
     }
 
     @Test

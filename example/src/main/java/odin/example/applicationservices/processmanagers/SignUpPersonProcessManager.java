@@ -27,6 +27,7 @@ import odin.concepts.common.ISendMessage;
 import odin.example.applicationservices.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
+import odin.framework.Matcher;
 
 public class SignUpPersonProcessManager implements IProcessManager {
 
@@ -39,19 +40,20 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     @Override
-    public <T> IMessageHandler dispatch(T msg) {
-        return match(PersonSignUpReceived.class, this::handle, msg).match(PersonRegistered.class, this::handle, msg);
+    public <T> IMessageHandler handle(T msg) {
+        return new Matcher(this).match(PersonSignUpReceived.class, this::handle, msg)
+                .match(PersonRegistered.class, this::handle, msg).result();
     }
 
     private IMessageHandler handle(PersonSignUpReceived msg) {
-        logger.info("Event {} received",  msg.getClass().getSimpleName());
+        logger.info("Event {} received", msg.getClass().getSimpleName());
 
         commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(), msg.getName()));
         return this;
     }
 
     private IMessageHandler handle(PersonRegistered msg) {
-        logger.info("Event {} received",  msg.getClass().getSimpleName());
+        logger.info("Event {} received", msg.getClass().getSimpleName());
         return this;
     }
 }

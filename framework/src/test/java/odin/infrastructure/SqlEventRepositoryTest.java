@@ -17,11 +17,12 @@ import odin.concepts.common.ISendMessage;
 import odin.concepts.infra.IDataSource;
 import odin.framework.AbstractAggregateRoot;
 import odin.framework.AbstractDomainEvent;
+import odin.framework.Matcher;
 
 class SqlEventRepositoryTest {
     @Test
     public void sqlEventRepositoryTest() {
-        
+
         var sut = new SqlEventRepository<TestAggregate>(new TestDataSource(), new TestBus());
         sut.createDatabase();
         var id = UUID.randomUUID();
@@ -56,8 +57,8 @@ class SqlEventRepositoryTest {
         }
 
         @Override
-        public <T> IMessageHandler dispatch(T msg) {
-            return this.match(Msg.class, this::setTestField, msg);
+        public <T> IMessageHandler handle(T msg) {
+            return new Matcher(this).match(Msg.class, this::setTestField, msg).result();
         }
 
     }

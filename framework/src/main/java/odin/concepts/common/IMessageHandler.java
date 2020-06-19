@@ -15,15 +15,6 @@
 
 package odin.concepts.common;
 
-@SuppressWarnings({ "unchecked" })
 public interface IMessageHandler {
-
-    default <T, Y> IMessageHandler match(Class<T> msgClazz, IMessageAction<T> msgAction, Y msg) {
-        if (msg.getClass().equals(msgClazz)) {
-            return msgAction.executeAction((T) msg);
-        }
-        return this;
-    }
-
-    <T> IMessageHandler dispatch(T msg);
+    <T> IMessageHandler handle(T msg);
 }

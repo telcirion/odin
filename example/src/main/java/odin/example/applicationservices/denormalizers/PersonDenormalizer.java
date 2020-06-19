@@ -27,6 +27,7 @@ import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.Person;
 import odin.example.readmodel.PersonList;
+import odin.framework.Matcher;
 
 public class PersonDenormalizer implements IDenormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -69,9 +70,9 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
     }
 
     @Override
-    public <T> IMessageHandler dispatch(T msg) {
-        return match(PersonRegistered.class, this::handle, msg).match(PersonNameChanged.class, this::handle, msg);
-
+    public <T> IMessageHandler handle(T msg) {
+        return new Matcher(this).match(PersonRegistered.class, this::handle, msg)
+                .match(PersonNameChanged.class, this::handle, msg).result();
     }
 
     private void log(IDomainEvent event) {

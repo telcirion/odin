@@ -27,6 +27,7 @@ import odin.concepts.common.IMessageHandler;
 import odin.example.applicationservices.commands.ChangePersonName;
 import odin.example.applicationservices.commands.RegisterPerson;
 import odin.example.domain.state.Person;
+import odin.framework.Matcher;
 
 public class PersonCommandHandler implements ICommandHandler {
 
@@ -55,8 +56,9 @@ public class PersonCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public <T> IMessageHandler dispatch(T msg) {
-        return match(RegisterPerson.class, this::handle, msg).match(ChangePersonName.class, this::handle, msg);
+    public <T> IMessageHandler handle(T msg) {
+        return new Matcher(this).match(RegisterPerson.class, this::handle, msg)
+                .match(ChangePersonName.class, this::handle, msg).result();
     }
 
     private void log(ICommand command) {

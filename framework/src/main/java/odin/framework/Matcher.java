@@ -15,6 +15,7 @@
 
 package odin.framework;
 
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageAction;
 import odin.concepts.common.IMessageHandler;
 
@@ -25,7 +26,7 @@ public class Matcher {
         this.noMatchHandler = noMatchHandler;
     }
 
-    public <T, Y> Matcher match(final Class<T> msgClazz, final IMessageAction<T> msgAction, final Y msg) {
+    public <T> Matcher match(final Class<T> msgClazz, final IMessageAction<T> msgAction, final IMessage msg) {
         if (msgClazz.isInstance(msg)) {
             return new Matcher(msgAction.executeAction(msgClazz.cast(msg)));
         }

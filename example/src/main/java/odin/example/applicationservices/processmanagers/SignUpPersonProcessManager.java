@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.concepts.applicationservices.IProcessManager;
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
 import odin.example.applicationservices.commands.RegisterPerson;
@@ -40,7 +41,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     @Override
-    public <T> IMessageHandler handle(T msg) {
+    public IMessageHandler handle(IMessage msg) {
         return new Matcher(this).match(PersonSignUpReceived.class, this::handle, msg)
                 .match(PersonRegistered.class, this::handle, msg).result();
     }

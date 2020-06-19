@@ -25,7 +25,7 @@ class SimpleMessageBusTest implements IMessageHandler, IMessage {
     }
 
     @Override
-    public <T> IMessageHandler handle(T msg) {
+    public IMessageHandler handle(IMessage msg) {
         synchronized (this) {
             msgHandled = true;
         }

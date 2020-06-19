@@ -16,5 +16,5 @@
 package odin.concepts.common;
 
 public interface IMessageHandler {
-    <T> IMessageHandler handle(T msg);
+    IMessageHandler handle(IMessage msg);
 }

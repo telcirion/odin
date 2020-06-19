@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import odin.concepts.applicationservices.ICommand;
 import odin.concepts.applicationservices.ICommandHandler;
 import odin.concepts.applicationservices.IRepository;
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.example.applicationservices.commands.ChangePersonName;
 import odin.example.applicationservices.commands.RegisterPerson;
@@ -56,7 +57,7 @@ public class PersonCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public <T> IMessageHandler handle(T msg) {
+    public IMessageHandler handle(IMessage msg) {
         return new Matcher(this).match(RegisterPerson.class, this::handle, msg)
                 .match(ChangePersonName.class, this::handle, msg).result();
     }

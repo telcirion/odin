@@ -57,7 +57,7 @@ class SqlEventRepositoryTest {
         }
 
         @Override
-        public <T> IMessageHandler handle(T msg) {
+        public IMessageHandler handle(IMessage msg) {
             return new Matcher(this).match(Msg.class, this::setTestField, msg).result();
         }
 

@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 
 class AbstractAggregateRootTest {
@@ -98,7 +99,7 @@ class AbstractAggregateRootTest {
         }
 
         @Override
-        public <T> IMessageHandler handle(final T msg) {
+        public IMessageHandler handle(IMessage msg) {
             return new Matcher(this).match(PersonRegistered.class, this::registered, msg)
                     .match(PersonNameChanged.class, this::changedName, msg).result();
 

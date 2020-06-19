@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.concepts.applicationservices.IDenormalizer;
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.domainmodel.IDomainEvent;
 import odin.example.domain.events.PersonNameChanged;
@@ -70,7 +71,7 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
     }
 
     @Override
-    public <T> IMessageHandler handle(T msg) {
+    public IMessageHandler handle(IMessage msg) {
         return new Matcher(this).match(PersonRegistered.class, this::handle, msg)
                 .match(PersonNameChanged.class, this::handle, msg).result();
     }

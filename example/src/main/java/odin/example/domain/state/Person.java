@@ -17,6 +17,7 @@ package odin.example.domain.state;
 
 import java.util.UUID;
 
+import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
@@ -62,7 +63,7 @@ public class Person extends AbstractAggregateRoot {
     }
 
     @Override
-    public <T> IMessageHandler handle(final T msg) {
+    public IMessageHandler handle(IMessage msg) {
         return new Matcher(this).match(PersonRegistered.class, this::registered, msg)
                 .match(PersonNameChanged.class, this::changedName, msg).result();
 

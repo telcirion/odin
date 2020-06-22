@@ -80,7 +80,7 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
         final String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
                 + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
                 + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
-                + "AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
+                + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
         executeSqlUpdate(createSchema);
     }
 
@@ -90,8 +90,9 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         final Gson gson = gsonBuilder.create();
         b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getEventId()).append("','").append(s.getAggregateId()).append("','").append(s.getTimestamp())
-                .append("','").append(s.getClass().getName()).append("','").append(gson.toJson(s)).append("');\r\n");
+                .append(s.getEventId()).append("','").append(s.getAggregateId().toString()).append("','")
+                .append(s.getTimestamp()).append("','").append(s.getClass().getName()).append("','")
+                .append(gson.toJson(s)).append("');\r\n");
         return b.toString();
     }
 
@@ -158,7 +159,7 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
 
     @Override
     public void save(T obj) {
-        obj.getAddedEvents().forEach(e -> { 
+        obj.getAddedEvents().forEach(e -> {
             executeSqlUpdate(generateInsert(e));
             eventBus.send(e);
         });

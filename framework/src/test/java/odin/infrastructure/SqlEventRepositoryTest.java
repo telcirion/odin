@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
+import odin.concepts.common.Identity;
 import odin.concepts.infra.IDataSource;
 import odin.framework.AbstractAggregateRoot;
 import odin.framework.AbstractDomainEvent;
@@ -25,7 +25,7 @@ class SqlEventRepositoryTest {
 
         var sut = new SqlEventRepository<TestAggregate>(new TestDataSource(), new TestBus());
         sut.createDatabase();
-        var id = UUID.randomUUID();
+        var id = new Identity();
         var saveAggregate = new TestAggregate(id);
         saveAggregate.applyEvent(new Msg(id, "test"));
         sut.save(saveAggregate);
@@ -37,7 +37,7 @@ class SqlEventRepositoryTest {
         private static final long serialVersionUID = 1L;
         public final String testField;
 
-        protected Msg(UUID aggregateId, String testField) {
+        protected Msg(Identity aggregateId, String testField) {
             super(aggregateId);
             this.testField = testField;
         }
@@ -47,7 +47,7 @@ class SqlEventRepositoryTest {
 
         public String testField;
 
-        protected TestAggregate(UUID id) {
+        protected TestAggregate(Identity id) {
             super(id);
         }
 

@@ -16,12 +16,12 @@
 package odin.concepts.domainmodel;
 
 import java.util.List;
-import java.util.UUID;
 
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.Identity;
 
 public interface IAggregateRoot extends IMessageHandler {
-    UUID getId();
+    Identity getId();
 
     List<IDomainEvent> getAddedEvents();
 

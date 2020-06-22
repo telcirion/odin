@@ -15,10 +15,9 @@
 
 package odin.example.domain.state;
 
-import java.util.UUID;
-
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.Identity;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.framework.AbstractAggregateRoot;
@@ -37,7 +36,7 @@ public class Person extends AbstractAggregateRoot {
         return name;
     }
 
-    public Person(final UUID id) {
+    public Person(final Identity id) {
         super(id);
         this.name = null;
         this.ssn = null;

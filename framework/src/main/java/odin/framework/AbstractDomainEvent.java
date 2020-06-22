@@ -16,29 +16,29 @@
 package odin.framework;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
 
 public abstract class AbstractDomainEvent implements IDomainEvent {
 
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final UUID aggregateId;
+    private final Identity id = new Identity();
+    private final Identity aggregateId;
     private final LocalDateTime timestamp;
 
-    protected AbstractDomainEvent(UUID aggregateId) {
+    protected AbstractDomainEvent(Identity aggregateId) {
         this.aggregateId = aggregateId;
         this.timestamp = LocalDateTime.now();
     }
 
     @Override
-    public UUID getEventId() {
+    public Identity getEventId() {
         return id;
     }
 
     @Override
-    public UUID getAggregateId() {
+    public Identity getAggregateId() {
         return aggregateId;
     }
 

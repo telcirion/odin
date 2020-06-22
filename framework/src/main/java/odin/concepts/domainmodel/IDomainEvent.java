@@ -16,14 +16,14 @@
 package odin.concepts.domainmodel;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import odin.concepts.common.IMessage;
+import odin.concepts.common.Identity;
 
 public interface IDomainEvent extends IMessage {
-    UUID getEventId();
+    Identity getEventId();
 
-    UUID getAggregateId();
+    Identity getAggregateId();
 
     LocalDateTime getTimestamp();
 }

@@ -18,9 +18,10 @@ package odin.concepts.applicationservices;
 import java.util.UUID;
 
 import odin.concepts.common.IMessage;
+import odin.concepts.common.Identity;
 
 public interface ICommand extends IMessage {
-    UUID getTargetId();
+    Identity getTargetId();
 
     UUID getTargetVersion();
 }

@@ -13,31 +13,22 @@
  * limitations under the License.
  */
 
-package odin.example.readmodel;
+package odin.concepts.common;
 
-import odin.concepts.common.Identity;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class Person {
+public class Identity implements Serializable {
 
-    private final String name;
-    private final String ssn;
-    private final Identity id;
+    private static final long serialVersionUID = 1L;
+    final UUID id;
 
-    public String getSsn() {
-        return ssn;
+    public Identity() {
+        this.id = UUID.randomUUID();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Identity getId() {
-        return id;
-    }
-
-    public Person(Identity id, String name, String ssn) {
-        this.id = id;
-        this.name = name;
-        this.ssn = ssn;
+    @Override
+    public String toString() {
+        return id.toString();
     }
 }

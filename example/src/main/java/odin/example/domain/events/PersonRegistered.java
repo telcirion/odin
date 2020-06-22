@@ -15,8 +15,7 @@
 
 package odin.example.domain.events;
 
-import java.util.UUID;
-
+import odin.concepts.common.Identity;
 import odin.framework.AbstractDomainEvent;
 
 public class PersonRegistered extends AbstractDomainEvent {
@@ -24,7 +23,7 @@ public class PersonRegistered extends AbstractDomainEvent {
     private final String ssn;
     private final String name;
 
-    public PersonRegistered(UUID aggregateId, String ssn, String name) {
+    public PersonRegistered(Identity aggregateId, String ssn, String name) {
         super(aggregateId);
         this.ssn = ssn;
         this.name = name;

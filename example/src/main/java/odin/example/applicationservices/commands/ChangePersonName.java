@@ -17,6 +17,7 @@ package odin.example.applicationservices.commands;
 
 import java.util.UUID;
 
+import odin.concepts.common.Identity;
 import odin.framework.AbstractCommand;
 
 public class ChangePersonName extends AbstractCommand {
@@ -24,7 +25,7 @@ public class ChangePersonName extends AbstractCommand {
     private static final long serialVersionUID = 1L;
     private final String name;
 
-    public ChangePersonName(String name, UUID targetId, UUID targetVersion) {
+    public ChangePersonName(String name, Identity targetId, UUID targetVersion) {
         super(targetId, targetVersion);
         this.name = name;
     }

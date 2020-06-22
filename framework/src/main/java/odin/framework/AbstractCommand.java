@@ -18,20 +18,21 @@ package odin.framework;
 import java.util.UUID;
 
 import odin.concepts.applicationservices.ICommand;
+import odin.concepts.common.Identity;
 
 public abstract class AbstractCommand implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final UUID targetId;
+    private final Identity targetId;
     private final UUID targetVersion;
 
-    protected AbstractCommand(UUID targetId, UUID targetVersion) {
+    protected AbstractCommand(Identity targetId, UUID targetVersion) {
         this.targetId = targetId;
         this.targetVersion = targetVersion;
     }
 
     @Override
-    public UUID getTargetId() {
+    public Identity getTargetId() {
         return targetId;
     }
 

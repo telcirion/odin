@@ -2,24 +2,23 @@ package odin.framework;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.Identity;
 
 class AbstractAggregateRootTest {
     private static ConcreteAggregateRoot sut;
-    private static UUID aggregateId;
+    private static Identity aggregateId;
     private static final String testSSn = "1";
     private static final String firstTestName = "first";
     private static final String secondTestName = "second";
 
     @BeforeAll
     static void setUp() {
-        aggregateId = UUID.randomUUID();
+        aggregateId = new Identity();
         sut = new ConcreteAggregateRoot(aggregateId);
         sut.register(testSSn, firstTestName);
         sut.changeName(secondTestName);
@@ -30,7 +29,7 @@ class AbstractAggregateRootTest {
         private final String ssn;
         private final String name;
 
-        protected PersonRegistered(UUID aggregateId, String ssn, String name) {
+        protected PersonRegistered(Identity aggregateId, String ssn, String name) {
             super(aggregateId);
             this.ssn = ssn;
             this.name = name;
@@ -50,7 +49,7 @@ class AbstractAggregateRootTest {
         private static final long serialVersionUID = 1L;
         private final String name;
 
-        public PersonNameChanged(UUID aggregateId, String name) {
+        public PersonNameChanged(Identity aggregateId, String name) {
             super(aggregateId);
             this.name = name;
         }
@@ -73,7 +72,7 @@ class AbstractAggregateRootTest {
             return name;
         }
 
-        public ConcreteAggregateRoot(final UUID id) {
+        public ConcreteAggregateRoot(final Identity id) {
             super(id);
             this.name = null;
             this.ssn = null;

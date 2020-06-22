@@ -16,7 +16,6 @@
 package odin.example.applicationservices.processmanagers;
 
 import java.lang.invoke.MethodHandles;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,7 @@ import odin.concepts.applicationservices.IProcessManager;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
+import odin.concepts.common.Identity;
 import odin.example.applicationservices.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
@@ -49,7 +49,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
     private IMessageHandler handle(PersonSignUpReceived msg) {
         logger.info("Event {} received", msg.getClass().getSimpleName());
 
-        commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getSsn(), msg.getName()));
+        commandBus.send(new RegisterPerson(new Identity(), msg.getSsn(), msg.getName()));
         return this;
     }
 

@@ -15,8 +15,7 @@
 
 package odin.example.applicationservices.commands;
 
-import java.util.UUID;
-
+import odin.concepts.common.Identity;
 import odin.framework.AbstractCommand;
 
 public class RegisterPerson extends AbstractCommand {
@@ -25,11 +24,10 @@ public class RegisterPerson extends AbstractCommand {
     private final String name;
     private final String ssn;
 
-    public RegisterPerson(UUID targetId, String ssn, String name) {
+    public RegisterPerson(Identity targetId, String ssn, String name) {
         super(targetId, null);
         this.name = name;
         this.ssn = ssn;
-
     }
 
     public String getSsn() {

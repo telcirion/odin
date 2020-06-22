@@ -87,7 +87,7 @@ class SimpleDomainTest {
 
         // wait for name to be changed.
         // noinspection StatementWithEmptyBody
-        while (personDenormalizer.getNumberOfPersonNameChangedReceived() < 1){
+        while (personDenormalizer.getNumberOfPersonNameChangedReceived() < 1) {
             // do nothing, just wait.
         }
         logger.info("All DomainEvents (PersonNameChanged) were processed by the denormalizer.");

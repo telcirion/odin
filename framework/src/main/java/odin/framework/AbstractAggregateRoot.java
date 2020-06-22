@@ -17,17 +17,17 @@ package odin.framework;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
 
 public abstract class AbstractAggregateRoot implements IAggregateRoot {
 
     private final List<IDomainEvent> addedEvents;
-    private final UUID id;
+    private final Identity id;
     
-    protected AbstractAggregateRoot(UUID id) {
+    protected AbstractAggregateRoot(Identity id) {
         this.id = id;
         this.addedEvents = new ArrayList<>();
     }
@@ -44,7 +44,7 @@ public abstract class AbstractAggregateRoot implements IAggregateRoot {
     }
 
     @Override
-    public UUID getId() {
+    public Identity getId() {
         return id;
     }
 }

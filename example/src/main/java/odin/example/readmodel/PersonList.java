@@ -17,23 +17,22 @@ package odin.example.readmodel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class PersonList {
-    private final Map<UUID, Person> persons = new HashMap<>();
+    private final Map<String, Person> persons = new HashMap<>();
 
     public void add(Person person) {
         synchronized (this) {
-            this.persons.put(person.getId(), person);
+            this.persons.put(person.getId().toString(), person);
         }
     }
 
     public void updateName(Person person) {
         synchronized (this) {
 
-            Person oldPerson = this.persons.get(person.getId());
+            Person oldPerson = this.persons.get(person.getId().toString());
             Person newPerson = new Person(person.getId(), person.getName(), oldPerson.getSsn());
-            this.persons.replace(person.getId(), newPerson);
+            this.persons.replace(person.getId().toString(), newPerson);
         }
     }
 

@@ -12,7 +12,7 @@ class SimpleMessageBusTest implements IMessageHandler, IMessage {
     private boolean msgHandled = false;
 
     @Test
-    public void verySimpleMessageBusTest() {
+    void verySimpleMessageBusTest() {
         var sut = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
         sut.consume(this);
         sut.send(this);

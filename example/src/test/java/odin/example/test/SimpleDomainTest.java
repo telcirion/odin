@@ -15,7 +15,7 @@
 
 package odin.example.test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.invoke.MethodHandles;
 
@@ -100,6 +100,6 @@ class SimpleDomainTest {
 
         eventBus.stop();
         commandBus.stop();
-        assertTrue(anotherPersonQueryResult.getPerson().getName().equals("Nico"));
+        assertEquals("Nico", anotherPersonQueryResult.getPerson().getName());
     }
 }

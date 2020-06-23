@@ -13,7 +13,7 @@ class CommandInfoTest {
 
 
     @Test
-    public void testAllOfAbstractCommand() {
+    void testAllOfAbstractCommand() {
         Identity targetId = new Identity();
         UUID targetVersion = UUID.randomUUID();
         ICommandInfo sut = new CommandInfo(targetId, targetVersion);

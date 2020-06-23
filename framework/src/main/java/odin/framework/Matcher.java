@@ -27,7 +27,7 @@ public class Matcher<Z> {
 
     public <T> Matcher<Z> match(final Class<T> msgClazz, final IMessageAction<T,Z> msgAction, final IMessage msg) {
         if (msgClazz.isInstance(msg)) {
-            return new Matcher<Z>(msgAction.executeAction(msgClazz.cast(msg)));
+            return new Matcher<>(msgAction.executeAction(msgClazz.cast(msg)));
         }
         return this;
     }

@@ -20,7 +20,7 @@ import odin.framework.TestCommand;
 
 class SqlEventRepositoryTest {
     @Test
-    public void sqlEventRepositoryTest() {
+    void sqlEventRepositoryTest() {
 
         var sut = new SqlEventRepository(new TestDataSource(), new TestBus());
         sut.createDatabase();

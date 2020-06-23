@@ -15,15 +15,16 @@
 
 package odin.example.domain.state;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.IAggregateRoot;
+import odin.concepts.domainmodel.ICommand;
+import odin.concepts.domainmodel.IDomainEvent;
+import odin.example.domain.commands.ChangePersonName;
+import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
-import odin.framework.AbstractAggregateRoot;
 import odin.framework.Matcher;
 
-public class Person extends AbstractAggregateRoot {
+public class Person implements IAggregateRoot {
 
     private String name;
     private String ssn;
@@ -36,13 +37,12 @@ public class Person extends AbstractAggregateRoot {
         return name;
     }
 
-    public Person(final Identity id) {
-        super(id);
+    public Person() {
         this.name = null;
         this.ssn = null;
     }
 
-    private Person registered(final PersonRegistered event) {     
+    private Person registered(final PersonRegistered event) {
         this.name = event.getName();
         this.ssn = event.getSsn();
         return this;
@@ -53,17 +53,25 @@ public class Person extends AbstractAggregateRoot {
         return this;
     }
 
-    public void register(final String ssn, final String name) {
-        this.applyEvent(new PersonRegistered(getId(), ssn, name));
+    public IDomainEvent register(RegisterPerson command) {
+        return new PersonRegistered(command.getCommandInfo().getTargetId(), command.getSsn(), command.getName());
     }
 
-    public void changeName(final String name) {
-        this.applyEvent(new PersonNameChanged(getId(), name));
+    public IDomainEvent changeName(ChangePersonName command) {
+        return new PersonNameChanged(command.getCommandInfo().getTargetId(), command.getName());
     }
 
     @Override
-    public IMessageHandler handle(IMessage msg) {
-        return new Matcher(this).match(PersonRegistered.class, this::registered, msg)
+    public IDomainEvent process(ICommand command) {
+        var event = new Matcher<IDomainEvent>(null).match(RegisterPerson.class, this::register, command)
+                .match(ChangePersonName.class, this::changeName, command).result();
+        source(event);
+        return event;
+    }
+
+    @Override
+    public IAggregateRoot source(IDomainEvent msg) {
+        return new Matcher<>(this).match(PersonRegistered.class, this::registered, msg)
                 .match(PersonNameChanged.class, this::changedName, msg).result();
 
     }

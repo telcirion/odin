@@ -13,28 +13,10 @@
  * limitations under the License.
  */
 
-package odin.example.applicationservices.commands;
+package odin.concepts.domainmodel;
 
-import odin.concepts.common.Identity;
-import odin.framework.AbstractCommand;
+import odin.concepts.common.IMessage;
 
-public class RegisterPerson extends AbstractCommand {
-
-    private static final long serialVersionUID = 1L;
-    private final String name;
-    private final String ssn;
-
-    public RegisterPerson(Identity targetId, String ssn, String name) {
-        super(targetId, null);
-        this.name = name;
-        this.ssn = ssn;
-    }
-
-    public String getSsn() {
-        return ssn;
-    }
-
-    public String getName() {
-        return name;
-    }
+public interface ICommand extends IMessage {
+    ICommandInfo getCommandInfo();
 }

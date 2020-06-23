@@ -20,50 +20,52 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.ICommand;
 import odin.concepts.applicationservices.ICommandHandler;
 import odin.concepts.applicationservices.IRepository;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
-import odin.example.applicationservices.commands.ChangePersonName;
-import odin.example.applicationservices.commands.RegisterPerson;
+import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.ICommand;
+import odin.example.domain.commands.ChangePersonName;
+import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
+import odin.framework.Aggregate;
 import odin.framework.Matcher;
 
 public class PersonCommandHandler implements ICommandHandler {
 
-    private final IRepository<Person> personRepository;
+    private final IRepository personRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public PersonCommandHandler(IRepository<Person> personRepository) {
+    public PersonCommandHandler(IRepository personRepository) {
         this.personRepository = personRepository;
     }
 
     private ICommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
-        Person p = new Person(registerPerson.getTargetId());
-        p.register(registerPerson.getSsn(), registerPerson.getName());
+        var p = new Aggregate<>(new Identity(), new Person());
+        p.process(registerPerson);
         personRepository.save(p);
         return this;
     }
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        Person p = personRepository.load(new Person(changePersonName.getTargetId()));
-        p.changeName(changePersonName.getName());
+        var p = personRepository.load(new Aggregate<>(changePersonName.getCommandInfo().getTargetId(), new Person()));
+        p.process(changePersonName);
         personRepository.save(p);
         return this;
     }
 
     @Override
     public IMessageHandler handle(IMessage msg) {
-        return new Matcher(this).match(RegisterPerson.class, this::handle, msg)
+        return new Matcher<ICommandHandler>(this).match(RegisterPerson.class, this::handle, msg)
                 .match(ChangePersonName.class, this::handle, msg).result();
     }
 
     private void log(ICommand command) {
         LOGGER.info("Command {} received for aggregateId: {}, revision: {}", command.getClass().getSimpleName(),
-                command.getTargetId(), command.getTargetVersion());
+                command.getCommandInfo().getTargetId(), command.getCommandInfo().getTargetVersion());
     }
 }

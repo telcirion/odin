@@ -1,11 +1,11 @@
 /* Copyright 2019 Peter Jansen
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,36 +15,35 @@
 
 package odin.framework;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.IDomainEventInfo;
 
-public abstract class AbstractAggregateRoot implements IAggregateRoot {
+public class DomainEventInfo implements IDomainEventInfo {
 
-    private final List<IDomainEvent> addedEvents;
-    private final Identity id;
-    
-    protected AbstractAggregateRoot(Identity id) {
-        this.id = id;
-        this.addedEvents = new ArrayList<>();
+    private static final long serialVersionUID = 1L;
+    private final Identity id = new Identity();
+    private final Identity aggregateId;
+    private final LocalDateTime timestamp;
+
+    public DomainEventInfo(Identity aggregateId) {
+        this.aggregateId = aggregateId;
+        this.timestamp = LocalDateTime.now();
     }
 
     @Override
-    public List<IDomainEvent> getAddedEvents() {
-        return addedEvents;
-    }
-
-    @Override
-    public void applyEvent(IDomainEvent event) {
-        this.addedEvents.add(event);
-        this.handle(event);
-    }
-
-    @Override
-    public Identity getId() {
+    public Identity getEventId() {
         return id;
+    }
+
+    @Override
+    public Identity getAggregateId() {
+        return aggregateId;
+    }
+
+    @Override
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 }

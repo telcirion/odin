@@ -13,37 +13,36 @@
  * limitations under the License.
  */
 
-package odin.framework;
-
-import java.time.LocalDateTime;
+package odin.example.domain.commands;
 
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.ICommand;
+import odin.concepts.domainmodel.ICommandInfo;
+import odin.framework.CommandInfo;
 
-public abstract class AbstractDomainEvent implements IDomainEvent {
+public class RegisterPerson implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final Identity id = new Identity();
-    private final Identity aggregateId;
-    private final LocalDateTime timestamp;
+    private final CommandInfo commandInfo;
+    private final String name;
+    private final String ssn;
 
-    protected AbstractDomainEvent(Identity aggregateId) {
-        this.aggregateId = aggregateId;
-        this.timestamp = LocalDateTime.now();
+    public RegisterPerson(Identity targetId, String ssn, String name) {
+        commandInfo = new CommandInfo(targetId, null);
+        this.name = name;
+        this.ssn = ssn;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
-    public Identity getEventId() {
-        return id;
-    }
-
-    @Override
-    public Identity getAggregateId() {
-        return aggregateId;
-    }
-
-    @Override
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public ICommandInfo getCommandInfo() {
+        return commandInfo;
     }
 }

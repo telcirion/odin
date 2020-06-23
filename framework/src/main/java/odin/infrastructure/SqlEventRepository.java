@@ -41,11 +41,12 @@ import org.slf4j.LoggerFactory;
 
 import odin.concepts.applicationservices.IRepository;
 import odin.concepts.common.ISendMessage;
+import odin.concepts.domainmodel.IAggregate;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
 import odin.concepts.infra.IDataSource;
 
-public class SqlEventRepository<T extends IAggregateRoot> implements IRepository<T> {
+public class SqlEventRepository implements IRepository {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -90,20 +91,21 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         final Gson gson = gsonBuilder.create();
         b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getEventId()).append("','").append(s.getAggregateId().toString()).append("','")
-                .append(s.getTimestamp()).append("','").append(s.getClass().getName()).append("','")
-                .append(gson.toJson(s)).append("');\r\n");
+                .append(s.getDomainEventInfo().getEventId()).append("','")
+                .append(s.getDomainEventInfo().getAggregateId().toString()).append("','")
+                .append(s.getDomainEventInfo().getTimestamp()).append("','").append(s.getClass().getName())
+                .append("','").append(gson.toJson(s)).append("');\r\n");
         return b.toString();
     }
 
     @Override
-    public T load(T aggregate) {
+    public <K extends IAggregate<? extends IAggregateRoot>> K load(K aggregate) {
         final List<IDomainEvent> resultSet = getEventList(aggregate);
-        resultSet.forEach(aggregate::handle);
+        resultSet.forEach(aggregate::source);
         return aggregate;
     }
 
-    private List<IDomainEvent> getEventList(final IAggregateRoot aggregate) {
+    private List<IDomainEvent> getEventList(final IAggregate<?> aggregate) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         final ArrayList<IDomainEvent> eventList = new ArrayList<>();
@@ -158,7 +160,7 @@ public class SqlEventRepository<T extends IAggregateRoot> implements IRepository
     }
 
     @Override
-    public void save(T obj) {
+    public <K extends IAggregate<? extends IAggregateRoot>> void save(K obj) {
         obj.getAddedEvents().forEach(e -> {
             executeSqlUpdate(generateInsert(e));
             eventBus.send(e);

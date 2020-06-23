@@ -16,15 +16,18 @@
 package odin.example.domain.events;
 
 import odin.concepts.common.Identity;
-import odin.framework.AbstractDomainEvent;
+import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.IDomainEventInfo;
+import odin.framework.DomainEventInfo;
 
-public class PersonRegistered extends AbstractDomainEvent {
+public class PersonRegistered implements IDomainEvent {
     private static final long serialVersionUID = 1L;
+    private final DomainEventInfo domainEventInfo;
     private final String ssn;
     private final String name;
 
     public PersonRegistered(Identity aggregateId, String ssn, String name) {
-        super(aggregateId);
+        domainEventInfo = new DomainEventInfo(aggregateId);
         this.ssn = ssn;
         this.name = name;
     }
@@ -35,5 +38,10 @@ public class PersonRegistered extends AbstractDomainEvent {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public IDomainEventInfo getDomainEventInfo() {
+        return domainEventInfo;
     }
 }

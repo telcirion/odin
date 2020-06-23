@@ -24,14 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
-import odin.example.applicationservices.commands.ChangePersonName;
 import odin.example.applicationservices.denormalizers.PersonDenormalizer;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
 import odin.example.applicationservices.queries.PersonByNameQuery;
 import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
+import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
-import odin.example.domain.state.Person;
 import odin.infrastructure.SimpleMessageBus;
 import odin.infrastructure.SqlEventRepository;
 
@@ -44,7 +43,7 @@ class SimpleDomainTest {
         final SimpleMessageBus eventBus = new SimpleMessageBus(SimpleMessageBus.BusType.TOPIC);
         final SimpleMessageBus commandBus = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
 
-        SqlEventRepository<Person> personRepository = new SqlEventRepository<>(new TestDataSource(), eventBus);
+        SqlEventRepository personRepository = new SqlEventRepository(new TestDataSource(), eventBus);
         personRepository.createDatabase(); // it's only signUpPersonProcessManager test
 
         // start processManager

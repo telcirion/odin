@@ -15,16 +15,19 @@
 
 package odin.example.domain.events;
 
-import odin.framework.AbstractDomainEvent;
+import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.IDomainEventInfo;
+import odin.framework.DomainEventInfo;
 
-public class PersonSignUpReceived extends AbstractDomainEvent {
+public class PersonSignUpReceived implements IDomainEvent {
 
     private static final long serialVersionUID = 1L;
+    private final DomainEventInfo domainEventInfo;
     private final String ssn;
     private final String name;
 
     public PersonSignUpReceived(String ssn, String name) {
-        super(null);
+        domainEventInfo = new DomainEventInfo(null);
         this.ssn = ssn;
         this.name = name;
     }
@@ -37,4 +40,8 @@ public class PersonSignUpReceived extends AbstractDomainEvent {
         return ssn;
     }
 
+    @Override
+    public IDomainEventInfo getDomainEventInfo() {
+        return domainEventInfo;
+    }
 }

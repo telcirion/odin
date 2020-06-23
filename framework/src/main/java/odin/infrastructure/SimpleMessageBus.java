@@ -26,7 +26,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.IConsumeMessage;
+import odin.concepts.common.IConsumeMessage;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;

@@ -15,15 +15,8 @@
 
 package odin.concepts.domainmodel;
 
-import java.util.List;
+public interface IAggregateRoot {
+    IDomainEvent process(ICommand command);
 
-import odin.concepts.common.IMessageHandler;
-import odin.concepts.common.Identity;
-
-public interface IAggregateRoot extends IMessageHandler {
-    Identity getId();
-
-    List<IDomainEvent> getAddedEvents();
-
-    void applyEvent(IDomainEvent event);
+    IAggregateRoot source(IDomainEvent event);
 }

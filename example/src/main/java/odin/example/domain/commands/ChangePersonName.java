@@ -13,31 +13,32 @@
  * limitations under the License.
  */
 
-package odin.framework;
+package odin.example.domain.commands;
 
 import java.util.UUID;
 
-import odin.concepts.applicationservices.ICommand;
 import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.ICommand;
+import odin.concepts.domainmodel.ICommandInfo;
+import odin.framework.CommandInfo;
 
-public abstract class AbstractCommand implements ICommand {
+public class ChangePersonName implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final Identity targetId;
-    private final UUID targetVersion;
+    private final String name;
+    private final CommandInfo commandInfo;
 
-    protected AbstractCommand(Identity targetId, UUID targetVersion) {
-        this.targetId = targetId;
-        this.targetVersion = targetVersion;
+    public ChangePersonName(String name, Identity targetId, UUID targetVersion) {
+        commandInfo = new CommandInfo(targetId, targetVersion);
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Override
-    public Identity getTargetId() {
-        return targetId;
-    }
-
-    @Override
-    public UUID getTargetVersion() {
-        return targetVersion;
+    public ICommandInfo getCommandInfo() {
+        return commandInfo;
     }
 }

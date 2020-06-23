@@ -15,15 +15,8 @@
 
 package odin.concepts.domainmodel;
 
-import java.time.LocalDateTime;
-
 import odin.concepts.common.IMessage;
-import odin.concepts.common.Identity;
 
 public interface IDomainEvent extends IMessage {
-    Identity getEventId();
-
-    Identity getAggregateId();
-
-    LocalDateTime getTimestamp();
+    IDomainEventInfo getDomainEventInfo();
 }

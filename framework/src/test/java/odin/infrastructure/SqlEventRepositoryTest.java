@@ -11,56 +11,25 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.Test;
 
 import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.common.Identity;
 import odin.concepts.infra.IDataSource;
-import odin.framework.AbstractAggregateRoot;
-import odin.framework.AbstractDomainEvent;
-import odin.framework.Matcher;
+import odin.framework.Aggregate;
+import odin.framework.TestAggregateRoot;
+import odin.framework.TestCommand;
 
 class SqlEventRepositoryTest {
     @Test
     public void sqlEventRepositoryTest() {
 
-        var sut = new SqlEventRepository<TestAggregate>(new TestDataSource(), new TestBus());
+        var sut = new SqlEventRepository(new TestDataSource(), new TestBus());
         sut.createDatabase();
         var id = new Identity();
-        var saveAggregate = new TestAggregate(id);
-        saveAggregate.applyEvent(new Msg(id, "test"));
+        var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());
+        saveAggregate.process(new TestCommand(id, null, "value 1"));
         sut.save(saveAggregate);
-        TestAggregate loadAggregate = sut.load(new TestAggregate(id));
-        assertEquals(saveAggregate.testField, loadAggregate.testField);
-    }
-
-    private class Msg extends AbstractDomainEvent {
-        private static final long serialVersionUID = 1L;
-        public final String testField;
-
-        protected Msg(Identity aggregateId, String testField) {
-            super(aggregateId);
-            this.testField = testField;
-        }
-    }
-
-    private class TestAggregate extends AbstractAggregateRoot {
-
-        public String testField;
-
-        protected TestAggregate(Identity id) {
-            super(id);
-        }
-
-        private TestAggregate setTestField(Msg msg) {
-            this.testField = msg.testField;
-            return this;
-        }
-
-        @Override
-        public IMessageHandler handle(IMessage msg) {
-            return new Matcher(this).match(Msg.class, this::setTestField, msg).result();
-        }
-
+        var loadAggregate = sut.load(new Aggregate<>(id, new TestAggregateRoot()));
+        assertEquals(saveAggregate.getAggrageRoot().getTestField(), loadAggregate.getAggrageRoot().getTestField());
     }
 
     private static class TestDataSource implements IDataSource {

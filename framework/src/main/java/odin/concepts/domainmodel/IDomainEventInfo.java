@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,17 @@
  * limitations under the License.
  */
 
-package odin.concepts.common;
+package odin.concepts.domainmodel;
 
-public interface ISendMessage {
-    void send(IMessage m);
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import odin.concepts.common.Identity;
+
+public interface IDomainEventInfo extends Serializable {
+    Identity getEventId();
+
+    Identity getAggregateId();
+
+    LocalDateTime getTimestamp();
 }

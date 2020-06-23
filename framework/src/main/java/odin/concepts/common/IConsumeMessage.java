@@ -15,6 +15,8 @@
 
 package odin.concepts.common;
 
-public interface ISendMessage {
-    void send(IMessage m);
+public interface IConsumeMessage {
+    void consume(IMessageHandler messageHandler);
+    
+    void stop();
 }

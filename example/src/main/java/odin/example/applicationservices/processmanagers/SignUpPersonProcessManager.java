@@ -25,7 +25,7 @@ import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.common.Identity;
-import odin.example.applicationservices.commands.RegisterPerson;
+import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.framework.Matcher;
@@ -42,7 +42,7 @@ public class SignUpPersonProcessManager implements IProcessManager {
 
     @Override
     public IMessageHandler handle(IMessage msg) {
-        return new Matcher(this).match(PersonSignUpReceived.class, this::handle, msg)
+        return new Matcher<IMessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
                 .match(PersonRegistered.class, this::handle, msg).result();
     }
 

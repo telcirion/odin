@@ -100,6 +100,9 @@ class SimpleDomainTest {
 
         eventBus.stop();
         commandBus.stop();
+
         assertEquals("Nico", anotherPersonQueryResult.getPerson().getName());
+        // Peter should no longer be found
+        assertEquals(null, queryHandler.query(new PersonByNameQuery("Peter")).getPerson());
     }
 }

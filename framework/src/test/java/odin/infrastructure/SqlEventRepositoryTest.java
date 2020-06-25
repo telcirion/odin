@@ -29,7 +29,7 @@ class SqlEventRepositoryTest {
         saveAggregate.process(new TestCommand(id, null, "value 1"));
         sut.save(saveAggregate);
         var loadAggregate = sut.load(new Aggregate<>(id, new TestAggregateRoot()));
-        assertEquals(saveAggregate.getAggrageRoot().getTestField(), loadAggregate.getAggrageRoot().getTestField());
+        assertEquals(saveAggregate.getAggrateRoot().getTestField(), loadAggregate.getAggrateRoot().getTestField());
     }
 
     private static class TestDataSource implements IDataSource {

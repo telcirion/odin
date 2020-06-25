@@ -7,15 +7,16 @@ import org.junit.jupiter.api.Test;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 
-class SimpleMessageBusTest implements IMessageHandler, IMessage {
-    private static final long serialVersionUID = 1L;
+class SimpleMessageBusTest implements IMessageHandler {
     private boolean msgHandled = false;
 
     @Test
     void verySimpleMessageBusTest() {
         var sut = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
-        sut.consume(this);
-        sut.send(this);
+        sut.subscribe(this);
+        sut.send(new IMessage() {
+            private static final long serialVersionUID = 1L;
+        });
         // noinspection StatementWithEmptyBody
         while (!isMsgHandled()){
             // just wait;

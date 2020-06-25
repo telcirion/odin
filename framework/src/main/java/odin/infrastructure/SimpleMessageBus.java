@@ -26,12 +26,12 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.common.IConsumeMessage;
+import odin.concepts.common.IPublishMessage;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.ISendMessage;
 
-public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
+public class SimpleMessageBus implements ISendMessage, IPublishMessage {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final String endpoint;
@@ -66,7 +66,7 @@ public class SimpleMessageBus implements ISendMessage, IConsumeMessage {
     }
 
     @Override
-    public void consume(IMessageHandler messageHandler) {
+    public void subscribe(IMessageHandler messageHandler) {
         RouteBuilder builder = new RouteBuilder() {
             public void configure() {
                 errorHandler(deadLetterChannel("mock:error"));

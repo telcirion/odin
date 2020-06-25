@@ -24,7 +24,7 @@ class AggregateTest {
 
     @Test
     void getAggregateRoot() {
-        assertEquals(aggregateRoot, sut.getAggrageRoot());
+        assertEquals(aggregateRoot, sut.getAggrateRoot());
     }
 
     @Test

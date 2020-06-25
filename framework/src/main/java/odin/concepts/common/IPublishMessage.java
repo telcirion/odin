@@ -15,8 +15,8 @@
 
 package odin.concepts.common;
 
-public interface IConsumeMessage {
-    void consume(IMessageHandler messageHandler);
+public interface IPublishMessage {
+    void subscribe(IMessageHandler messageHandler);
     
     void stop();
 }

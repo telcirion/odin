@@ -48,7 +48,7 @@ public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
     }
 
     @Override
-    public T getAggrageRoot() {
+    public T getAggrateRoot() {
         return aggregateRoot;
     }
 

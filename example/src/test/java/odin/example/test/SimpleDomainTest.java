@@ -48,16 +48,16 @@ class SimpleDomainTest {
 
         // start processManager
         SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
-        eventBus.consume(signUpPersonProcessManager);
+        eventBus.subscribe(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
 
         // start denormalizer
         PersonDenormalizer personDenormalizer = new PersonDenormalizer();
-        eventBus.consume(personDenormalizer);
+        eventBus.subscribe(personDenormalizer);
         logger.info("Denormalizer created, wait for processing.");
 
         // start commandHandler
-        commandBus.consume(new PersonCommandHandler(personRepository));
+        commandBus.subscribe(new PersonCommandHandler(personRepository));
         logger.info("CommandHandler created, wait for processing.");
 
         // send first event

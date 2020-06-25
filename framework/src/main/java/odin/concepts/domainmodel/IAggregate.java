@@ -20,7 +20,7 @@ import java.util.List;
 import odin.concepts.common.Identity;
 
 public interface IAggregate<T extends IAggregateRoot> extends IAggregateRoot {
-    public T getAggrageRoot();
+    public T getAggrateRoot();
 
     public List<IDomainEvent> getAddedEvents();
 

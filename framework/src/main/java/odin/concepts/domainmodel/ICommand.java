@@ -18,5 +18,4 @@ package odin.concepts.domainmodel;
 import odin.concepts.common.IMessage;
 
 public interface ICommand extends IMessage {
-    ICommandInfo getCommandInfo();
 }

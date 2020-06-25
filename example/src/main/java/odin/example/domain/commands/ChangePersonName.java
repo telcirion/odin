@@ -17,19 +17,19 @@ package odin.example.domain.commands;
 
 import java.util.UUID;
 
+import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
-import odin.concepts.domainmodel.ICommandInfo;
-import odin.framework.CommandInfo;
+import odin.framework.MessageInfo;
 
 public class ChangePersonName implements ICommand {
 
     private static final long serialVersionUID = 1L;
     private final String name;
-    private final CommandInfo commandInfo;
+    private final MessageInfo commandInfo;
 
     public ChangePersonName(String name, Identity targetId, UUID targetVersion) {
-        commandInfo = new CommandInfo(targetId, targetVersion);
+        commandInfo = new MessageInfo(targetId, targetVersion);
         this.name = name;
     }
 
@@ -38,7 +38,7 @@ public class ChangePersonName implements ICommand {
     }
 
     @Override
-    public ICommandInfo getCommandInfo() {
+    public IMessageInfo getMessageInfo() {
         return commandInfo;
     }
 }

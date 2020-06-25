@@ -26,9 +26,9 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.common.IPublishMessage;
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.IPublishMessage;
 import odin.concepts.common.ISendMessage;
 
 public class SimpleMessageBus implements ISendMessage, IPublishMessage {

@@ -3,31 +3,41 @@ package odin.framework;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IDomainEventInfo;
 
-class DomainEventInfoTest {
-    private static IDomainEventInfo sut;
+class MessageInfoTest {
+    private static IMessageInfo sut;
     private static Identity aggregateId;
+    private static UUID aggregateVersion;
+
 
     @BeforeAll
     static void setUp() {
         aggregateId = new Identity();
-        sut = new DomainEventInfo(aggregateId);
+        aggregateVersion = UUID.randomUUID();
+        sut = new MessageInfo(aggregateId, aggregateVersion);
     }
 
 
     @Test
     void getEventId() {
-        assertNotNull(sut.getEventId());
+        assertNotNull(sut.getMessageId());
     }
 
     @Test
-    void getAggregateId() {
-        assertEquals(aggregateId, sut.getAggregateId());
+    void getSubjectId() {
+        assertEquals(aggregateId, sut.getSubjectId());
+    }
+
+    @Test
+    void getSubjectVersion() {
+        assertEquals(aggregateVersion, sut.geSubjectVersion());
     }
 
     @Test

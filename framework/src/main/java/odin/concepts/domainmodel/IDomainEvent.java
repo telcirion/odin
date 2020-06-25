@@ -18,5 +18,4 @@ package odin.concepts.domainmodel;
 import odin.concepts.common.IMessage;
 
 public interface IDomainEvent extends IMessage {
-    IDomainEventInfo getDomainEventInfo();
 }

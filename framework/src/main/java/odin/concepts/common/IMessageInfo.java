@@ -13,17 +13,18 @@
  * limitations under the License.
  */
 
-package odin.concepts.domainmodel;
+package odin.concepts.common;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-import odin.concepts.common.Identity;
+public interface IMessageInfo extends Serializable {
+    Identity getMessageId();
 
-public interface IDomainEventInfo extends Serializable {
-    Identity getEventId();
+    Identity getSubjectId();
 
-    Identity getAggregateId();
+    UUID geSubjectVersion();
 
     LocalDateTime getTimestamp();
 }

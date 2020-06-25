@@ -15,29 +15,43 @@
 
 package odin.framework;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.ICommandInfo;
 
-public class CommandInfo implements ICommandInfo {
+public class MessageInfo implements IMessageInfo {
 
     private static final long serialVersionUID = 1L;
-    private final Identity targetId;
-    private final UUID targetVersion;
+    private final Identity id = new Identity();
+    private final Identity subjectId;
+    private final LocalDateTime timestamp;
+    private final UUID subjectVersion;
 
-    public CommandInfo(Identity targetId, UUID targetVersion) {
-        this.targetId = targetId;
-        this.targetVersion = targetVersion;
+    public MessageInfo(Identity subjectId, UUID subjectVersion) {
+        this.subjectId = subjectId;
+        this.subjectVersion = subjectVersion;
+        this.timestamp = LocalDateTime.now();
     }
 
     @Override
-    public Identity getTargetId() {
-        return targetId;
+    public Identity getMessageId() {
+        return id;
     }
 
     @Override
-    public UUID getTargetVersion() {
-        return targetVersion;
+    public Identity getSubjectId() {
+        return subjectId;
+    }
+
+    @Override
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public UUID geSubjectVersion() {
+        return subjectVersion;
     }
 }

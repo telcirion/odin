@@ -91,9 +91,9 @@ public class SqlEventRepository implements IRepository {
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         final Gson gson = gsonBuilder.create();
         b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getDomainEventInfo().getEventId()).append("','")
-                .append(s.getDomainEventInfo().getAggregateId().toString()).append("','")
-                .append(s.getDomainEventInfo().getTimestamp()).append("','").append(s.getClass().getName())
+                .append(s.getMessageInfo().getMessageId()).append("','")
+                .append(s.getMessageInfo().getSubjectId().toString()).append("','")
+                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName())
                 .append("','").append(gson.toJson(s)).append("');\r\n");
         return b.toString();
     }

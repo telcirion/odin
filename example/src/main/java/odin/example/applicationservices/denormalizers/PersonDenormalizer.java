@@ -51,7 +51,7 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
 
     private IDenormalizer<PersonList> handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
-        Person person = new Person(personRegistered.getDomainEventInfo().getAggregateId(), personRegistered.getName(),
+        Person person = new Person(personRegistered.getMessageInfo().getSubjectId(), personRegistered.getName(),
                 personRegistered.getSsn());
         personList.add(person);
         synchronized (this) {
@@ -62,7 +62,7 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
 
     private IDenormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
-        Person person = new Person(personNameChanged.getDomainEventInfo().getAggregateId(), personNameChanged.getName(),
+        Person person = new Person(personNameChanged.getMessageInfo().getSubjectId(), personNameChanged.getName(),
                 null);
         personList.updateName(person);
         synchronized (this) {
@@ -79,7 +79,7 @@ public class PersonDenormalizer implements IDenormalizer<PersonList> {
 
     private void log(IDomainEvent event) {
         LOGGER.info("DomainEvent {} received for aggregateId: {}", event.getClass().getSimpleName(),
-                event.getDomainEventInfo().getAggregateId());
+                event.getMessageInfo().getSubjectId());
     }
 
     @Override

@@ -15,20 +15,20 @@
 
 package odin.example.domain.commands;
 
+import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
-import odin.concepts.domainmodel.ICommandInfo;
-import odin.framework.CommandInfo;
+import odin.framework.MessageInfo;
 
 public class RegisterPerson implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final CommandInfo commandInfo;
+    private final MessageInfo commandInfo;
     private final String name;
     private final String ssn;
 
     public RegisterPerson(Identity targetId, String ssn, String name) {
-        commandInfo = new CommandInfo(targetId, null);
+        commandInfo = new MessageInfo(targetId, null);
         this.name = name;
         this.ssn = ssn;
     }
@@ -42,7 +42,7 @@ public class RegisterPerson implements ICommand {
     }
 
     @Override
-    public ICommandInfo getCommandInfo() {
+    public IMessageInfo getMessageInfo() {
         return commandInfo;
     }
 }

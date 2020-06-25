@@ -47,14 +47,17 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     private IMessageHandler handle(PersonSignUpReceived msg) {
-        logger.info("Event {} received", msg.getClass().getSimpleName());
-
+        logReception(msg);
         commandBus.send(new RegisterPerson(new Identity(), msg.getSsn(), msg.getName()));
         return this;
     }
 
     private IMessageHandler handle(PersonRegistered msg) {
-        logger.info("Event {} received", msg.getClass().getSimpleName());
+        logReception(msg);
         return this;
+    }
+
+    private void logReception(IMessage msg) {
+        logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getMessageInfo().getTimestamp());
     }
 }

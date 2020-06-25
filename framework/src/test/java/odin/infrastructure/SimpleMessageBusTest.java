@@ -14,9 +14,7 @@ class SimpleMessageBusTest implements IMessageHandler {
     void verySimpleMessageBusTest() {
         var sut = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
         sut.subscribe(this);
-        sut.send(new IMessage() {
-            private static final long serialVersionUID = 1L;
-        });
+        sut.send(new TestMessage());
         // noinspection StatementWithEmptyBody
         while (!isMsgHandled()){
             // just wait;

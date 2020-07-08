@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/telcirion/Playground/_apis/build/status/telcirion.odin?branchName=master)](https://dev.azure.com/telcirion/Playground/_build/latest?definitionId=10&branchName=master)
+[![Build Status](https://github.com/telcirion/odin/workflows/Build%20Java%20CI%20with%20Maven/badge.svg)](https://github.com/telcirion/odin/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=coverage)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=telcirion/odin)](https://dependabot.com)
 # ODIN-Framework

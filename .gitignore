@@ -1,14 +1,36 @@
-/nb-configuration.xml
-/**/target/
-/.idea/
-*.iml
-*.project
-*.classpath
+# Eclipse
+.project
+.classpath
 .settings/
+bin/
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+
+# NetBeans
 nb-configuration.xml
-/**/nbproject/
-/**/activemq-data/
-/**/testdb
-/**/.vscode/
-/**/dependency-reduced-pom.xml
-/**/.factorypath
+
+# Visual Studio Code
+.vscode
+.factorypath
+
+# OSX
+.DS_Store
+
+# Vim
+*.swp
+*.swo
+
+# patch
+*.orig
+*.rej
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties

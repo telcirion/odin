@@ -3,12 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>odin</artifactId>
     <groupId>org.example</groupId>
+    <artifactId>odin</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <groupId>org.example</groupId>
-  <artifactId>example-service</artifactId>
+  <artifactId>odin-example-service</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
     <quarkus-plugin.version>1.5.2.Final</quarkus-plugin.version>
@@ -42,6 +42,15 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>odin-example</artifactId>
+      <version>1.0-SNAPSHOT</version>
+  </dependency>
   </dependencies>
   <build>
     <plugins>

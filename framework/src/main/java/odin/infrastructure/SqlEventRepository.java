@@ -59,21 +59,10 @@ public class SqlEventRepository implements IRepository {
     }
 
     private void executeSqlUpdate(final String sqlString) {
-        Statement statement = null;
-        try {
-            statement = ds.getConnection().createStatement();
+        try (Statement statement = ds.getConnection().createStatement()) {
             statement.executeUpdate(sqlString);
         } catch (final SQLException ex) {
             logger.error(ex.getMessage());
-
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (final SQLException ex) {
-                logger.error(ex.getMessage());
-            }
         }
     }
 
@@ -93,53 +82,36 @@ public class SqlEventRepository implements IRepository {
         b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
                 .append(s.getMessageInfo().getMessageId()).append("','")
                 .append(s.getMessageInfo().getSubjectId().toString()).append("','")
-                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName())
-                .append("','").append(gson.toJson(s)).append("');\r\n");
+                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName()).append("','")
+                .append(gson.toJson(s)).append("');\r\n");
         return b.toString();
     }
 
     @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> K load(K aggregate) {
+    public <K extends IAggregate<? extends IAggregateRoot>> K load(final K aggregate) {
         final List<IDomainEvent> resultSet = getEventList(aggregate);
         resultSet.forEach(aggregate::source);
         return aggregate;
     }
 
     private List<IDomainEvent> getEventList(final IAggregate<?> aggregate) {
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
         final ArrayList<IDomainEvent> eventList = new ArrayList<>();
-        try {
-            statement = ds.getConnection().prepareStatement(
-                    "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;");
+        try (PreparedStatement statement = ds.getConnection().prepareStatement(
+                "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;")) {
             statement.setString(1, aggregate.getId().toString());
-            resultSet = statement.executeQuery();
-            final GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-            final Gson gson = gsonBuilder.create();
-            while (resultSet.next()) {
-                eventList.add(
-                        (IDomainEvent) gson.fromJson(resultSet.getString(2), Class.forName(resultSet.getString(1))));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                final GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+                final Gson gson = gsonBuilder.create();
+                while (resultSet.next()) {
+                    eventList.add((IDomainEvent) gson.fromJson(resultSet.getString(2),
+                            Class.forName(resultSet.getString(1))));
+                }
+                return eventList;
             }
-            return eventList;
         } catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
             logger.error(ex.getMessage());
             return new ArrayList<>();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-            } catch (final SQLException ex) {
-                logger.error(ex.getMessage());
-            }
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (final SQLException ex) {
-                logger.error(ex.getMessage());
-            }
         }
     }
 
@@ -160,7 +132,7 @@ public class SqlEventRepository implements IRepository {
     }
 
     @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> void save(K obj) {
+    public <K extends IAggregate<? extends IAggregateRoot>> void save(final K obj) {
         obj.getAddedEvents().forEach(e -> {
             executeSqlUpdate(generateInsert(e));
             eventBus.send(e);

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.example.test;
+package odin.example.applicationservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -36,7 +36,7 @@ import odin.infrastructure.SqlEventRepository;
 
 class SimpleDomainTest {
 
-    @Test
+    //@Test
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

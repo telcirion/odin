@@ -1,4 +1,4 @@
-package org.example.openapi.swaggerui;
+package odin.example.infrastructure.openapi;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

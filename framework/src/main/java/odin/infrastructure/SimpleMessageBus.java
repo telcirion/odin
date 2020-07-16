@@ -15,7 +15,7 @@
 
 package odin.infrastructure;
 
-import static org.apache.activemq.camel.component.ActiveMQComponent.activeMQComponent;
+import static org.apache.camel.component.activemq.ActiveMQComponent.activeMQComponent;
 
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;

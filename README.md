@@ -1,4 +1,5 @@
 [![Build Java CI with Maven](https://github.com/telcirion/odin/workflows/Build%20Java%20CI%20with%20Maven/badge.svg)](https://github.com/telcirion/odin/actions?query=workflow%3A%22Build+Java+CI+with+Maven%22)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=alert_status)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=coverage)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=telcirion/odin)](https://dependabot.com)
 # ODIN-Framework

@@ -21,6 +21,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
@@ -62,7 +63,11 @@ public class SimpleMessageBus implements ISendMessage, IPublishMessage {
 
     @Override
     public void send(IMessage m) {
-        ctx.createProducerTemplate().sendBody(endpoint, m);
+        try (ProducerTemplate prodTemp = ctx.createProducerTemplate()) {
+            prodTemp.sendBody(endpoint, m);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     @Override

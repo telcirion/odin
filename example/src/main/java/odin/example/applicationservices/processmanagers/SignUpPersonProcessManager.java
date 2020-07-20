@@ -28,7 +28,7 @@ import odin.concepts.common.Identity;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
-import odin.framework.Matcher;
+import odin.framework.common.Matcher;
 
 public class SignUpPersonProcessManager implements IProcessManager {
 

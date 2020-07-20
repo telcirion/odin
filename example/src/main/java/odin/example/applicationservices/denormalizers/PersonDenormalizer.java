@@ -28,7 +28,7 @@ import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.Person;
 import odin.example.readmodel.PersonList;
-import odin.framework.Matcher;
+import odin.framework.common.Matcher;
 
 public class PersonDenormalizer implements IDenormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

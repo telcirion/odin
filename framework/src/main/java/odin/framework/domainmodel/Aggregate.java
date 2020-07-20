@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.framework;
+package odin.framework.domainmodel;
 
 import java.util.ArrayList;
 import java.util.List;

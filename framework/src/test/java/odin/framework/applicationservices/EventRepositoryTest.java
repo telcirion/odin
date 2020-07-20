@@ -1,4 +1,4 @@
-package odin.infrastructure;
+package odin.framework.applicationservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,16 +14,18 @@ import odin.concepts.common.IMessage;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.common.Identity;
 import odin.concepts.infra.IDataSource;
-import odin.framework.Aggregate;
-import odin.framework.TestAggregateRoot;
-import odin.framework.TestCommand;
+import odin.framework.domainmodel.Aggregate;
+import odin.framework.domainmodel.TestAggregateRoot;
+import odin.framework.domainmodel.TestCommand;
+import odin.framework.infrastructure.SqlEventStore;
 
-class SqlEventRepositoryTest {
+class EventRepositoryTest {
     @Test
-    void sqlEventRepositoryTest() {
+    void eventRepositoryTest() {
+        var eventStore = new SqlEventStore(new TestDataSource());
+        eventStore.createDatabase();
+        var sut = new EventRepository(eventStore, new TestBus());
 
-        var sut = new SqlEventRepository(new TestDataSource(), new TestBus());
-        sut.createDatabase();
         var id = new Identity();
         var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());
         saveAggregate.process(new TestCommand(id, null, "value 1"));

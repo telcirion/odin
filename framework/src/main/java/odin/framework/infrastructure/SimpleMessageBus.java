@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.infrastructure;
+package odin.framework.infrastructure;
 
 import static org.apache.camel.component.activemq.ActiveMQComponent.activeMQComponent;
 

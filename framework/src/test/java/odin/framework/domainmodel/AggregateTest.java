@@ -1,4 +1,4 @@
-package odin.framework;
+package odin.framework.domainmodel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

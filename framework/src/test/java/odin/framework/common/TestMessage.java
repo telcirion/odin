@@ -1,4 +1,4 @@
-package odin.infrastructure;
+package odin.framework.common;
 
 import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageInfo;

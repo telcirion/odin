@@ -17,7 +17,7 @@ package odin.example.domain.events;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.framework.MessageInfo;
+import odin.framework.common.MessageInfo;
 
 public class PersonSignUpReceived implements IDomainEvent {
 

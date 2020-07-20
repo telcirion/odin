@@ -22,7 +22,7 @@ import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
-import odin.framework.Matcher;
+import odin.framework.common.Matcher;
 
 public class Person implements IAggregateRoot {
 

@@ -18,7 +18,7 @@ package odin.example.domain.commands;
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
-import odin.framework.MessageInfo;
+import odin.framework.common.MessageInfo;
 
 public class RegisterPerson implements ICommand {
 

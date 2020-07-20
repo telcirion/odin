@@ -1,8 +1,9 @@
-package odin.framework;
+package odin.framework.domainmodel;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
+import odin.framework.common.MessageInfo;
 
 public class TestDomainEvent implements IDomainEvent {
 

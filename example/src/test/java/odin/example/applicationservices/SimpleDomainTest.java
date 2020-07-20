@@ -31,8 +31,9 @@ import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
-import odin.infrastructure.SimpleMessageBus;
-import odin.infrastructure.SqlEventRepository;
+import odin.framework.applicationservices.EventRepository;
+import odin.framework.infrastructure.SimpleMessageBus;
+import odin.framework.infrastructure.SqlEventStore;
 
 class SimpleDomainTest {
 
@@ -43,9 +44,6 @@ class SimpleDomainTest {
         final SimpleMessageBus eventBus = new SimpleMessageBus(SimpleMessageBus.BusType.TOPIC);
         final SimpleMessageBus commandBus = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
 
-        SqlEventRepository personRepository = new SqlEventRepository(new TestDataSource(), eventBus);
-        personRepository.createDatabase(); // it's only signUpPersonProcessManager test
-
         // start processManager
         SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
         eventBus.subscribe(signUpPersonProcessManager);
@@ -55,6 +53,11 @@ class SimpleDomainTest {
         PersonDenormalizer personDenormalizer = new PersonDenormalizer();
         eventBus.subscribe(personDenormalizer);
         logger.info("Denormalizer created, wait for processing.");
+
+        // Initialize repo & storage
+        final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
+        eventStore.createDatabase(); // it's only signUpPersonProcessManager test
+        EventRepository personRepository = new EventRepository(eventStore, eventBus);
 
         // start commandHandler
         commandBus.subscribe(new PersonCommandHandler(personRepository));

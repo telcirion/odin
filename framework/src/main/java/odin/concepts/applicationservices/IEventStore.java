@@ -13,26 +13,15 @@
  * limitations under the License.
  */
 
-package odin.framework;
+package odin.concepts.applicationservices;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageAction;
+import java.util.List;
 
-public class Matcher<Z> {
-    final Z noMatchHandler;
+import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.IDomainEvent;
 
-    public Matcher(Z noMatchHandler) {
-        this.noMatchHandler = noMatchHandler;
-    }
+public interface IEventStore {
+    void save(IDomainEvent domainEvents);
 
-    public <T> Matcher<Z> match(final Class<T> msgClazz, final IMessageAction<T,Z> msgAction, final IMessage msg) {
-        if (msgClazz.isInstance(msg)) {
-            return new Matcher<>(msgAction.executeAction(msgClazz.cast(msg)));
-        }
-        return this;
-    }
-
-    public Z result() {
-        return noMatchHandler;
-    }
+    List<IDomainEvent> load(Identity id);
 }

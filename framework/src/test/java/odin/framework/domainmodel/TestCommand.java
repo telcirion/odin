@@ -1,10 +1,11 @@
-package odin.framework;
+package odin.framework.domainmodel;
 
 import java.util.UUID;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
+import odin.framework.common.MessageInfo;
 
 public class TestCommand implements ICommand {
 

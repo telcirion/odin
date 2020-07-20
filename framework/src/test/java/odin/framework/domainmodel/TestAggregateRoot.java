@@ -1,8 +1,9 @@
-package odin.framework;
+package odin.framework.domainmodel;
 
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.ICommand;
 import odin.concepts.domainmodel.IDomainEvent;
+import odin.framework.common.Matcher;
 
 public class TestAggregateRoot implements IAggregateRoot {
     private String testField;

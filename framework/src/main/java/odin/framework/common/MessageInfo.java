@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.framework;
+package odin.framework.common;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

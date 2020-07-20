@@ -18,7 +18,7 @@ package odin.example.domain.events;
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.framework.MessageInfo;
+import odin.framework.common.MessageInfo;
 
 public class PersonNameChanged implements IDomainEvent {
 

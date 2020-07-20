@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package odin.infrastructure;
+package odin.framework.infrastructure;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Type;
@@ -39,66 +39,32 @@ import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.IRepository;
-import odin.concepts.common.ISendMessage;
-import odin.concepts.domainmodel.IAggregate;
-import odin.concepts.domainmodel.IAggregateRoot;
+import odin.concepts.applicationservices.IEventStore;
+import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
 import odin.concepts.infra.IDataSource;
 
-public class SqlEventRepository implements IRepository {
+public class SqlEventStore implements IEventStore {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IDataSource ds;
-    private final ISendMessage eventBus;
 
-    public SqlEventRepository(final IDataSource ds, final ISendMessage eventBus) {
-        this.eventBus = eventBus;
+    public SqlEventStore(final IDataSource ds) {
         this.ds = ds;
     }
 
-    private void executeSqlUpdate(final String sqlString) {
-        try (Statement statement = ds.getConnection().createStatement()) {
-            statement.executeUpdate(sqlString);
-        } catch (final SQLException ex) {
-            logger.error(ex.getMessage());
-        }
-    }
-
-    public void createDatabase() {
-        final String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
-                + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
-                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
-                + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
-        executeSqlUpdate(createSchema);
-    }
-
-    private String generateInsert(final IDomainEvent s) {
-        final StringBuilder b = new StringBuilder();
-        final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        final Gson gson = gsonBuilder.create();
-        b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getMessageInfo().getMessageId()).append("','")
-                .append(s.getMessageInfo().getSubjectId().toString()).append("','")
-                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName()).append("','")
-                .append(gson.toJson(s)).append("');\r\n");
-        return b.toString();
+    @Override
+    public void save(IDomainEvent event) {
+        executeSqlUpdate(generateInsert(event));
     }
 
     @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> K load(final K aggregate) {
-        final List<IDomainEvent> resultSet = getEventList(aggregate);
-        resultSet.forEach(aggregate::source);
-        return aggregate;
-    }
-
-    private List<IDomainEvent> getEventList(final IAggregate<?> aggregate) {
+    public List<IDomainEvent> load(Identity id) {
         final ArrayList<IDomainEvent> eventList = new ArrayList<>();
         try (PreparedStatement statement = ds.getConnection().prepareStatement(
                 "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;")) {
-            statement.setString(1, aggregate.getId().toString());
+            statement.setString(1, id.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 final GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
@@ -115,6 +81,35 @@ public class SqlEventRepository implements IRepository {
         }
     }
 
+    public void createDatabase() {
+        final String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
+                + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
+                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
+                + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
+        executeSqlUpdate(createSchema);
+    }
+
+    private void executeSqlUpdate(final String sqlString) {
+        try (Statement statement = ds.getConnection().createStatement()) {
+            statement.executeUpdate(sqlString);
+        } catch (final SQLException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    private String generateInsert(final IDomainEvent s) {
+        final StringBuilder b = new StringBuilder();
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        final Gson gson = gsonBuilder.create();
+        b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
+                .append(s.getMessageInfo().getMessageId()).append("','")
+                .append(s.getMessageInfo().getSubjectId().toString()).append("','")
+                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName()).append("','")
+                .append(gson.toJson(s)).append("');\r\n");
+        return b.toString();
+    }
+
     class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
         @Override
         public JsonElement serialize(final LocalDateTime localDateTime, final Type srcType,
@@ -129,13 +124,5 @@ public class SqlEventRepository implements IRepository {
                 final JsonDeserializationContext context) {
             return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
-    }
-
-    @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> void save(final K obj) {
-        obj.getAddedEvents().forEach(e -> {
-            executeSqlUpdate(generateInsert(e));
-            eventBus.send(e);
-        });
     }
 }

@@ -16,7 +16,7 @@ within the domain.)
 This framework facilitates the above pattern by providing the presented concepts with interfaces, implementation and
 some glue to tie it all together.
 
-# What's in a name
+## What's in a name
 Every framework needs a name. Something cool, mythical and easy to remember. There are probably way more projects that
 share this name, tough luck. Anyway, to quote [wikipedia](https://en.wikipedia.org/wiki/Norse_mythology): "Odin pursues knowledge throughout the worlds",
 which seems to fit nicely with the DDD concepts.

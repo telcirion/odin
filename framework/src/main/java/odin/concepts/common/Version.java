@@ -21,14 +21,14 @@ import java.util.UUID;
 public class Version implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    final UUID version;
+    final UUID versionNumber;
 
     public Version() {
-        this.version = UUID.randomUUID();
+        this.versionNumber = UUID.randomUUID();
     }
 
     @Override
     public String toString() {
-        return version.toString();
+        return versionNumber.toString();
     }
 }

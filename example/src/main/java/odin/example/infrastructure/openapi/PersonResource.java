@@ -25,13 +25,13 @@ public class PersonResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(RegisterPerson rp){
-
+        // for future expansions
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void changeName(ChangePersonName rp){
-
+        // for future expansions
     }
 
 }

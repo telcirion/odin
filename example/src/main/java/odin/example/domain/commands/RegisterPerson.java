@@ -15,8 +15,6 @@
 
 package odin.example.domain.commands;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;

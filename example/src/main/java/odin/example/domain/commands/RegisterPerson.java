@@ -15,6 +15,8 @@
 
 package odin.example.domain.commands;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
@@ -23,12 +25,12 @@ import odin.framework.common.MessageInfo;
 public class RegisterPerson implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final MessageInfo commandInfo;
+    private final IMessageInfo messageInfo;
     private final String name;
     private final String ssn;
 
     public RegisterPerson(Identity targetId, String ssn, String name) {
-        commandInfo = new MessageInfo(targetId, null);
+        messageInfo = new MessageInfo(targetId, null);
         this.name = name;
         this.ssn = ssn;
     }
@@ -43,6 +45,6 @@ public class RegisterPerson implements ICommand {
 
     @Override
     public IMessageInfo getMessageInfo() {
-        return commandInfo;
+        return messageInfo;
     }
 }

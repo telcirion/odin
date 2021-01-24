@@ -68,6 +68,6 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private void log(ICommand command) {
         LOGGER.info("Command {} received for aggregateId: {}, revision: {}", command.getClass().getSimpleName(),
-                command.getMessageInfo().getSubjectId(), command.getMessageInfo().geSubjectVersion());
+                command.getMessageInfo().getSubjectId(), command.getMessageInfo().getSubjectVersion());
     }
 }

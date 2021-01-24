@@ -3,24 +3,23 @@ package odin.framework.common;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
+import odin.concepts.common.Version;
 
 class MessageInfoTest {
     private static IMessageInfo sut;
     private static Identity aggregateId;
-    private static UUID aggregateVersion;
+    private static Version aggregateVersion;
 
 
     @BeforeAll
     static void setUp() {
         aggregateId = new Identity();
-        aggregateVersion = UUID.randomUUID();
+        aggregateVersion = new Version();
         sut = new MessageInfo(aggregateId, aggregateVersion);
     }
 
@@ -37,7 +36,7 @@ class MessageInfoTest {
 
     @Test
     void getSubjectVersion() {
-        assertEquals(aggregateVersion, sut.geSubjectVersion());
+        assertEquals(aggregateVersion, sut.getSubjectVersion());
     }
 
     @Test

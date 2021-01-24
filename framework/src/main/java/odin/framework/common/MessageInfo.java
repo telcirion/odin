@@ -16,10 +16,10 @@
 package odin.framework.common;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
+import odin.concepts.common.Version;
 
 public class MessageInfo implements IMessageInfo {
 
@@ -27,9 +27,9 @@ public class MessageInfo implements IMessageInfo {
     private final Identity id = new Identity();
     private final Identity subjectId;
     private final LocalDateTime timestamp;
-    private final UUID subjectVersion;
+    private final Version subjectVersion;
 
-    public MessageInfo(Identity subjectId, UUID subjectVersion) {
+    public MessageInfo(Identity subjectId, Version subjectVersion) {
         this.subjectId = subjectId;
         this.subjectVersion = subjectVersion;
         this.timestamp = LocalDateTime.now();
@@ -51,7 +51,7 @@ public class MessageInfo implements IMessageInfo {
     }
 
     @Override
-    public UUID geSubjectVersion() {
+    public Version getSubjectVersion() {
         return subjectVersion;
     }
 }

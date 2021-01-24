@@ -10,7 +10,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class PersonResourceTest {
     @Test
-    void testHelloEndpoint() {
-        given().when().get("/persons").then().statusCode(200).body(is("hello"));
+    void testPersonGetEndpoint() {
+        given().when().get("/persons").then().statusCode(200).body(is("{\"name\":null,\"ssn\":null}"));
     }
 }

@@ -17,14 +17,13 @@ package odin.concepts.common;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public interface IMessageInfo extends Serializable {
     Identity getMessageId();
 
     Identity getSubjectId();
 
-    UUID geSubjectVersion();
+    Version getSubjectVersion();
 
     LocalDateTime getTimestamp();
 }

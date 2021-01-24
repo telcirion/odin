@@ -13,31 +13,22 @@
  * limitations under the License.
  */
 
-package odin.example.domain.commands;
+package odin.concepts.common;
 
-import odin.concepts.common.IMessageInfo;
-import odin.concepts.common.Identity;
-import odin.concepts.common.Version;
-import odin.concepts.domainmodel.ICommand;
-import odin.framework.common.MessageInfo;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class ChangePersonName implements ICommand {
+public class Version implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private final String name;
-    private final IMessageInfo messageInfo;
+    final UUID version;
 
-    public ChangePersonName(String name, Identity targetId, Version targetVersion) {
-        messageInfo = new MessageInfo(targetId, targetVersion);
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
+    public Version() {
+        this.version = UUID.randomUUID();
     }
 
     @Override
-    public IMessageInfo getMessageInfo() {
-        return messageInfo;
+    public String toString() {
+        return version.toString();
     }
 }

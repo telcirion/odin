@@ -23,12 +23,15 @@ public class PersonResource {
     }
 
     @POST
+    @Path("/registrations") 
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(RegisterPerson rp){
         // for future expansions
     }
 
-    @PUT
+    
+    @POST
+    @Path("/namechanges") 
     @Consumes(MediaType.APPLICATION_JSON)
     public void changeName(ChangePersonName rp){
         // for future expansions

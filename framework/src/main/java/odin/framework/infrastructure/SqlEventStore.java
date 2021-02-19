@@ -16,25 +16,16 @@
 package odin.framework.infrastructure;
 
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,16 +57,15 @@ public class SqlEventStore implements IEventStore {
                 "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;")) {
             statement.setString(1, id.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
-                final GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-                final Gson gson = gsonBuilder.create();
+                ObjectMapper o = new ObjectMapper();
+                o.registerModule(new JavaTimeModule());
                 while (resultSet.next()) {
-                    eventList.add((IDomainEvent) gson.fromJson(resultSet.getString(2),
-                            Class.forName(resultSet.getString(1))));
+                    eventList.add(
+                            (IDomainEvent) o.readValue(resultSet.getString(2), Class.forName(resultSet.getString(1))));
                 }
                 return eventList;
             }
-        } catch (SQLException | JsonSyntaxException | ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException | JsonProcessingException ex) {
             logger.error(ex.getMessage());
             return new ArrayList<>();
         }
@@ -99,30 +89,18 @@ public class SqlEventStore implements IEventStore {
 
     private String generateInsert(final IDomainEvent s) {
         final StringBuilder b = new StringBuilder();
-        final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        final Gson gson = gsonBuilder.create();
-        b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                .append(s.getMessageInfo().getMessageId()).append("','")
-                .append(s.getMessageInfo().getSubjectId().toString()).append("','")
-                .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName()).append("','")
-                .append(gson.toJson(s)).append("');\r\n");
+        ObjectMapper o = new ObjectMapper();
+        o.registerModule(new JavaTimeModule());
+        try {
+            b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
+                    .append(s.getMessageInfo().getMessageId()).append("','")
+                    .append(s.getMessageInfo().getSubjectId().toString()).append("','")
+                    .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName())
+                    .append("','").append(o.writeValueAsString(s)).append("');\r\n");
+        } catch (JsonProcessingException ex) {
+            logger.error(ex.getMessage());
+        }
         return b.toString();
     }
 
-    class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
-        @Override
-        public JsonElement serialize(final LocalDateTime localDateTime, final Type srcType,
-                final JsonSerializationContext context) {
-            return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime));
-        }
-    }
-
-    class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
-        @Override
-        public LocalDateTime deserialize(final JsonElement json, final Type typeOfT,
-                final JsonDeserializationContext context) {
-            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        }
-    }
 }

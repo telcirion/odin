@@ -27,7 +27,7 @@ import odin.concepts.common.Version;
 public class MessageInfo implements IMessageInfo {
 
     private static final long serialVersionUID = 1L;
-    private final Identity id = new Identity();
+    private final Identity messageId = new Identity();
     private final Identity subjectId;
     private final LocalDateTime timestamp;
     private final Version subjectVersion;
@@ -42,7 +42,7 @@ public class MessageInfo implements IMessageInfo {
 
     @Override
     public Identity getMessageId() {
-        return id;
+        return messageId;
     }
 
     @Override

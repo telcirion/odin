@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
-import odin.example.applicationservices.denormalizers.PersonDenormalizer;
+import odin.example.applicationservices.denormalizers.PersonDeNormalizer;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
 import odin.example.applicationservices.queries.PersonByNameQuery;
 import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
@@ -49,10 +49,10 @@ class SimpleDomainTest {
         eventBus.subscribe(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
 
-        // start denormalizer
-        PersonDenormalizer personDenormalizer = new PersonDenormalizer();
-        eventBus.subscribe(personDenormalizer);
-        logger.info("Denormalizer created, wait for processing.");
+        // start de-normalizer
+        PersonDeNormalizer personDeNormalizer = new PersonDeNormalizer();
+        eventBus.subscribe(personDeNormalizer);
+        logger.info("De-normalizer created, wait for processing.");
 
         // Initialize repo & storage
         final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
@@ -71,13 +71,13 @@ class SimpleDomainTest {
 
         // after processing 2 registrations, we're done.
         // noinspection StatementWithEmptyBody
-        while (personDenormalizer.getNumberOfPersonRegisteredReceived() < 2) {
+        while (personDeNormalizer.getNumberOfPersonRegisteredReceived() < 2) {
             // do nothing, just wait.
         }
-        logger.info("All DomainEvents (PersonRegistered) were processed by the denormalizer.");
+        logger.info("All DomainEvents (PersonRegistered) were processed by the de-normalizer.");
 
         // let's try a person query
-        PersonQueryHandler queryHandler = new PersonQueryHandler(personDenormalizer.getReadModel());
+        PersonQueryHandler queryHandler = new PersonQueryHandler(personDeNormalizer.getReadModel());
         PersonQueryResult personQueryResult = queryHandler.query(new PersonByNameQuery("Peter"));
         if (personQueryResult != null) {
             logger.info("Person found with name: " + personQueryResult.getPerson().getName() + " and ssn: "
@@ -89,10 +89,10 @@ class SimpleDomainTest {
 
         // wait for name to be changed.
         // noinspection StatementWithEmptyBody
-        while (personDenormalizer.getNumberOfPersonNameChangedReceived() < 1) {
+        while (personDeNormalizer.getNumberOfPersonNameChangedReceived() < 1) {
             // do nothing, just wait.
         }
-        logger.info("All DomainEvents (PersonNameChanged) were processed by the denormalizer.");
+        logger.info("All DomainEvents (PersonNameChanged) were processed by the de-normalizer.");
 
         // and check if the name is changed
         PersonQueryResult anotherPersonQueryResult = queryHandler.query(new PersonByNameQuery("Nico"));

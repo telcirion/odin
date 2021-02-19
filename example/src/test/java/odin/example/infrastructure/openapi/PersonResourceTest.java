@@ -3,9 +3,12 @@ package odin.example.infrastructure.openapi;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
+import javax.ws.rs.core.MediaType;
+
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import odin.example.domain.commands.RegisterPerson;
 
 @QuarkusTest
 class PersonResourceTest {
@@ -16,7 +19,8 @@ class PersonResourceTest {
 
     @Test
     void testPersonPostRegisterPersonEndpoint() {
-        given().when().post("/persons/registrations").then().statusCode(415);
+        given().contentType(MediaType.APPLICATION_JSON).body(new RegisterPerson(null, "789", "Bob")).when()
+                .post("/persons/registrations/").then().statusCode(400);
     }
 
     @Test

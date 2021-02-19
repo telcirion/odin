@@ -18,21 +18,20 @@ public class PersonResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Person hello() {
         return new Person();
-
     }
 
     @POST
-    @Path("/registrations") 
+    @Path("/registrations")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void register(RegisterPerson rp){
+    public void register(RegisterPerson rp) {
         // for future expansions
+        System.out.println("joehoe");
     }
 
-    
     @POST
-    @Path("/namechanges") 
+    @Path("/namechanges")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void changeName(ChangePersonName rp){
+    public void changeName(ChangePersonName rp) {
         // for future expansions
     }
 

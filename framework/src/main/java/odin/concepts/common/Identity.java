@@ -31,4 +31,8 @@ public class Identity implements Serializable {
     public String toString() {
         return id.toString();
     }
+
+    public UUID getId() {
+        return id;
+    }
 }

@@ -17,13 +17,14 @@ package odin.example.domain.commands;
 
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
+import odin.concepts.common.Version;
 import odin.concepts.domainmodel.ICommand;
 import odin.framework.common.MessageInfo;
 
 public class RegisterPerson implements ICommand {
 
     private static final long serialVersionUID = 1L;
-    private final IMessageInfo messageInfo;
+    private final MessageInfo messageInfo;
     private final String name;
     private final String ssn;
 

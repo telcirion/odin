@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 
 @QuarkusTest
@@ -20,12 +21,13 @@ class PersonResourceTest {
     @Test
     void testPersonPostRegisterPersonEndpoint() {
         given().contentType(MediaType.APPLICATION_JSON).body(new RegisterPerson(null, "789", "Bob")).when()
-                .post("/persons/registrations/").then().statusCode(400);
+                .post("/persons/registrations/").then().statusCode(204);
     }
 
     @Test
     void testPersonPostChangePersonNameEndpoint() {
-        given().when().post("/persons/namechanges").then().statusCode(415);
+        given().contentType(MediaType.APPLICATION_JSON).body(new ChangePersonName("Alice", null, null)).when()
+                .post("/persons/namechanges").then().statusCode(204);
     }
 
 }

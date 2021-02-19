@@ -25,7 +25,7 @@ public class PersonResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void register(RegisterPerson rp) {
         // for future expansions
-        System.out.println("joehoe");
+
     }
 
     @POST

@@ -25,7 +25,7 @@ public class ChangePersonName implements ICommand {
 
     private static final long serialVersionUID = 1L;
     private final String name;
-    private final IMessageInfo messageInfo;
+    private final MessageInfo messageInfo;
 
     public ChangePersonName(String name, Identity targetId, Version targetVersion) {
         messageInfo = new MessageInfo(targetId, targetVersion);

@@ -17,6 +17,9 @@ package odin.framework.common;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.common.Version;
@@ -29,7 +32,9 @@ public class MessageInfo implements IMessageInfo {
     private final LocalDateTime timestamp;
     private final Version subjectVersion;
 
-    public MessageInfo(Identity subjectId, Version subjectVersion) {
+    @JsonCreator
+    public MessageInfo(@JsonProperty("subjectId") Identity subjectId,
+            @JsonProperty("subjectVersion") Version subjectVersion) {
         this.subjectId = subjectId;
         this.subjectVersion = subjectVersion;
         this.timestamp = LocalDateTime.now();

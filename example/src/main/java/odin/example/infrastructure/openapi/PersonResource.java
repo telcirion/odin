@@ -6,6 +6,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.jboss.resteasy.spi.HttpResponseCodes;
 
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
@@ -23,16 +27,20 @@ public class PersonResource {
     @POST
     @Path("/registrations")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void register(RegisterPerson rp) {
+    @APIResponse(responseCode = "202")
+    public Response register(RegisterPerson rp) {
         // for future expansions
-
+        return Response.accepted().build();
     }
 
     @POST
     @Path("/namechanges")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void changeName(ChangePersonName rp) {
+    @APIResponse(responseCode = "202")
+    public Response changeName(ChangePersonName rp) {
         // for future expansions
+
+        return Response.accepted().build();
     }
 
 }

@@ -21,13 +21,13 @@ class PersonResourceTest {
     @Test
     void testPersonPostRegisterPersonEndpoint() {
         given().contentType(MediaType.APPLICATION_JSON).body(new RegisterPerson(null, "789", "Bob")).when()
-                .post("/persons/registrations/").then().statusCode(204);
+                .post("/persons/registrations/").then().statusCode(202);
     }
 
     @Test
     void testPersonPostChangePersonNameEndpoint() {
         given().contentType(MediaType.APPLICATION_JSON).body(new ChangePersonName("Alice", null, null)).when()
-                .post("/persons/namechanges").then().statusCode(204);
+                .post("/persons/namechanges").then().statusCode(202);
     }
 
 }

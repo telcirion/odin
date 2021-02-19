@@ -22,11 +22,32 @@
         <jacoco.version>0.8.6</jacoco.version>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
         <checkstyle-maven-plugin.version>3.1.2</checkstyle-maven-plugin.version>
+        <checkstyle.version>8.31</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     </properties>
+
     <modules>
         <module>framework</module>
         <module>example</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle-maven-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

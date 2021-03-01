@@ -22,7 +22,7 @@ import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
-import odin.framework.common.Matcher;
+import odin.framework.common.Dispatcher;
 
 public class Person implements IAggregateRoot {
 
@@ -63,7 +63,7 @@ public class Person implements IAggregateRoot {
 
     @Override
     public IDomainEvent process(ICommand command) {
-        var event = new Matcher<IDomainEvent>(null).match(RegisterPerson.class, this::register, command)
+        var event = new Dispatcher<IDomainEvent>(null).match(RegisterPerson.class, this::register, command)
                 .match(ChangePersonName.class, this::changeName, command).result();
         source(event);
         return event;
@@ -71,7 +71,7 @@ public class Person implements IAggregateRoot {
 
     @Override
     public IAggregateRoot source(IDomainEvent msg) {
-        return new Matcher<>(this).match(PersonRegistered.class, this::registered, msg)
+        return new Dispatcher<>(this).match(PersonRegistered.class, this::registered, msg)
                 .match(PersonNameChanged.class, this::changedName, msg).result();
 
     }

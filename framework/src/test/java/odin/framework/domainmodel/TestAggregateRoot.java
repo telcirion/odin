@@ -3,7 +3,7 @@ package odin.framework.domainmodel;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.ICommand;
 import odin.concepts.domainmodel.IDomainEvent;
-import odin.framework.common.Matcher;
+import odin.framework.common.Dispatcher;
 
 public class TestAggregateRoot implements IAggregateRoot {
     private String testField;
@@ -29,13 +29,13 @@ public class TestAggregateRoot implements IAggregateRoot {
 
     @Override
     public IAggregateRoot source(IDomainEvent event) {
-        return new Matcher<>(this).match(String.class, this::dummy, event)
+        return new Dispatcher<>(this).match(String.class, this::dummy, event)
                 .match(TestDomainEvent.class, this::testFieldChanged, event).result();
     }
 
     @Override
     public IDomainEvent process(ICommand command) {
-        var event = new Matcher<IDomainEvent>(null).match(TestCommand.class, this::changeTestField, command).result();
+        var event = new Dispatcher<IDomainEvent>(null).match(TestCommand.class, this::changeTestField, command).result();
         source(event);
         return event;
     }

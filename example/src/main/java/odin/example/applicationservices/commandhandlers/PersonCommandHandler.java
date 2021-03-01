@@ -29,7 +29,7 @@ import odin.concepts.domainmodel.ICommand;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
-import odin.framework.common.Matcher;
+import odin.framework.common.Dispatcher;
 import odin.framework.domainmodel.Aggregate;
 
 public class PersonCommandHandler implements ICommandHandler {
@@ -62,7 +62,7 @@ public class PersonCommandHandler implements ICommandHandler {
 
     @Override
     public IMessageHandler handle(IMessage msg) {
-        return new Matcher<ICommandHandler>(this).match(RegisterPerson.class, this::handle, msg)
+        return new Dispatcher<ICommandHandler>(this).match(RegisterPerson.class, this::handle, msg)
                 .match(ChangePersonName.class, this::handle, msg).result();
     }
 

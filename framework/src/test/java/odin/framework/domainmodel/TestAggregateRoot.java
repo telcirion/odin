@@ -18,7 +18,7 @@ public class TestAggregateRoot implements IAggregateRoot {
     }
 
     public TestAggregateRoot dummy(String event) {
-        return this; 
+        return this;
     }
 
     public String getTestField() {
@@ -35,7 +35,8 @@ public class TestAggregateRoot implements IAggregateRoot {
 
     @Override
     public IDomainEvent process(ICommand command) {
-        var event = new Dispatcher<IDomainEvent>(null).match(TestCommand.class, this::changeTestField, command).result();
+        var event = new Dispatcher<IDomainEvent>(null).match(TestCommand.class, this::changeTestField, command)
+                .result();
         source(event);
         return event;
     }

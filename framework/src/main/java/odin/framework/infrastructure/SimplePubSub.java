@@ -30,31 +30,17 @@ import odin.concepts.common.IMessageHandler;
 import odin.concepts.common.IPublishMessage;
 import odin.concepts.common.ISendMessage;
 
-public class SimpleMessageBus implements ISendMessage, IPublishMessage {
+public class SimplePubSub implements ISendMessage, IPublishMessage {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final String endpoint;
     private final CamelContext ctx;
 
-    public enum BusType {
-        TOPIC("?multipleConsumers=true"), QUEUE("");
-
-        private final String type;
-
-        public String getTypeString() {
-            return type;
-        }
-
-        private BusType(String type) {
-            this.type = type;
-        }
-    }
-
-    public SimpleMessageBus(BusType busType) {
+    public SimplePubSub() {
         ctx = new DefaultCamelContext();
         ctx.setStreamCaching(true);
         this.endpoint = new StringBuilder().append("vm:").append(UUID.randomUUID().toString())
-            .append(busType.getTypeString()).toString();
+            .append("?multipleConsumers=true").toString();
     }
 
     @Override

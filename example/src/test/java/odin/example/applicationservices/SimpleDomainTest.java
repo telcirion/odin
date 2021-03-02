@@ -32,7 +32,7 @@ import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.framework.applicationservices.EventRepository;
-import odin.framework.infrastructure.SimpleMessageBus;
+import odin.framework.infrastructure.SimplePubSub;
 import odin.framework.infrastructure.SqlEventStore;
 
 class SimpleDomainTest {
@@ -41,8 +41,8 @@ class SimpleDomainTest {
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-        final SimpleMessageBus eventBus = new SimpleMessageBus(SimpleMessageBus.BusType.TOPIC);
-        final SimpleMessageBus commandBus = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
+        final SimplePubSub eventBus = new SimplePubSub();
+        final SimplePubSub commandBus = new SimplePubSub();
 
         // start processManager
         SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);

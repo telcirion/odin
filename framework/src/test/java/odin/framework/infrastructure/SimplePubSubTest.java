@@ -8,12 +8,12 @@ import odin.concepts.common.IMessage;
 import odin.concepts.common.IMessageHandler;
 import odin.framework.common.TestMessage;
 
-class SimpleMessageBusTest implements IMessageHandler {
+class SimplePubSubTest implements IMessageHandler {
     private boolean msgHandled = false;
 
     @Test
-    void verySimpleMessageBusTest() {
-        var sut = new SimpleMessageBus(SimpleMessageBus.BusType.QUEUE);
+    void verySimplePubSubTest() {
+        var sut = new SimplePubSub();
         sut.subscribe(this);
         sut.send(new TestMessage());
         // noinspection StatementWithEmptyBody

@@ -23,11 +23,11 @@ import odin.framework.common.MessageInfo;
 public class PersonNameChanged implements IDomainEvent {
 
     private static final long serialVersionUID = 1L;
-    private final MessageInfo domainEventInfo;
+    private final MessageInfo messageInfo;
     private final String name;
 
     public PersonNameChanged(Identity aggregateId, String name) {
-        domainEventInfo = new MessageInfo(aggregateId, null);
+        messageInfo = new MessageInfo(aggregateId, null);
         this.name = name;
     }
 
@@ -37,6 +37,6 @@ public class PersonNameChanged implements IDomainEvent {
 
     @Override
     public IMessageInfo getMessageInfo() {
-        return domainEventInfo;
+        return messageInfo;
     }
 }

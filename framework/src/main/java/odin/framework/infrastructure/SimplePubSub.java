@@ -16,12 +16,9 @@
 package odin.framework.infrastructure;
 
 import java.lang.invoke.MethodHandles;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,48 +30,15 @@ import odin.concepts.common.ISendMessage;
 public class SimplePubSub implements ISendMessage, IPublishMessage {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final String endpoint;
-    private final CamelContext ctx;
-
-    public SimplePubSub() {
-        ctx = new DefaultCamelContext();
-        ctx.setStreamCaching(true);
-        this.endpoint = new StringBuilder().append("vm:").append(UUID.randomUUID().toString())
-            .append("?multipleConsumers=true").toString();
-    }
+    private final List<IMessageHandler> subscribers = new ArrayList<>();
 
     @Override
     public void send(IMessage m) {
-        try (ProducerTemplate prodTemp = ctx.createProducerTemplate()) {
-            prodTemp.sendBody(endpoint, m);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        subscribers.forEach(x -> x.handle(m));
     }
 
     @Override
     public void subscribe(IMessageHandler messageHandler) {
-        RouteBuilder builder = new RouteBuilder() {
-            public void configure() {
-                errorHandler(deadLetterChannel("mock:error"));
-                from(endpoint).process().body(IMessage.class, messageHandler::handle);
-            }
-        };
-
-        try {
-            ctx.addRoutes(builder);
-            ctx.start();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    @Override
-    public void stop() {
-        try {
-            ctx.stop();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        subscribers.add(messageHandler);
     }
 }

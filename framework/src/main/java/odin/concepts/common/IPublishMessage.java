@@ -17,6 +17,7 @@ package odin.concepts.common;
 
 public interface IPublishMessage {
     void subscribe(IMessageHandler messageHandler);
-    
-    void stop();
+
+    default void stop() {
+    }
 }

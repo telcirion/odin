@@ -22,12 +22,12 @@ import odin.framework.common.MessageInfo;
 public class PersonSignUpReceived implements IDomainEvent {
 
     private static final long serialVersionUID = 1L;
-    private final MessageInfo domainEventInfo;
+    private final MessageInfo messageInfo;
     private final String ssn;
     private final String name;
 
     public PersonSignUpReceived(String ssn, String name) {
-        domainEventInfo = new MessageInfo(null, null);
+        messageInfo = new MessageInfo(null, null);
         this.ssn = ssn;
         this.name = name;
     }
@@ -42,6 +42,6 @@ public class PersonSignUpReceived implements IDomainEvent {
 
     @Override
     public IMessageInfo getMessageInfo() {
-        return domainEventInfo;
+        return messageInfo;
     }
 }

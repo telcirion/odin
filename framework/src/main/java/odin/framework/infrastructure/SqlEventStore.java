@@ -23,8 +23,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -64,13 +62,8 @@ public class SqlEventStore implements IEventStore {
                 mapper.registerModule(new JavaTimeModule());
                 mapper.registerModule(new ParameterNamesModule());
                 while (resultSet.next()) {
-                    logger.info("event loaded " + resultSet.getString(2));
                     eventList.add((IDomainEvent) mapper.readValue(resultSet.getString(2),
                             Class.forName(resultSet.getString(1))));
-
-                    IDomainEvent a = (IDomainEvent) mapper.readValue(resultSet.getString(2),
-                            Class.forName(resultSet.getString(1)));
-                    logger.info("event for subjectId " + a.getMessageInfo().getSubjectId().getId().toString());
                 }
                 return eventList;
             }
@@ -106,7 +99,6 @@ public class SqlEventStore implements IEventStore {
                     .append(s.getMessageInfo().getSubjectId().toString()).append("','")
                     .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName())
                     .append("','").append(o.writeValueAsString(s)).append("');\r\n");
-            logger.info("event saved " + o.writeValueAsString(s));
         } catch (JsonProcessingException ex) {
             logger.error(ex.getMessage());
         }

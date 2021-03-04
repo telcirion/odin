@@ -32,9 +32,8 @@ public class MessageInfo implements IMessageInfo {
     private final LocalDateTime timestamp;
     private final Version subjectVersion;
 
-    @JsonCreator
-    public MessageInfo(@JsonProperty("subjectId") Identity subjectId,
-            @JsonProperty("subjectVersion") Version subjectVersion) {
+    
+    public MessageInfo(Identity subjectId, Version subjectVersion) {
         this.subjectId = subjectId;
         this.subjectVersion = subjectVersion;
         this.timestamp = LocalDateTime.now();

@@ -15,6 +15,9 @@
 
 package odin.example.domain.events;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
@@ -22,12 +25,13 @@ import odin.framework.common.MessageInfo;
 
 public class PersonRegistered implements IDomainEvent {
     private static final long serialVersionUID = 1L;
-    private final MessageInfo messageInfo;
+
     private final String ssn;
     private final String name;
+    private final MessageInfo messageInfo;
 
-    public PersonRegistered(Identity aggregateId, String ssn, String name) {
-        messageInfo = new MessageInfo(aggregateId, null);
+    public PersonRegistered(Identity id, String ssn, String name) {
+        messageInfo = new MessageInfo(id, null);
         this.ssn = ssn;
         this.name = name;
     }

@@ -14,9 +14,7 @@ public class TestDomainEvent implements IDomainEvent {
     private final MessageInfo messageInfo;
     private final String eventData;
 
-    @JsonCreator
-    public TestDomainEvent(@JsonProperty("aggregateId") final Identity aggregateId,
-            @JsonProperty("eventData") String eventData) {
+    public TestDomainEvent(final Identity aggregateId, String eventData) {
         this.messageInfo = new MessageInfo(aggregateId, null);
         this.eventData = eventData;
     }

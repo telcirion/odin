@@ -82,8 +82,8 @@ public class SqlEventStore implements IEventStore {
     }
 
     private void executeSqlUpdate(final String sqlString) {
-        try (Statement statement = ds.getConnection().createStatement()) {
-            statement.executeUpdate(sqlString);
+        try (PreparedStatement statement = ds.getConnection().prepareStatement(sqlString)) {
+            statement.executeUpdate();
         } catch (final SQLException ex) {
             logger.error(ex.getMessage());
         }

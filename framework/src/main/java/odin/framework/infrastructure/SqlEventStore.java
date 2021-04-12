@@ -47,7 +47,20 @@ public class SqlEventStore implements IEventStore {
 
     @Override
     public void save(IDomainEvent event) {
-        executeSqlUpdate(generateInsert(event));
+
+        ObjectMapper o = new ObjectMapper();
+        o.registerModule(new JavaTimeModule());
+        try (PreparedStatement statement = ds.getConnection().prepareStatement(
+                "INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES(?, ?, ?, ?, ?)")) {
+            statement.setString(1, event.getMessageInfo().getMessageId().toString());
+            statement.setString(2, event.getMessageInfo().getSubjectId().toString());
+            statement.setString(3, event.getMessageInfo().getTimestamp().toString());
+            statement.setString(4, event.getClass().getName());
+            statement.setString(5, o.writeValueAsString(event));
+            statement.executeUpdate();
+        } catch (SQLException | JsonProcessingException ex) {
+            logger.error(ex.getMessage());
+        }
     }
 
     @Override
@@ -73,35 +86,17 @@ public class SqlEventStore implements IEventStore {
     }
 
     public void createDatabase() {
-        final String createSchema = "CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
-                + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
-                + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
-                + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, CLASSNAME VARCHAR(255), DATA TEXT);";
-        executeSqlUpdate(createSchema);
-    }
+        try (PreparedStatement statement = ds.getConnection()
+                .prepareStatement("CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
+                        + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
+                        + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
+                        + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, "
+                        + "CLASSNAME VARCHAR(255), DATA TEXT);")) {
 
-    private void executeSqlUpdate(final String sqlString) {
-        try (PreparedStatement statement = ds.getConnection().prepareStatement(sqlString)) {
             statement.executeUpdate();
         } catch (final SQLException ex) {
             logger.error(ex.getMessage());
         }
-    }
 
-    private String generateInsert(final IDomainEvent s) {
-        final StringBuilder b = new StringBuilder();
-        ObjectMapper o = new ObjectMapper();
-        o.registerModule(new JavaTimeModule());
-        try {
-            b.append("INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES ('")
-                    .append(s.getMessageInfo().getMessageId()).append("','")
-                    .append(s.getMessageInfo().getSubjectId().toString()).append("','")
-                    .append(s.getMessageInfo().getTimestamp()).append("','").append(s.getClass().getName())
-                    .append("','").append(o.writeValueAsString(s)).append("');\r\n");
-        } catch (JsonProcessingException ex) {
-            logger.error(ex.getMessage());
-        }
-        return b.toString();
     }
-
 }

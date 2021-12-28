@@ -23,7 +23,7 @@
         <jacoco.version>0.8.7</jacoco.version>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
         <checkstyle-maven-plugin.version>3.1.2</checkstyle-maven-plugin.version>
-        <checkstyle.version>9.0.1</checkstyle.version>
+        <checkstyle.version>9.2.1</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     </properties>

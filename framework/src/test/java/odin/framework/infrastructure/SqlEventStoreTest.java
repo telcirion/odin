@@ -10,8 +10,6 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import org.junit.jupiter.api.Test;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.ISendMessage;
 import odin.concepts.common.Identity;
 import odin.concepts.infra.IDataSource;
 import odin.framework.domainmodel.TestDomainEvent;
@@ -62,13 +60,5 @@ class SqlEventStoreTest {
         public Connection getConnection() throws SQLException {
             return ds.getConnection();
         }
-    }
-
-    private class TestBus implements ISendMessage {
-
-        @Override
-        public void send(IMessage m) {
-        }
-
     }
 }

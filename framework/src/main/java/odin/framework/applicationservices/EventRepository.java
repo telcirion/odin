@@ -42,7 +42,7 @@ public class EventRepository<T extends IAggregateRoot> implements IRepository<T>
         var aggregate = creator.createAggregateRoot();
         final List<IDomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregate::source);
-        return new Aggregate<>(id, (T) aggregate);
+        return new Aggregate<>(id, aggregate);
     }
 
     @Override

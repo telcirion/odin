@@ -26,9 +26,4 @@ public class Version implements Serializable {
     public Version() {
         this.versionNumber = UUID.randomUUID();
     }
-
-    @Override
-    public String toString() {
-        return versionNumber.toString();
-    }
 }

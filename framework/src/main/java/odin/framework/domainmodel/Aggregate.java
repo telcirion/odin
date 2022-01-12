@@ -57,11 +57,4 @@ public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
         this.addedEvents.add(event);
         return event;
     }
-
-    @Override
-    public IAggregate<T> source(final IDomainEvent event) {
-        aggregateRoot.source(event);
-        return this;
-    }
-
 }

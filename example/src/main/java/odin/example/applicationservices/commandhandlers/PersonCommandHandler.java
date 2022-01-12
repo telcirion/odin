@@ -54,7 +54,7 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        var p = personRepository.load(changePersonName.getMessageInfo().subjectId(), () -> new Person());
+        var p = personRepository.load(changePersonName.getMessageInfo().subjectId(), Person::new);
         p.process(changePersonName);
         personRepository.save(p);
         return this;

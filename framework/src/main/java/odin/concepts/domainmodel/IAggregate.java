@@ -28,6 +28,4 @@ public interface IAggregate<T extends IAggregateRoot> {
 
     public IDomainEvent process(ICommand command);
 
-    public IAggregate<T> source(final IDomainEvent event);
-
 }

@@ -31,6 +31,7 @@ import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
+import odin.example.domain.state.Person;
 import odin.framework.applicationservices.EventRepository;
 import odin.framework.infrastructure.SimplePubSub;
 import odin.framework.infrastructure.SqlEventStore;
@@ -57,7 +58,7 @@ class SimpleDomainTest {
         // Initialize repo & storage
         final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
         eventStore.createDatabase(); // it's only signUpPersonProcessManager test
-        EventRepository personRepository = new EventRepository(eventStore, eventBus);
+        EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
 
         // start commandHandler
         commandBus.subscribe(new PersonCommandHandler(personRepository));

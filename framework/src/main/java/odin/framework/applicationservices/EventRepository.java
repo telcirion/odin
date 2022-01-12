@@ -24,7 +24,7 @@ import odin.concepts.domainmodel.IAggregate;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
 
-public class EventRepository implements IRepository {
+public class EventRepository<T extends IAggregateRoot> implements IRepository<T> {
 
     private final IEventStore es;
     private final ISendMessage eventBus;
@@ -35,14 +35,14 @@ public class EventRepository implements IRepository {
     }
 
     @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> K load(final K aggregate) {
+    public IAggregate<T> load(final IAggregate<T> aggregate) {
         final List<IDomainEvent> resultSet = es.load(aggregate.getId());
         resultSet.forEach(aggregate::source);
         return aggregate;
     }
 
     @Override
-    public <K extends IAggregate<? extends IAggregateRoot>> void save(final K obj) {
+    public void save(final IAggregate<T> obj) {
         obj.getAddedEvents().forEach(e -> {
             es.save(e);
             eventBus.send(e);

@@ -34,11 +34,11 @@ import odin.framework.domainmodel.Aggregate;
 
 public class PersonCommandHandler implements ICommandHandler {
 
-    private final IRepository personRepository;
+    private final IRepository<Person> personRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public PersonCommandHandler(IRepository personRepository) {
+    public PersonCommandHandler(IRepository<Person> personRepository) {
         this.personRepository = personRepository;
     }
 

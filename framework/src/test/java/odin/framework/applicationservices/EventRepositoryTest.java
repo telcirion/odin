@@ -25,7 +25,7 @@ class EventRepositoryTest {
     void eventRepositoryTest() {
         var eventStore = new SqlEventStore(new TestDataSource());
         eventStore.createDatabase();
-        var sut = new EventRepository(eventStore, new TestBus());
+        var sut = new EventRepository<TestAggregateRoot>(eventStore, new TestBus());
 
         var id = new Identity();
         var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());

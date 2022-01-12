@@ -18,8 +18,8 @@ package odin.concepts.applicationservices;
 import odin.concepts.domainmodel.IAggregate;
 import odin.concepts.domainmodel.IAggregateRoot;
 
-public interface IRepository {
-    public <K extends IAggregate<? extends IAggregateRoot>> K load(K aggregate);
-    
-    public <K extends IAggregate<? extends IAggregateRoot>> void save(K obj);
+public interface IRepository<T extends IAggregateRoot> {
+    public IAggregate<T> load(IAggregate<T> aggregate);
+
+    public void save(IAggregate<T> obj);
 }

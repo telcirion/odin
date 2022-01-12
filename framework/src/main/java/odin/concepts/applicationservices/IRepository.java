@@ -15,11 +15,12 @@
 
 package odin.concepts.applicationservices;
 
+import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IAggregate;
 import odin.concepts.domainmodel.IAggregateRoot;
 
 public interface IRepository<T extends IAggregateRoot> {
-    public IAggregate<T> load(IAggregate<T> aggregate);
+    public IAggregate<T> load(Identity id, ICreateAggregateRoot<T> creator);
 
     public void save(IAggregate<T> obj);
 }

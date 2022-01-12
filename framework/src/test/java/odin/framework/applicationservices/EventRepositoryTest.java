@@ -32,7 +32,7 @@ class EventRepositoryTest {
         saveAggregate.process(new TestCommand(id, null, "value 1"));
         assertNotNull(saveAggregate.getAddedEvents().get(0).getMessageInfo().timestamp());
         sut.save(saveAggregate);
-        var loadAggregate = sut.load(new Aggregate<>(id, new TestAggregateRoot()));
+        var loadAggregate = sut.load(id, () -> new TestAggregateRoot());
         assertEquals(saveAggregate.getAggregateRoot().getTestField(), loadAggregate.getAggregateRoot().getTestField());
     }
 

@@ -17,12 +17,15 @@ package odin.framework.applicationservices;
 
 import java.util.List;
 
+import odin.concepts.applicationservices.ICreateAggregateRoot;
 import odin.concepts.applicationservices.IEventStore;
 import odin.concepts.applicationservices.IRepository;
 import odin.concepts.common.ISendMessage;
+import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IAggregate;
 import odin.concepts.domainmodel.IAggregateRoot;
 import odin.concepts.domainmodel.IDomainEvent;
+import odin.framework.domainmodel.Aggregate;
 
 public class EventRepository<T extends IAggregateRoot> implements IRepository<T> {
 
@@ -35,10 +38,11 @@ public class EventRepository<T extends IAggregateRoot> implements IRepository<T>
     }
 
     @Override
-    public IAggregate<T> load(final IAggregate<T> aggregate) {
-        final List<IDomainEvent> resultSet = es.load(aggregate.getId());
+    public IAggregate<T> load(Identity id, ICreateAggregateRoot<T> creator) {
+        var aggregate = creator.createAggregateRoot();
+        final List<IDomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregate::source);
-        return aggregate;
+        return new Aggregate<>(id, (T) aggregate);
     }
 
     @Override

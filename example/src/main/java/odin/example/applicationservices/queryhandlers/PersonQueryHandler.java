@@ -28,6 +28,6 @@ public class PersonQueryHandler implements IQueryHandler {
     }
 
     public PersonQueryResult query(PersonByNameQuery query) {
-        return new PersonQueryResult(personList.findPerson(query.getName()));
+        return new PersonQueryResult(personList.findPerson(query.name()));
     }
 }

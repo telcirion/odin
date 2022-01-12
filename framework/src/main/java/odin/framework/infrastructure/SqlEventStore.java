@@ -87,12 +87,12 @@ public class SqlEventStore implements IEventStore {
 
     public void createDatabase() {
         try (PreparedStatement statement = ds.getConnection()
-                .prepareStatement("CREATE SCHEMA IF NOT EXISTS EVENT_STORE;\r\n"
-                        + "DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;\r\n"
-                        + "CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY, "
-                        + "AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP, "
-                        + "CLASSNAME VARCHAR(255), DATA TEXT);")) {
-
+                .prepareStatement("""
+                        CREATE SCHEMA IF NOT EXISTS EVENT_STORE;
+                        DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;
+                        CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY,
+                        AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP,
+                        CLASSNAME VARCHAR(255), DATA TEXT);""")) {
             statement.executeUpdate();
         } catch (final SQLException ex) {
             logger.error(ex.getMessage());

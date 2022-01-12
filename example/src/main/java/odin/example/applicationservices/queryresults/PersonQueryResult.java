@@ -18,14 +18,5 @@ package odin.example.applicationservices.queryresults;
 import odin.concepts.applicationservices.IQueryResult;
 import odin.example.readmodel.Person;
 
-public class PersonQueryResult implements IQueryResult {
-    private final Person person;
-
-    public PersonQueryResult(Person person) {
-        this.person = person;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
+public record PersonQueryResult(Person person) implements IQueryResult {
 }

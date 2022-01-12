@@ -80,11 +80,11 @@ class SimpleDomainTest {
         PersonQueryHandler queryHandler = new PersonQueryHandler(personDeNormalizer.getReadModel());
         PersonQueryResult personQueryResult = queryHandler.query(new PersonByNameQuery("Peter"));
         if (personQueryResult != null) {
-            logger.info("Person found with name: " + personQueryResult.getPerson().getName() + " and ssn: "
-                    + personQueryResult.getPerson().getSsn());
+            logger.info("Person found with name: " + personQueryResult.person().name() + " and ssn: "
+                    + personQueryResult.person().ssn());
 
             // and then change the person's name
-            commandBus.send(new ChangePersonName("Nico", personQueryResult.getPerson().getId(), null));
+            commandBus.send(new ChangePersonName("Nico", personQueryResult.person().id(), null));
         }
 
         // wait for name to be changed.
@@ -97,15 +97,15 @@ class SimpleDomainTest {
         // and check if the name is changed
         PersonQueryResult anotherPersonQueryResult = queryHandler.query(new PersonByNameQuery("Nico"));
         if (anotherPersonQueryResult != null) {
-            logger.info("Person found with name: " + anotherPersonQueryResult.getPerson().getName() + " and ssn: "
-                    + anotherPersonQueryResult.getPerson().getSsn());
+            logger.info("Person found with name: " + anotherPersonQueryResult.person().name() + " and ssn: "
+                    + anotherPersonQueryResult.person().ssn());
         }
 
         eventBus.stop();
         commandBus.stop();
 
-        assertEquals("Nico", anotherPersonQueryResult.getPerson().getName());
+        assertEquals("Nico", anotherPersonQueryResult.person().name());
         // Peter should no longer be found
-        assertEquals(null, queryHandler.query(new PersonByNameQuery("Peter")).getPerson());
+        assertEquals(null, queryHandler.query(new PersonByNameQuery("Peter")).person());
     }
 }

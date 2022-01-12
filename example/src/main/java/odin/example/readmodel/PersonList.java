@@ -23,16 +23,16 @@ public class PersonList {
 
     public void add(Person person) {
         synchronized (this) {
-            this.persons.put(person.getId().toString(), person);
+            this.persons.put(person.id().toString(), person);
         }
     }
 
     public void updateName(Person person) {
         synchronized (this) {
 
-            Person oldPerson = this.persons.get(person.getId().toString());
-            Person newPerson = new Person(person.getId(), person.getName(), oldPerson.getSsn());
-            this.persons.replace(person.getId().toString(), newPerson);
+            Person oldPerson = this.persons.get(person.id().toString());
+            Person newPerson = new Person(person.id(), person.name(), oldPerson.ssn());
+            this.persons.replace(person.id().toString(), newPerson);
         }
     }
 
@@ -40,7 +40,7 @@ public class PersonList {
         synchronized (this) {
 
             for (Person p : persons.values()) {
-                if (p.getName().equals(name)) {
+                if (p.name().equals(name)) {
                     return p;
                 }
             }

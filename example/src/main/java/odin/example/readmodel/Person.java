@@ -17,27 +17,5 @@ package odin.example.readmodel;
 
 import odin.concepts.common.Identity;
 
-public class Person {
-
-    private final String name;
-    private final String ssn;
-    private final Identity id;
-
-    public String getSsn() {
-        return ssn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Identity getId() {
-        return id;
-    }
-
-    public Person(Identity id, String name, String ssn) {
-        this.id = id;
-        this.name = name;
-        this.ssn = ssn;
-    }
+public record Person(Identity id, String name, String ssn) {
 }

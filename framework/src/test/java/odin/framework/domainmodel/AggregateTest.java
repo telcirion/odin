@@ -24,14 +24,14 @@ class AggregateTest {
 
     @Test
     void getAggregateRoot() {
-        assertEquals(aggregateRoot, sut.getAggrateRoot());
+        assertEquals(aggregateRoot, sut.getAggregateRoot());
     }
 
     @Test
     void processAndgetAddedEvents() {
         sut.process(new TestCommand(aggregateId, null, "value 1"));
         sut.process(new TestCommand(aggregateId, null, "value 2"));
-        
+
         assertEquals(2, sut.getAddedEvents().size());
     }
 

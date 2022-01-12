@@ -33,7 +33,7 @@ class EventRepositoryTest {
         assertNotNull(saveAggregate.getAddedEvents().get(0).getMessageInfo().timestamp());
         sut.save(saveAggregate);
         var loadAggregate = sut.load(new Aggregate<>(id, new TestAggregateRoot()));
-        assertEquals(saveAggregate.getAggrateRoot().getTestField(), loadAggregate.getAggrateRoot().getTestField());
+        assertEquals(saveAggregate.getAggregateRoot().getTestField(), loadAggregate.getAggregateRoot().getTestField());
     }
 
     private static class TestDataSource implements IDataSource {

@@ -47,8 +47,8 @@ public class PersonCommandHandler implements ICommandHandler {
         var p = new Aggregate<>(new Identity(), new Person());
         p.process(registerPerson);
         personRepository.save(p);
-        LOGGER.info("Person with name {} and ssn {} registered.", p.getAggrateRoot().getName(),
-                p.getAggrateRoot().getSsn());
+        LOGGER.info("Person with name {} and ssn {} registered.", p.getAggregateRoot().getName(),
+                p.getAggregateRoot().getSsn());
         return this;
     }
 

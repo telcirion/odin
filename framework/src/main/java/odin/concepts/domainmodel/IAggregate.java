@@ -19,10 +19,15 @@ import java.util.List;
 
 import odin.concepts.common.Identity;
 
-public interface IAggregate<T extends IAggregateRoot> extends IAggregateRoot {
-    public T getAggrateRoot();
+public interface IAggregate<T extends IAggregateRoot> {
+    public T getAggregateRoot();
 
     public List<IDomainEvent> getAddedEvents();
 
     public Identity getId();
+
+    public IDomainEvent process(ICommand command);
+
+    public IAggregate<T> source(final IDomainEvent event);
+
 }

@@ -41,17 +41,15 @@ public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
         return addedEvents;
     }
 
-
     @Override
     public Identity getId() {
         return id;
     }
 
     @Override
-    public T getAggrateRoot() {
+    public T getAggregateRoot() {
         return aggregateRoot;
     }
-
 
     @Override
     public IDomainEvent process(ICommand command) {
@@ -61,8 +59,9 @@ public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
     }
 
     @Override
-    public IAggregateRoot source(final IDomainEvent event) {
-        return aggregateRoot.source(event);
+    public IAggregate<T> source(final IDomainEvent event) {
+        aggregateRoot.source(event);
+        return this;
     }
 
 }

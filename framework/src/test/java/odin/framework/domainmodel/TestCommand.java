@@ -1,5 +1,7 @@
 package odin.framework.domainmodel;
 
+import java.time.LocalDateTime;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.common.Version;
@@ -13,7 +15,7 @@ public class TestCommand implements ICommand {
     private final String testValue;
 
     public TestCommand(Identity id, Version targetVersion, String testValue) {
-        this.commandInfo = new MessageInfo(id, targetVersion);
+        this.commandInfo = new MessageInfo(new Identity(), LocalDateTime.now(), id, targetVersion);
         this.testValue = testValue;
     }
 

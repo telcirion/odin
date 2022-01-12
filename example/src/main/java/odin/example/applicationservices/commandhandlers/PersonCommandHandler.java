@@ -54,7 +54,7 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private ICommandHandler handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        var p = personRepository.load(new Aggregate<>(changePersonName.getMessageInfo().getSubjectId(), new Person()));
+        var p = personRepository.load(new Aggregate<>(changePersonName.getMessageInfo().subjectId(), new Person()));
         p.process(changePersonName);
         personRepository.save(p);
         return this;
@@ -68,6 +68,6 @@ public class PersonCommandHandler implements ICommandHandler {
 
     private void log(ICommand command) {
         LOGGER.info("Command {} received for aggregateId: {}, revision: {}", command.getClass().getSimpleName(),
-                command.getMessageInfo().getSubjectId(), command.getMessageInfo().getSubjectVersion());
+                command.getMessageInfo().subjectId(), command.getMessageInfo().subjectVersion());
     }
 }

@@ -15,6 +15,8 @@
 
 package odin.example.domain.commands;
 
+import java.time.LocalDateTime;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.common.Version;
@@ -28,7 +30,7 @@ public class ChangePersonName implements ICommand {
     private final MessageInfo messageInfo;
 
     public ChangePersonName(String name, Identity targetId, Version targetVersion) {
-        messageInfo = new MessageInfo(targetId, targetVersion);
+        messageInfo = new MessageInfo(new Identity(), LocalDateTime.now(), targetId, targetVersion);
         this.name = name;
     }
 

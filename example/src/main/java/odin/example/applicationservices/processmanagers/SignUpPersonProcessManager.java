@@ -58,6 +58,6 @@ public class SignUpPersonProcessManager implements IProcessManager {
     }
 
     private void logReception(IMessage msg) {
-        logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getMessageInfo().getTimestamp());
+        logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getMessageInfo().timestamp());
     }
 }

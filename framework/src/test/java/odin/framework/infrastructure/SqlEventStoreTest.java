@@ -1,7 +1,6 @@
-package odin.framework.applicationservices;
+package odin.framework.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,25 +14,33 @@ import odin.concepts.common.IMessage;
 import odin.concepts.common.ISendMessage;
 import odin.concepts.common.Identity;
 import odin.concepts.infra.IDataSource;
-import odin.framework.domainmodel.Aggregate;
-import odin.framework.domainmodel.TestAggregateRoot;
-import odin.framework.domainmodel.TestCommand;
-import odin.framework.infrastructure.SqlEventStore;
+import odin.framework.domainmodel.TestDomainEvent;
 
-class EventRepositoryTest {
+class SqlEventStoreTest {
     @Test
-    void eventRepositoryTest() {
+    void eventStoreTest() {
         var eventStore = new SqlEventStore(new TestDataSource());
         eventStore.createDatabase();
-        var sut = new EventRepository(eventStore, new TestBus());
 
-        var id = new Identity();
-        var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());
-        saveAggregate.process(new TestCommand(id, null, "value 1"));
-        assertNotNull(saveAggregate.getAddedEvents().get(0).getMessageInfo().timestamp());
-        sut.save(saveAggregate);
-        var loadAggregate = sut.load(new Aggregate<>(id, new TestAggregateRoot()));
-        assertEquals(saveAggregate.getAggrateRoot().getTestField(), loadAggregate.getAggrateRoot().getTestField());
+        Identity aggregateId1 = new Identity();
+        Identity aggregateId2 = new Identity();
+
+        var testDomainEvent1 = new TestDomainEvent(aggregateId1, "event 1");
+        var testDomainEvent2 = new TestDomainEvent(aggregateId2, "event 2");
+        var testDomainEvent3 = new TestDomainEvent(aggregateId1, "event 3");
+
+        eventStore.save(testDomainEvent1);
+        eventStore.save(testDomainEvent2);
+        eventStore.save(testDomainEvent3);
+
+        var loadedEvents1 = eventStore.load(aggregateId1);
+        var loadedEvents2 = eventStore.load(aggregateId2);
+
+        assertEquals(2, loadedEvents1.size());
+        assertEquals(1, loadedEvents2.size());
+
+        assertEquals(testDomainEvent1.getMessageInfo().messageId().getId().toString(),
+                loadedEvents1.get(0).getMessageInfo().messageId().getId().toString());
     }
 
     private static class TestDataSource implements IDataSource {

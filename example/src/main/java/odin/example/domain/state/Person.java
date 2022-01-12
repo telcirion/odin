@@ -54,11 +54,11 @@ public class Person implements IAggregateRoot {
     }
 
     public IDomainEvent register(RegisterPerson command) {
-        return new PersonRegistered(command.getMessageInfo().getSubjectId(), command.getSsn(), command.getName());
+        return new PersonRegistered(command.getMessageInfo().subjectId(), command.getSsn(), command.getName());
     }
 
     public IDomainEvent changeName(ChangePersonName command) {
-        return new PersonNameChanged(command.getMessageInfo().getSubjectId(), command.getName());
+        return new PersonNameChanged(command.getMessageInfo().subjectId(), command.getName());
     }
 
     @Override

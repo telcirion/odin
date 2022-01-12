@@ -52,9 +52,9 @@ public class SqlEventStore implements IEventStore {
         o.registerModule(new JavaTimeModule());
         try (PreparedStatement statement = ds.getConnection().prepareStatement(
                 "INSERT INTO EVENT_STORE.EVENT (ID, AGGREGATE_ID, TIMESTAMP, CLASSNAME, DATA) VALUES(?, ?, ?, ?, ?)")) {
-            statement.setString(1, event.getMessageInfo().getMessageId().toString());
-            statement.setString(2, event.getMessageInfo().getSubjectId().toString());
-            statement.setString(3, event.getMessageInfo().getTimestamp().toString());
+            statement.setString(1, event.getMessageInfo().messageId().toString());
+            statement.setString(2, event.getMessageInfo().subjectId().toString());
+            statement.setString(3, event.getMessageInfo().timestamp().toString());
             statement.setString(4, event.getClass().getName());
             statement.setString(5, o.writeValueAsString(event));
             statement.executeUpdate();

@@ -15,6 +15,8 @@
 
 package odin.example.domain.commands;
 
+import java.time.LocalDateTime;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.ICommand;
@@ -28,7 +30,7 @@ public class RegisterPerson implements ICommand {
     private final String ssn;
 
     public RegisterPerson(Identity targetId, String ssn, String name) {
-        messageInfo = new MessageInfo(targetId, null);
+        messageInfo = new MessageInfo(new Identity(), LocalDateTime.now(), targetId, null);
         this.name = name;
         this.ssn = ssn;
     }

@@ -19,11 +19,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public interface IMessageInfo extends Serializable {
-    Identity getMessageId();
+    Identity messageId();
 
-    Identity getSubjectId();
+    Identity subjectId();
 
-    Version getSubjectVersion();
+    Version subjectVersion();
 
-    LocalDateTime getTimestamp();
+    LocalDateTime timestamp();
 }

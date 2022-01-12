@@ -15,6 +15,8 @@
 
 package odin.example.domain.events;
 
+import java.time.LocalDateTime;
+
 import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
 import odin.concepts.domainmodel.IDomainEvent;
@@ -28,7 +30,7 @@ public class PersonRegistered implements IDomainEvent {
     private final MessageInfo messageInfo;
 
     public PersonRegistered(Identity id, String ssn, String name) {
-        messageInfo = new MessageInfo(id, null);
+        messageInfo = new MessageInfo(new Identity(), LocalDateTime.now(), id, null);
         this.ssn = ssn;
         this.name = name;
     }

@@ -62,24 +62,6 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>dev-azure-com-telcirion-odin-framework-mvn</id>
-            <url>https://pkgs.dev.azure.com/telcirion/_packaging/odin-framework-mvn/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <distributionManagement>
-        <repository>
-            <id>dev-azure-com-telcirion-odin-framework-mvn</id>
-            <url>https://pkgs.dev.azure.com/telcirion/_packaging/odin-framework-mvn/maven/v1</url>
-        </repository>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

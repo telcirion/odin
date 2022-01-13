@@ -8,7 +8,7 @@
         <revision>1.0.0</revision>
         <changelist>-SNAPSHOT</changelist>
         <sha1/>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <compiler-plugin.version>3.9.0</compiler-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

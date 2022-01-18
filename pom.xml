@@ -34,7 +34,6 @@
     <modules>
         <module>framework</module>
         <module>example</module>
-        <module>example-service</module>
     </modules>
 
     <build>

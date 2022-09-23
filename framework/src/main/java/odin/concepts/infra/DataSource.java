@@ -13,7 +13,13 @@
  * limitations under the License.
  */
 
-package odin.concepts.applicationservices;
+package odin.concepts.infra;
 
-public interface IQueryHandler{
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public interface DataSource {
+
+    Connection getConnection() throws SQLException;
+
 }

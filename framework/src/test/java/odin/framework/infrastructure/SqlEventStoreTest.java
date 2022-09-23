@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.Test;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import org.junit.jupiter.api.Test;
-
 import odin.concepts.common.Identity;
-import odin.concepts.infra.IDataSource;
+import odin.concepts.infra.DataSource;
 import odin.framework.domainmodel.TestDomainEvent;
 
 class SqlEventStoreTest {
@@ -41,7 +41,7 @@ class SqlEventStoreTest {
                 loadedEvents1.get(0).getMessageInfo().messageId().getId().toString());
     }
 
-    private static class TestDataSource implements IDataSource {
+    private static class TestDataSource implements DataSource {
 
         private static final HikariConfig config = new HikariConfig();
         private static final HikariDataSource ds;

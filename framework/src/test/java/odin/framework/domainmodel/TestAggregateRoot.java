@@ -1,14 +1,14 @@
 package odin.framework.domainmodel;
 
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.ICommand;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.AggregateRoot;
+import odin.concepts.domainmodel.Command;
+import odin.concepts.domainmodel.DomainEvent;
 import odin.framework.common.Dispatcher;
 
-public class TestAggregateRoot implements IAggregateRoot {
+public class TestAggregateRoot implements AggregateRoot {
     private String testField;
 
-    private IDomainEvent changeTestField(TestCommand command) {
+    private DomainEvent changeTestField(TestCommand command) {
         return new TestDomainEvent(command.getMessageInfo().subjectId(), command.getTestValue());
     }
 
@@ -28,14 +28,14 @@ public class TestAggregateRoot implements IAggregateRoot {
     }
 
     @Override
-    public IAggregateRoot source(IDomainEvent event) {
+    public AggregateRoot source(DomainEvent event) {
         return new Dispatcher<>(this).match(String.class, this::dummy, event)
                 .match(TestDomainEvent.class, this::testFieldChanged, event).result();
     }
 
     @Override
-    public IDomainEvent process(ICommand command) {
-        var event = new Dispatcher<IDomainEvent>(null).match(TestCommand.class, this::changeTestField, command)
+    public DomainEvent process(Command command) {
+        var event = new Dispatcher<DomainEvent>(null).match(TestCommand.class, this::changeTestField, command)
                 .result();
         source(event);
         return event;

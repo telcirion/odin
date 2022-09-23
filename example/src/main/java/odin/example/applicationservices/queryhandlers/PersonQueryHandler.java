@@ -15,12 +15,12 @@
 
 package odin.example.applicationservices.queryhandlers;
 
-import odin.concepts.applicationservices.IQueryHandler;
+import odin.concepts.applicationservices.QueryHandler;
 import odin.example.applicationservices.queries.PersonByNameQuery;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.readmodel.PersonList;
 
-public class PersonQueryHandler implements IQueryHandler {
+public class PersonQueryHandler implements QueryHandler {
     private PersonList personList;
 
     public PersonQueryHandler(PersonList personList) {

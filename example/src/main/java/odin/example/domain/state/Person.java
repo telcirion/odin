@@ -15,16 +15,16 @@
 
 package odin.example.domain.state;
 
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.ICommand;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.AggregateRoot;
+import odin.concepts.domainmodel.Command;
+import odin.concepts.domainmodel.DomainEvent;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.framework.common.Dispatcher;
 
-public class Person implements IAggregateRoot {
+public class Person implements AggregateRoot {
 
     private String name;
     private String ssn;
@@ -53,24 +53,24 @@ public class Person implements IAggregateRoot {
         return this;
     }
 
-    public IDomainEvent register(RegisterPerson command) {
+    public DomainEvent register(RegisterPerson command) {
         return new PersonRegistered(command.getMessageInfo().subjectId(), command.getSsn(), command.getName());
     }
 
-    public IDomainEvent changeName(ChangePersonName command) {
+    public DomainEvent changeName(ChangePersonName command) {
         return new PersonNameChanged(command.getMessageInfo().subjectId(), command.getName());
     }
 
     @Override
-    public IDomainEvent process(ICommand command) {
-        var event = new Dispatcher<IDomainEvent>(null).match(RegisterPerson.class, this::register, command)
+    public DomainEvent process(Command command) {
+        var event = new Dispatcher<DomainEvent>(null).match(RegisterPerson.class, this::register, command)
                 .match(ChangePersonName.class, this::changeName, command).result();
         source(event);
         return event;
     }
 
     @Override
-    public IAggregateRoot source(IDomainEvent msg) {
+    public AggregateRoot source(DomainEvent msg) {
         return new Dispatcher<>(this).match(PersonRegistered.class, this::registered, msg)
                 .match(PersonNameChanged.class, this::changedName, msg).result();
 

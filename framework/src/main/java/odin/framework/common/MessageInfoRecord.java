@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2022 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 
-package odin.concepts.infra;
+package odin.framework.common;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 
-public interface IDataSource {
+import odin.concepts.common.Identity;
+import odin.concepts.common.MessageInfo;
+import odin.concepts.common.Version;
 
-    Connection getConnection() throws SQLException;
-
+public record MessageInfoRecord(Identity messageId, LocalDateTime timestamp, Identity subjectId, Version subjectVersion)
+        implements MessageInfo {
 }

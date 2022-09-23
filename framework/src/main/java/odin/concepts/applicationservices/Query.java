@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-package odin.concepts.domainmodel;
+package odin.concepts.applicationservices;
 
-import odin.concepts.common.IMessage;
-
-public interface ICommand extends IMessage {
+public interface Query {
 }

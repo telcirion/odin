@@ -1,4 +1,4 @@
-/* Copyright 2020 Peter Jansen
+/* Copyright 2019 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
 
 package odin.concepts.applicationservices;
 
-import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.MessageHandler;
 
-public interface ICommandHandler extends IMessageHandler {
-
+public interface ProcessManager extends MessageHandler {
 }

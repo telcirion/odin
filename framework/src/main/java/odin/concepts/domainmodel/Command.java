@@ -1,4 +1,4 @@
-/* Copyright 2022 Peter Jansen
+/* Copyright 2019 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,9 @@
  * limitations under the License.
  */
 
-package odin.framework.common;
+package odin.concepts.domainmodel;
 
-import java.time.LocalDateTime;
+import odin.concepts.common.Message;
 
-import odin.concepts.common.IMessageInfo;
-import odin.concepts.common.Identity;
-import odin.concepts.common.Version;
-
-public record MessageInfo(Identity messageId, LocalDateTime timestamp, Identity subjectId, Version subjectVersion)
-        implements IMessageInfo {
+public interface Command extends Message {
 }

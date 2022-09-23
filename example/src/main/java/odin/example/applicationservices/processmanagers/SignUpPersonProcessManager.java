@@ -20,44 +20,44 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.IProcessManager;
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.concepts.common.ISendMessage;
+import odin.concepts.applicationservices.ProcessManager;
 import odin.concepts.common.Identity;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageHandler;
+import odin.concepts.common.SendMessage;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.framework.common.Dispatcher;
 
-public class SignUpPersonProcessManager implements IProcessManager {
+public class SignUpPersonProcessManager implements ProcessManager {
 
-    private final ISendMessage commandBus;
+    private final SendMessage commandBus;
 
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public SignUpPersonProcessManager(ISendMessage commandBus) {
+    public SignUpPersonProcessManager(SendMessage commandBus) {
         this.commandBus = commandBus;
     }
 
     @Override
-    public IMessageHandler handle(IMessage msg) {
-        return new Dispatcher<IMessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
+    public MessageHandler handle(Message msg) {
+        return new Dispatcher<MessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
                 .match(PersonRegistered.class, this::handle, msg).result();
     }
 
-    private IMessageHandler handle(PersonSignUpReceived msg) {
+    private MessageHandler handle(PersonSignUpReceived msg) {
         logReception(msg);
         commandBus.send(new RegisterPerson(new Identity(), msg.getSsn(), msg.getName()));
         return this;
     }
 
-    private IMessageHandler handle(PersonRegistered msg) {
+    private MessageHandler handle(PersonRegistered msg) {
         logReception(msg);
         return this;
     }
 
-    private void logReception(IMessage msg) {
+    private void logReception(Message msg) {
         logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getMessageInfo().timestamp());
     }
 }

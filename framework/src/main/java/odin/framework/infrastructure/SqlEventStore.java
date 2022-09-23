@@ -22,31 +22,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import odin.concepts.applicationservices.IEventStore;
+import odin.concepts.applicationservices.EventStore;
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IDomainEvent;
-import odin.concepts.infra.IDataSource;
+import odin.concepts.domainmodel.DomainEvent;
+import odin.concepts.infra.DataSource;
 
-public class SqlEventStore implements IEventStore {
+public class SqlEventStore implements EventStore {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final IDataSource ds;
+    private final DataSource ds;
 
-    public SqlEventStore(final IDataSource ds) {
+    public SqlEventStore(final DataSource ds) {
         this.ds = ds;
     }
 
     @Override
-    public void save(IDomainEvent event) {
+    public void save(DomainEvent event) {
 
         ObjectMapper o = new ObjectMapper();
         o.registerModule(new JavaTimeModule());
@@ -64,8 +64,8 @@ public class SqlEventStore implements IEventStore {
     }
 
     @Override
-    public List<IDomainEvent> load(Identity id) {
-        final ArrayList<IDomainEvent> eventList = new ArrayList<>();
+    public List<DomainEvent> load(Identity id) {
+        final ArrayList<DomainEvent> eventList = new ArrayList<>();
         try (PreparedStatement statement = ds.getConnection().prepareStatement(
                 "SELECT CLASSNAME, DATA FROM EVENT_STORE.EVENT WHERE AGGREGATE_ID=? ORDER BY TIMESTAMP;")) {
             statement.setString(1, id.toString());
@@ -74,7 +74,7 @@ public class SqlEventStore implements IEventStore {
                 mapper.registerModule(new JavaTimeModule());
                 mapper.registerModule(new ParameterNamesModule());
                 while (resultSet.next()) {
-                    eventList.add((IDomainEvent) mapper.readValue(resultSet.getString(2),
+                    eventList.add((DomainEvent) mapper.readValue(resultSet.getString(2),
                             Class.forName(resultSet.getString(1))));
                 }
                 return eventList;

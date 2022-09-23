@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageHandler;
 import odin.framework.common.TestMessage;
 
-class SimplePubSubTest implements IMessageHandler {
+class SimplePubSubTest implements MessageHandler {
     private boolean msgHandled = false;
 
     @Test
@@ -25,7 +25,7 @@ class SimplePubSubTest implements IMessageHandler {
     }
 
     @Override
-    public IMessageHandler handle(IMessage msg) {
+    public MessageHandler handle(Message msg) {
         synchronized (this) {
             msgHandled = true;
         }

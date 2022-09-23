@@ -22,23 +22,23 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.concepts.common.IPublishMessage;
-import odin.concepts.common.ISendMessage;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageHandler;
+import odin.concepts.common.PublishMessage;
+import odin.concepts.common.SendMessage;
 
-public class SimplePubSub implements ISendMessage, IPublishMessage {
+public class SimplePubSub implements SendMessage, PublishMessage {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final List<IMessageHandler> subscribers = new ArrayList<>();
+    private final List<MessageHandler> subscribers = new ArrayList<>();
 
     @Override
-    public void send(IMessage m) {
+    public void send(Message m) {
         subscribers.forEach(x -> x.handle(m));
     }
 
     @Override
-    public void subscribe(IMessageHandler messageHandler) {
+    public void subscribe(MessageHandler messageHandler) {
         subscribers.add(messageHandler);
     }
 }

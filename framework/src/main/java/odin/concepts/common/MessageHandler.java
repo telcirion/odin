@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
 
 package odin.concepts.common;
 
-public interface IPublishMessage {
-    void subscribe(IMessageHandler messageHandler);
-
-    default void stop() {
-    }
+public interface MessageHandler {
+    MessageHandler handle(Message msg);
 }

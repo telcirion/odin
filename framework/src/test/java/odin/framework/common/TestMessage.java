@@ -1,13 +1,13 @@
 package odin.framework.common;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageInfo;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageInfo;
 
-public class TestMessage implements IMessage {
+public class TestMessage implements Message {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public IMessageInfo getMessageInfo() {
+    public MessageInfo getMessageInfo() {
         return null;
     }
       

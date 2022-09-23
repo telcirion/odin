@@ -15,8 +15,8 @@
 
 package odin.concepts.domainmodel;
 
-public interface IAggregateRoot {
-    IDomainEvent process(ICommand command);
+public interface AggregateRoot {
+    DomainEvent process(Command command);
 
-    IAggregateRoot source(IDomainEvent event);
+    AggregateRoot source(DomainEvent event);
 }

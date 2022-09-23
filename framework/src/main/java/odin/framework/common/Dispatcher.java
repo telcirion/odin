@@ -15,8 +15,8 @@
 
 package odin.framework.common;
 
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageAction;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageAction;
 
 public class Dispatcher<Z> {
     final Z noMatchHandler;
@@ -25,7 +25,7 @@ public class Dispatcher<Z> {
         this.noMatchHandler = noMatchHandler;
     }
 
-    public <T> Dispatcher<Z> match(final Class<T> msgClazz, final IMessageAction<T,Z> msgAction, final IMessage msg) {
+    public <T> Dispatcher<Z> match(final Class<T> msgClazz, final MessageAction<T,Z> msgAction, final Message msg) {
         if (msgClazz.isInstance(msg)) {
             return new Dispatcher<>(msgAction.executeAction(msgClazz.cast(msg)));
         }

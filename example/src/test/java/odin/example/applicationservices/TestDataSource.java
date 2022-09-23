@@ -21,9 +21,9 @@ import java.sql.SQLException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import odin.concepts.infra.IDataSource;
+import odin.concepts.infra.DataSource;
 
-public class TestDataSource implements IDataSource {
+public class TestDataSource implements DataSource {
 
     private final HikariConfig config = new HikariConfig();
     private final HikariDataSource ds;

@@ -15,7 +15,7 @@
 
 package odin.example.applicationservices.queries;
 
-import odin.concepts.applicationservices.IQuery;
+import odin.concepts.applicationservices.Query;
 
-public record PersonByNameQuery(String name) implements IQuery {
+public record PersonByNameQuery(String name) implements Query {
 }

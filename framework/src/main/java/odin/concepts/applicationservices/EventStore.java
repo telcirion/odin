@@ -13,9 +13,15 @@
  * limitations under the License.
  */
 
-package odin.concepts.common;
+package odin.concepts.applicationservices;
 
-@FunctionalInterface
-public interface IMessageAction<T,K> {
-    K executeAction(T msg);
+import java.util.List;
+
+import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.DomainEvent;
+
+public interface EventStore {
+    void save(DomainEvent domainEvents);
+
+    List<DomainEvent> load(Identity id);
 }

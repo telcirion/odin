@@ -15,5 +15,8 @@
 
 package odin.concepts.applicationservices;
 
-public interface IQueryResult {
+import odin.concepts.common.MessageHandler;
+
+public interface DeNormalizer<T> extends MessageHandler {
+    T getReadModel();
 }

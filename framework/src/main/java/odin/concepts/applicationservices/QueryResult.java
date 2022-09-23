@@ -15,5 +15,5 @@
 
 package odin.concepts.applicationservices;
 
-public interface IQuery {
+public interface QueryResult {
 }

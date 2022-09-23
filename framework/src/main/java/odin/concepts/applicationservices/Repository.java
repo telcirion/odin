@@ -1,4 +1,4 @@
-/* Copyright 2019 Peter Jansen
+/* Copyright 2020 Peter Jansen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,14 @@
  * limitations under the License.
  */
 
-package odin.concepts.common;
+package odin.concepts.applicationservices;
 
-public interface ISendMessage {
-    void send(IMessage m);
+import odin.concepts.common.Identity;
+import odin.concepts.domainmodel.Aggregate;
+import odin.concepts.domainmodel.AggregateRoot;
+
+public interface Repository<T extends AggregateRoot> {
+    public Aggregate<T> load(Identity id, CreateAggregateRoot<T> creator);
+
+    public void save(Aggregate<T> obj);
 }

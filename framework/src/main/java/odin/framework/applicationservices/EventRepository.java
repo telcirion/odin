@@ -17,36 +17,36 @@ package odin.framework.applicationservices;
 
 import java.util.List;
 
-import odin.concepts.applicationservices.ICreateAggregateRoot;
-import odin.concepts.applicationservices.IEventStore;
-import odin.concepts.applicationservices.IRepository;
-import odin.concepts.common.ISendMessage;
+import odin.concepts.applicationservices.CreateAggregateRoot;
+import odin.concepts.applicationservices.EventStore;
+import odin.concepts.applicationservices.Repository;
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IAggregate;
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.IDomainEvent;
-import odin.framework.domainmodel.Aggregate;
+import odin.concepts.common.SendMessage;
+import odin.concepts.domainmodel.Aggregate;
+import odin.concepts.domainmodel.AggregateRoot;
+import odin.concepts.domainmodel.DomainEvent;
+import odin.framework.domainmodel.EventAggregate;
 
-public class EventRepository<T extends IAggregateRoot> implements IRepository<T> {
+public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 
-    private final IEventStore es;
-    private final ISendMessage eventBus;
+    private final EventStore es;
+    private final SendMessage eventBus;
 
-    public EventRepository(final IEventStore es, final ISendMessage eventBus) {
+    public EventRepository(final EventStore es, final SendMessage eventBus) {
         this.eventBus = eventBus;
         this.es = es;
     }
 
     @Override
-    public IAggregate<T> load(Identity id, ICreateAggregateRoot<T> creator) {
+    public Aggregate<T> load(Identity id, CreateAggregateRoot<T> creator) {
         var aggregate = creator.createAggregateRoot();
-        final List<IDomainEvent> resultSet = es.load(id);
+        final List<DomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregate::source);
-        return new Aggregate<>(id, aggregate);
+        return new EventAggregate<>(id, aggregate);
     }
 
     @Override
-    public void save(final IAggregate<T> obj) {
+    public void save(final Aggregate<T> obj) {
         obj.getAddedEvents().forEach(e -> {
             es.save(e);
             eventBus.send(e);

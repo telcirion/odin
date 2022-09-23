@@ -15,7 +15,7 @@
 
 package odin.concepts.domainmodel;
 
-import odin.concepts.common.IMessage;
+import odin.concepts.common.Message;
 
-public interface IDomainEvent extends IMessage {
+public interface DomainEvent extends Message {
 }

@@ -19,25 +19,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IAggregate;
-import odin.concepts.domainmodel.IAggregateRoot;
-import odin.concepts.domainmodel.ICommand;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.domainmodel.Aggregate;
+import odin.concepts.domainmodel.AggregateRoot;
+import odin.concepts.domainmodel.Command;
+import odin.concepts.domainmodel.DomainEvent;
 
-public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
+public class EventAggregate<T extends AggregateRoot> implements Aggregate<T> {
 
-    private final List<IDomainEvent> addedEvents;
+    private final List<DomainEvent> addedEvents;
     private final Identity id;
     private final T aggregateRoot;
 
-    public Aggregate(final Identity id, final T aggregateRoot) {
+    public EventAggregate(final Identity id, final T aggregateRoot) {
         this.id = id;
         this.aggregateRoot = aggregateRoot;
         this.addedEvents = new ArrayList<>();
     }
 
     @Override
-    public List<IDomainEvent> getAddedEvents() {
+    public List<DomainEvent> getAddedEvents() {
         return addedEvents;
     }
 
@@ -52,7 +52,7 @@ public class Aggregate<T extends IAggregateRoot> implements IAggregate<T> {
     }
 
     @Override
-    public IDomainEvent process(ICommand command) {
+    public DomainEvent process(Command command) {
         var event = aggregateRoot.process(command);
         this.addedEvents.add(event);
         return event;

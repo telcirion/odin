@@ -15,8 +15,5 @@
 
 package odin.concepts.applicationservices;
 
-import odin.concepts.common.IMessageHandler;
-
-public interface IDeNormalizer<T> extends IMessageHandler {
-    T getReadModel();
+public interface QueryHandler{
 }

@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import odin.concepts.common.IMessageInfo;
 import odin.concepts.common.Identity;
+import odin.concepts.common.MessageInfo;
 import odin.concepts.common.Version;
 
 class MessageInfoTest {
-    private static IMessageInfo sut;
+    private static MessageInfo sut;
     private static Identity aggregateId;
     private static Version aggregateVersion;
 
@@ -21,7 +21,7 @@ class MessageInfoTest {
     static void setUp() {
         aggregateId = new Identity();
         aggregateVersion = new Version();
-        sut = new MessageInfo(new Identity(), LocalDateTime.now(), aggregateId, aggregateVersion);
+        sut = new MessageInfoRecord(new Identity(), LocalDateTime.now(), aggregateId, aggregateVersion);
     }
 
     @Test

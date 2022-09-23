@@ -20,17 +20,17 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.IDeNormalizer;
-import odin.concepts.common.IMessage;
-import odin.concepts.common.IMessageHandler;
-import odin.concepts.domainmodel.IDomainEvent;
+import odin.concepts.applicationservices.DeNormalizer;
+import odin.concepts.common.Message;
+import odin.concepts.common.MessageHandler;
+import odin.concepts.domainmodel.DomainEvent;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.Person;
 import odin.example.readmodel.PersonList;
 import odin.framework.common.Dispatcher;
 
-public class PersonDeNormalizer implements IDeNormalizer<PersonList> {
+public class PersonDeNormalizer implements DeNormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private int numberOfPersonRegisteredReceived = 0;
     private int numberOfPersonNameChangedReceived = 0;
@@ -49,7 +49,7 @@ public class PersonDeNormalizer implements IDeNormalizer<PersonList> {
 
     private final PersonList personList = new PersonList();
 
-    private IDeNormalizer<PersonList> handle(PersonRegistered personRegistered) {
+    private DeNormalizer<PersonList> handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
         Person person = new Person(personRegistered.getMessageInfo().subjectId(), personRegistered.getName(),
                 personRegistered.getSsn());
@@ -60,7 +60,7 @@ public class PersonDeNormalizer implements IDeNormalizer<PersonList> {
         return this;
     }
 
-    private IDeNormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
+    private DeNormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
         Person person = new Person(personNameChanged.getMessageInfo().subjectId(), personNameChanged.getName(),
                 null);
@@ -72,12 +72,12 @@ public class PersonDeNormalizer implements IDeNormalizer<PersonList> {
     }
 
     @Override
-    public IMessageHandler handle(IMessage msg) {
-        return new Dispatcher<IMessageHandler>(this).match(PersonRegistered.class, this::handle, msg)
+    public MessageHandler handle(Message msg) {
+        return new Dispatcher<MessageHandler>(this).match(PersonRegistered.class, this::handle, msg)
                 .match(PersonNameChanged.class, this::handle, msg).result();
     }
 
-    private void log(IDomainEvent event) {
+    private void log(DomainEvent event) {
         LOGGER.info("DomainEvent {} received for aggregateId: {}", event.getClass().getSimpleName(),
                 event.getMessageInfo().subjectId());
     }

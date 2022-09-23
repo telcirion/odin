@@ -6,20 +6,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.IAggregate;
-import odin.concepts.domainmodel.IAggregateRoot;
+import odin.concepts.domainmodel.Aggregate;
+import odin.concepts.domainmodel.AggregateRoot;
 
 class AggregateTest {
 
     private static Identity aggregateId;
-    private static IAggregateRoot aggregateRoot;
-    private static IAggregate<IAggregateRoot> sut;
+    private static AggregateRoot aggregateRoot;
+    private static Aggregate<AggregateRoot> sut;
 
     @BeforeAll
     static void setUp() {
         aggregateId = new Identity();
         aggregateRoot = new TestAggregateRoot();
-        sut = new Aggregate<>(aggregateId, aggregateRoot);
+        sut = new EventAggregate<>(aggregateId, aggregateRoot);
     }
 
     @Test

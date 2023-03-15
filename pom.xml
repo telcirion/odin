@@ -24,7 +24,7 @@
         <javax-activation.version>1.2.0</javax-activation.version>
         <jackson.version>2.14.2</jackson.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <surefire-plugin.version>2.22.2</surefire-plugin.version>
+        <surefire-plugin.version>3.0.0</surefire-plugin.version>
         <checkstyle-maven-plugin.version>3.2.1</checkstyle-maven-plugin.version>
         <checkstyle.version>10.7.0</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>

@@ -91,7 +91,7 @@ public class SqlEventStore implements EventStore {
                         CREATE SCHEMA IF NOT EXISTS EVENT_STORE;
                         DROP TABLE IF EXISTS EVENT_STORE.EVENT CASCADE;
                         CREATE TABLE IF NOT EXISTS  EVENT_STORE.EVENT(ID UUID PRIMARY KEY,
-                        AGGREGATE_ID CHAR(36) NOT NULL , TIMESTAMP TIMESTAMP,
+                        AGGREGATE_ID UUID NOT NULL , TIMESTAMP TIMESTAMP,
                         CLASSNAME VARCHAR(255), DATA TEXT);""")) {
             statement.executeUpdate();
         } catch (final SQLException ex) {

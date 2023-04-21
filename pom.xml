@@ -25,7 +25,7 @@
         <yasson.version>3.0.3</yasson.version>
         <jacoco.version>0.8.9</jacoco.version>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
-        <checkstyle-maven-plugin.version>3.2.1</checkstyle-maven-plugin.version>
+        <checkstyle-maven-plugin.version>3.2.2</checkstyle-maven-plugin.version>
         <checkstyle.version>10.9.3</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>

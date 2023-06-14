@@ -33,8 +33,8 @@ import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
 import odin.framework.applicationservices.EventRepository;
+import odin.framework.infrastructure.InMemoryEventStore;
 import odin.framework.infrastructure.SimplePubSub;
-import odin.framework.infrastructure.SqlEventStore;
 
 class SimpleDomainTest {
 
@@ -56,8 +56,9 @@ class SimpleDomainTest {
         logger.info("De-normalizer created, wait for processing.");
 
         // Initialize repo & storage
-        final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
-        eventStore.createDatabase(); // it's only signUpPersonProcessManager test
+        // final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
+        // eventStore.createDatabase(); // it's only signUpPersonProcessManager test
+        InMemoryEventStore eventStore = new InMemoryEventStore();
         EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
 
         // start commandHandler

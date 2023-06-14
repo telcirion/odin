@@ -28,7 +28,7 @@ import odin.concepts.common.SendMessage;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
-import odin.framework.common.Dispatcher;
+import odin.framework.common.MessageDispatcher;
 
 public class SignUpPersonProcessManager implements ProcessManager {
 
@@ -42,7 +42,7 @@ public class SignUpPersonProcessManager implements ProcessManager {
 
     @Override
     public MessageHandler handle(Message msg) {
-        return new Dispatcher<MessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
+        return new MessageDispatcher<MessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
                 .match(PersonRegistered.class, this::handle, msg).result();
     }
 

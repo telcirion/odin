@@ -18,21 +18,22 @@ package odin.framework.common;
 import odin.concepts.common.Message;
 import odin.concepts.common.MessageAction;
 
-public class Dispatcher<Z> {
-    final Z noMatchHandler;
+public class MessageDispatcher<Z> {
+    final Z defaultHandler;
 
-    public Dispatcher(Z noMatchHandler) {
-        this.noMatchHandler = noMatchHandler;
+    public MessageDispatcher(Z defaultHandler) {
+        this.defaultHandler = defaultHandler;
     }
 
-    public <T> Dispatcher<Z> match(final Class<T> msgClazz, final MessageAction<T,Z> msgAction, final Message msg) {
+    public <T> MessageDispatcher<Z> match(final Class<T> msgClazz, final MessageAction<T, Z> msgAction,
+            final Message msg) {
         if (msgClazz.isInstance(msg)) {
-            return new Dispatcher<>(msgAction.executeAction(msgClazz.cast(msg)));
+            return new MessageDispatcher<>(msgAction.executeAction(msgClazz.cast(msg)));
         }
         return this;
     }
 
     public Z result() {
-        return noMatchHandler;
+        return defaultHandler;
     }
 }

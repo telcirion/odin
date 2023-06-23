@@ -20,7 +20,7 @@
         <slf4j.version>2.0.7</slf4j.version>
         <jackson.version>2.15.2</jackson.version>
         <jacoco.version>0.8.9</jacoco.version>
-        <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <surefire-plugin.version>3.1.2</surefire-plugin.version>
         <checkstyle-maven-plugin.version>3.3.0</checkstyle-maven-plugin.version>
 
         <checkstyle.version>10.9.3</checkstyle.version>

@@ -17,7 +17,7 @@ class SimplePubSubTest implements MessageHandler {
         sut.subscribe(this);
         sut.send(new TestMessage());
         // noinspection StatementWithEmptyBody
-        while (!isMsgHandled()){
+        while (!isMsgHandled()) {
             // just wait;
         }
         sut.stop();

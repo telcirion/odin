@@ -29,7 +29,7 @@ import odin.concepts.domainmodel.Command;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
-import odin.framework.common.Dispatcher;
+import odin.framework.common.MessageDispatcher;
 import odin.framework.domainmodel.EventAggregate;
 
 public class PersonCommandHandler implements CommandHandler {
@@ -62,7 +62,7 @@ public class PersonCommandHandler implements CommandHandler {
 
     @Override
     public MessageHandler handle(Message msg) {
-        return new Dispatcher<CommandHandler>(this).match(RegisterPerson.class, this::handle, msg)
+        return new MessageDispatcher<CommandHandler>(this).match(RegisterPerson.class, this::handle, msg)
                 .match(ChangePersonName.class, this::handle, msg).result();
     }
 

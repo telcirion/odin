@@ -48,7 +48,7 @@ public class SignUpPersonProcessManager implements ProcessManager {
 
     private MessageHandler handle(PersonSignUpReceived msg) {
         logReception(msg);
-        commandBus.send(new RegisterPerson(new Identity(), msg.getSsn(), msg.getName()));
+        commandBus.send(new RegisterPerson(new Identity(), msg.getLastName(), msg.getFirstName()));
         return this;
     }
 

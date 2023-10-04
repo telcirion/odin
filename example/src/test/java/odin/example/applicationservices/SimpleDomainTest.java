@@ -16,6 +16,7 @@
 package odin.example.applicationservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.invoke.MethodHandles;
 
@@ -106,6 +107,7 @@ class SimpleDomainTest {
         eventBus.stop();
         commandBus.stop();
 
+        assertNotNull(anotherPersonQueryResult);
         assertEquals("Nico", anotherPersonQueryResult.person().name());
         // Peter should no longer be found
         assertEquals(null, queryHandler.query(new PersonByNameQuery("Peter")).person());

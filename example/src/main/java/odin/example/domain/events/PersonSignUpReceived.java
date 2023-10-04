@@ -26,21 +26,21 @@ public class PersonSignUpReceived implements DomainEvent {
 
     private static final long serialVersionUID = 1L;
     private final MessageInfoRecord messageInfo;
-    private final String ssn;
-    private final String name;
+    private final String lastName;
+    private final String firstName;
 
-    public PersonSignUpReceived(String ssn, String name) {
+    public PersonSignUpReceived(String lastName, String firstName) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), null, null);
-        this.ssn = ssn;
-        this.name = name;
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getSsn() {
-        return ssn;
+    public String getLastName() {
+        return lastName;
     }
 
     @Override

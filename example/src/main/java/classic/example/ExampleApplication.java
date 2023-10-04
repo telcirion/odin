@@ -1,4 +1,4 @@
-package odin.example;
+package classic.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ public class ExampleApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ExampleApplication.class, args);
-        log.info("Up and running!");
+        log.info("Alles ging goed");
     }
+
 }

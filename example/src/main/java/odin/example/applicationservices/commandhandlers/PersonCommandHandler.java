@@ -47,8 +47,8 @@ public class PersonCommandHandler implements CommandHandler {
         var p = new EventAggregate<>(new Identity(), new Person());
         p.process(registerPerson);
         personRepository.save(p);
-        LOGGER.info("Person with name {} and ssn {} registered.", p.getAggregateRoot().getName(),
-                p.getAggregateRoot().getSsn());
+        LOGGER.info("Person with name {} and ssn {} registered.", p.getAggregateRoot().getFirstName(),
+                p.getAggregateRoot().getLastName());
         return this;
     }
 

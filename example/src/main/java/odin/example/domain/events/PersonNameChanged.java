@@ -26,15 +26,15 @@ public class PersonNameChanged implements DomainEvent {
 
     private static final long serialVersionUID = 1L;
     private final MessageInfoRecord messageInfo;
-    private final String name;
+    private final String firstName;
 
-    public PersonNameChanged(Identity aggregateId, String name) {
+    public PersonNameChanged(Identity aggregateId, String firstName) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), aggregateId, null);
-        this.name = name;
+        this.firstName = firstName;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     @Override

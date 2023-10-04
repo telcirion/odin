@@ -25,22 +25,22 @@ import odin.framework.common.MessageInfoRecord;
 public class PersonRegistered implements DomainEvent {
     private static final long serialVersionUID = 1L;
 
-    private final String ssn;
-    private final String name;
+    private final String lastName;
+    private final String firstName;
     private final MessageInfoRecord messageInfo;
 
-    public PersonRegistered(Identity id, String ssn, String name) {
+    public PersonRegistered(Identity id, String lastName, String firstName) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), id, null);
-        this.ssn = ssn;
-        this.name = name;
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
-    public String getSsn() {
-        return ssn;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     @Override

@@ -26,30 +26,30 @@ import odin.framework.common.MessageDispatcher;
 
 public class Person implements AggregateRoot {
 
-    private String name;
-    private String ssn;
+    private String firstName;
+    private String lastName;
 
-    public String getSsn() {
-        return ssn;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     public Person() {
-        this.name = null;
-        this.ssn = null;
+        this.firstName = null;
+        this.lastName = null;
     }
 
     private Person registered(final PersonRegistered event) {
-        this.name = event.getName();
-        this.ssn = event.getSsn();
+        this.firstName = event.getFirstName();
+        this.lastName = event.getLastName();
         return this;
     }
 
     private Person changedName(final PersonNameChanged event) {
-        this.name = event.getName();
+        this.firstName = event.getFirstName();
         return this;
     }
 

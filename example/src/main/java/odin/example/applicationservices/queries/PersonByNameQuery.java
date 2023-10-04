@@ -17,5 +17,5 @@ package odin.example.applicationservices.queries;
 
 import odin.concepts.applicationservices.Query;
 
-public record PersonByNameQuery(String name) implements Query {
+public record PersonByNameQuery(String firstName) implements Query {
 }

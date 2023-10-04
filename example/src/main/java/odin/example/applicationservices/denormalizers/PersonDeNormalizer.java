@@ -51,8 +51,8 @@ public class PersonDeNormalizer implements DeNormalizer<PersonList> {
 
     private DeNormalizer<PersonList> handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
-        Person person = new Person(personRegistered.getMessageInfo().subjectId(), personRegistered.getName(),
-                personRegistered.getSsn());
+        Person person = new Person(personRegistered.getMessageInfo().subjectId(), personRegistered.getFirstName(),
+                personRegistered.getLastName());
         personList.add(person);
         synchronized (this) {
             numberOfPersonRegisteredReceived++;
@@ -62,7 +62,7 @@ public class PersonDeNormalizer implements DeNormalizer<PersonList> {
 
     private DeNormalizer<PersonList> handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
-        Person person = new Person(personNameChanged.getMessageInfo().subjectId(), personNameChanged.getName(),
+        Person person = new Person(personNameChanged.getMessageInfo().subjectId(), personNameChanged.getFirstName(),
                 null);
         personList.updateName(person);
         synchronized (this) {

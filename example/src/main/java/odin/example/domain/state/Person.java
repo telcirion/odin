@@ -54,11 +54,12 @@ public class Person implements AggregateRoot {
     }
 
     public DomainEvent register(RegisterPerson command) {
-        return new PersonRegistered(command.getMessageInfo().subjectId(), command.getSsn(), command.getName());
+        return new PersonRegistered(command.getMessageInfo().subjectId(), command.getLastName(),
+                command.getFirstName());
     }
 
     public DomainEvent changeName(ChangePersonName command) {
-        return new PersonNameChanged(command.getMessageInfo().subjectId(), command.getName());
+        return new PersonNameChanged(command.getMessageInfo().subjectId(), command.getFirstName());
     }
 
     @Override

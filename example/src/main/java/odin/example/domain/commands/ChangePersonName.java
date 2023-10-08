@@ -26,16 +26,16 @@ import odin.framework.common.MessageInfoRecord;
 public class ChangePersonName implements Command {
 
     private static final long serialVersionUID = 1L;
-    private final String name;
+    private final String firstName;
     private final MessageInfoRecord messageInfo;
 
     public ChangePersonName(String name, Identity targetId, Version targetVersion) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), targetId, targetVersion);
-        this.name = name;
+        this.firstName = name;
     }
 
-    public String getName() {
-        return this.name;
+    public String getFirstName() {
+        return this.firstName;
     }
 
     @Override

@@ -26,21 +26,21 @@ public class RegisterPerson implements Command {
 
     private static final long serialVersionUID = 1L;
     private final MessageInfoRecord messageInfo;
-    private final String name;
-    private final String ssn;
+    private final String firstName;
+    private final String lastName;
 
-    public RegisterPerson(Identity targetId, String ssn, String name) {
+    public RegisterPerson(Identity targetId, String lastName, String firstName) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), targetId, null);
-        this.name = name;
-        this.ssn = ssn;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public String getSsn() {
-        return ssn;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class PersonList {
         synchronized (this) {
 
             Person oldPerson = this.persons.get(person.id().toString());
-            Person newPerson = new Person(person.id(), person.name(), oldPerson.ssn());
+            Person newPerson = new Person(person.id(), person.firstName(), oldPerson.lastName());
             this.persons.replace(person.id().toString(), newPerson);
         }
     }
@@ -40,7 +40,7 @@ public class PersonList {
         synchronized (this) {
 
             for (Person p : persons.values()) {
-                if (p.name().equals(name)) {
+                if (p.firstName().equals(name)) {
                     return p;
                 }
             }

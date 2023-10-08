@@ -23,7 +23,10 @@ import java.lang.invoke.MethodHandles;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import odin.concepts.applicationservices.EventStore;
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.applicationservices.denormalizers.PersonDeNormalizer;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
@@ -34,10 +37,12 @@ import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
 import odin.framework.applicationservices.EventRepository;
-import odin.framework.infrastructure.InMemoryEventStore;
 import odin.framework.infrastructure.SimplePubSub;
 
+@SpringBootTest
 class SimpleDomainTest {
+    @Autowired
+    private EventStore eventStore;
 
     @Test
     void test() {
@@ -59,7 +64,7 @@ class SimpleDomainTest {
         // Initialize repo & storage
         // final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
         // eventStore.createDatabase(); // it's only signUpPersonProcessManager test
-        InMemoryEventStore eventStore = new InMemoryEventStore();
+        // EventStore eventStore = new InMemoryEventStore();
         EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
 
         // start commandHandler

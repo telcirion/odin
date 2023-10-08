@@ -17,16 +17,18 @@ package odin.example.domain.events;
 
 import java.time.LocalDateTime;
 
+import lombok.NoArgsConstructor;
 import odin.concepts.common.Identity;
 import odin.concepts.common.MessageInfo;
 import odin.concepts.domainmodel.DomainEvent;
 import odin.framework.common.MessageInfoRecord;
 
+@NoArgsConstructor
 public class PersonNameChanged implements DomainEvent {
 
     private static final long serialVersionUID = 1L;
-    private final MessageInfoRecord messageInfo;
-    private final String firstName;
+    private MessageInfoRecord messageInfo;
+    private String firstName;
 
     public PersonNameChanged(Identity aggregateId, String firstName) {
         messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), aggregateId, null);

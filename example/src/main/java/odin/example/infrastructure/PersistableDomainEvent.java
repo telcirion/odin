@@ -36,11 +36,14 @@ public class PersistableDomainEvent {
     private Identity aggregateId;
     private LocalDateTime timestamp;
     private String e;
+    private String t;
 
     PersistableDomainEvent(DomainEvent event) {
+        t = event.getClass().getCanonicalName();
+        var mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         try {
-            var mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
+
             e = mapper.writeValueAsString(event);
         } catch (JsonProcessingException e) {
             log.error(getE(), e);
@@ -50,6 +53,13 @@ public class PersistableDomainEvent {
     }
 
     DomainEvent unwrap() {
+        var mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            return (DomainEvent) mapper.readValue(e, Class.forName(t));
+        } catch (JsonProcessingException | ClassNotFoundException e) {
+            log.error(getE(), e);
+        }
         return null;
     }
 }

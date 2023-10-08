@@ -1,4 +1,4 @@
-package classic.example;
+package odin.example.applicationservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import classic.example.domain.Person;
-import classic.example.repositories.PersonRepository;
+import odin.example.infrastructure.PersonReadModelRepository;
+import odin.example.readmodel.PersistableReadModelPerson;
 
 @SpringBootTest
-class ClassicExampleApplicationTests {
+class TemporaryPersistableReadModelTests {
     @Autowired
-    PersonRepository repo;
+    PersonReadModelRepository repo;
 
     @Test
     void contextLoads() {
@@ -21,7 +21,7 @@ class ClassicExampleApplicationTests {
     @Test
     void personRepositoryTest() {
 
-        Person person = new Person(null, "Peter", "Jansen");
+        PersistableReadModelPerson person = new PersistableReadModelPerson(null, "Peter", "Jansen");
         repo.save(person);
 
         var otherPerson = repo.findByFirstName("Peter").get(0);

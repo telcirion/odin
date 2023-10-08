@@ -17,16 +17,16 @@ public class SpringEventStore implements EventStore {
 
     @Override
     public void save(DomainEvent domainEvent) {
-        PersistableDomainEvent wEvent = new PersistableDomainEvent(domainEvent);
-        repo.save(wEvent);
+        PersistableDomainEvent persistableDomainEvent = new PersistableDomainEvent(domainEvent);
+        repo.save(persistableDomainEvent);
     }
 
     @Override
     public List<DomainEvent> load(Identity id) {
-        List<PersistableDomainEvent> wEvents = repo.findByAggregateIdOrderByTimestampAsc(id);
-        List<DomainEvent> dEvents = new ArrayList<>();
-        wEvents.forEach(e -> dEvents.add(e.unwrap()));
-        return dEvents;
+        List<PersistableDomainEvent> persistableDomainEvents = repo.findByAggregateIdOrderByTimestampAsc(id);
+        List<DomainEvent> domainEvents = new ArrayList<>();
+        persistableDomainEvents.forEach(e -> domainEvents.add(e.unwrap()));
+        return domainEvents;
     }
 
 }

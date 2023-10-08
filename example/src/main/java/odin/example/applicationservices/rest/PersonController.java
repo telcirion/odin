@@ -1,21 +1,21 @@
-package classic.example.rest;
+package odin.example.applicationservices.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import classic.example.domain.Person;
-import classic.example.service.PersonService;
+import odin.example.applicationservices.queryhandlers.PersonReadModelService;
+import odin.example.readmodel.PersistableReadModelPerson;
 
 @RestController
 public class PersonController {
 
     @Autowired
-    PersonService personService;
+    PersonReadModelService personService;
 
     @GetMapping(path = "/person/{id}")
-    public Person getBook(@PathVariable int id) {
+    public PersistableReadModelPerson getBook(@PathVariable int id) {
         return personService.findPersonById(id);
     }
 

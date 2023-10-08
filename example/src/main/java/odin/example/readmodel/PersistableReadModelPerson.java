@@ -1,4 +1,4 @@
-package classic.example.domain;
+package odin.example.readmodel;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Person")
-public class Person {
+public class PersistableReadModelPerson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,7 +15,7 @@
 
 package odin.example.applicationservices.queryresults;
 
-import odin.concepts.applicationservices.QueryResult;
+import odin.applicationservices.QueryResult;
 import odin.example.readmodel.Person;
 
 public record PersonQueryResult(Person person) implements QueryResult {

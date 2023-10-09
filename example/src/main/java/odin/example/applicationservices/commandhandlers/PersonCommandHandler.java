@@ -20,17 +20,17 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.CommandHandler;
-import odin.concepts.applicationservices.Repository;
-import odin.concepts.common.Identity;
-import odin.concepts.common.Message;
-import odin.concepts.common.MessageHandler;
-import odin.concepts.domainmodel.Command;
+import odin.applicationservices.CommandHandler;
+import odin.applicationservices.Repository;
+import odin.common.Identity;
+import odin.common.Message;
+import odin.common.MessageDispatcher;
+import odin.common.MessageHandler;
+import odin.domainmodel.Command;
+import odin.domainmodel.EventAggregate;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
-import odin.framework.common.MessageDispatcher;
-import odin.framework.domainmodel.EventAggregate;
 
 public class PersonCommandHandler implements CommandHandler {
 

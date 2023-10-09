@@ -15,14 +15,14 @@
 
 package odin.example.domain.state;
 
-import odin.concepts.domainmodel.AggregateRoot;
-import odin.concepts.domainmodel.Command;
-import odin.concepts.domainmodel.DomainEvent;
+import odin.common.MessageDispatcher;
+import odin.domainmodel.AggregateRoot;
+import odin.domainmodel.Command;
+import odin.domainmodel.DomainEvent;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
-import odin.framework.common.MessageDispatcher;
 
 public class Person implements AggregateRoot {
 

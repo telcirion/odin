@@ -15,7 +15,7 @@
 
 package odin.example.applicationservices.queryhandlers;
 
-import odin.concepts.applicationservices.QueryHandler;
+import odin.applicationservices.QueryHandler;
 import odin.example.applicationservices.queries.PersonByNameQuery;
 import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.readmodel.PersonList;

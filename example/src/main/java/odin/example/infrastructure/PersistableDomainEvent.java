@@ -18,8 +18,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.DomainEvent;
+import odin.common.Identity;
+import odin.domainmodel.DomainEvent;
 import odin.example.ExampleApplication;
 
 @Entity

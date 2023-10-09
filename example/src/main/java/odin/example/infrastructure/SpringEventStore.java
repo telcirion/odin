@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import odin.concepts.applicationservices.EventStore;
-import odin.concepts.common.Identity;
-import odin.concepts.domainmodel.DomainEvent;
+import odin.common.Identity;
+import odin.domainmodel.DomainEvent;
+import odin.infrastructure.EventStore;
 
 @Component
 public class SpringEventStore implements EventStore {

@@ -15,24 +15,19 @@
 
 package odin.example.domain.events;
 
-import java.time.LocalDateTime;
-
 import lombok.NoArgsConstructor;
-import odin.concepts.common.Identity;
-import odin.concepts.common.MessageInfo;
-import odin.concepts.domainmodel.DomainEvent;
-import odin.framework.common.MessageInfoRecord;
+import odin.common.Identity;
+import odin.domainmodel.DomainEvent;
 
 @NoArgsConstructor
-public class PersonRegistered implements DomainEvent {
+public class PersonRegistered extends DomainEvent {
     private static final long serialVersionUID = 1L;
 
     private String lastName;
     private String firstName;
-    private MessageInfoRecord messageInfo;
 
     public PersonRegistered(Identity id, String lastName, String firstName) {
-        messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), id, null);
+        super(id);
         this.lastName = lastName;
         this.firstName = firstName;
     }
@@ -45,8 +40,4 @@ public class PersonRegistered implements DomainEvent {
         return firstName;
     }
 
-    @Override
-    public MessageInfo getMessageInfo() {
-        return messageInfo;
-    }
 }

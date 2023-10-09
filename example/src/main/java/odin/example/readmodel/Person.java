@@ -15,7 +15,7 @@
 
 package odin.example.readmodel;
 
-import odin.concepts.common.Identity;
+import odin.common.Identity;
 
 public record Person(Identity id, String firstName, String lastName) {
 }

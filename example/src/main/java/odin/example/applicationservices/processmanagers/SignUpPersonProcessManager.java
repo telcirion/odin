@@ -20,15 +20,15 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.ProcessManager;
-import odin.concepts.common.Identity;
-import odin.concepts.common.Message;
-import odin.concepts.common.MessageHandler;
-import odin.concepts.common.SendMessage;
+import odin.applicationservices.ProcessManager;
+import odin.common.Identity;
+import odin.common.Message;
+import odin.common.MessageDispatcher;
+import odin.common.MessageHandler;
+import odin.common.SendMessage;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
-import odin.framework.common.MessageDispatcher;
 
 public class SignUpPersonProcessManager implements ProcessManager {
 

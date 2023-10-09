@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import odin.concepts.applicationservices.EventStore;
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.applicationservices.denormalizers.PersonDeNormalizer;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
@@ -36,8 +35,9 @@ import odin.example.applicationservices.queryresults.PersonQueryResult;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
-import odin.framework.applicationservices.EventRepository;
-import odin.framework.infrastructure.SimplePubSub;
+import odin.infrastructure.EventRepository;
+import odin.infrastructure.EventStore;
+import odin.infrastructure.SimplePubSub;
 
 @SpringBootTest
 class SimpleDomainTest {

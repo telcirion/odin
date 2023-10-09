@@ -17,10 +17,10 @@ package odin.example.domain.commands;
 
 import java.time.LocalDateTime;
 
-import odin.concepts.common.Identity;
-import odin.concepts.common.MessageInfo;
-import odin.concepts.domainmodel.Command;
-import odin.framework.common.MessageInfoRecord;
+import odin.common.Identity;
+import odin.common.MessageInfo;
+import odin.common.MessageInfoRecord;
+import odin.domainmodel.Command;
 
 public class RegisterPerson implements Command {
 

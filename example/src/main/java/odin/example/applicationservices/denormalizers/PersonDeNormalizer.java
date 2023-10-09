@@ -20,15 +20,15 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import odin.concepts.applicationservices.DeNormalizer;
-import odin.concepts.common.Message;
-import odin.concepts.common.MessageHandler;
-import odin.concepts.domainmodel.DomainEvent;
+import odin.applicationservices.DeNormalizer;
+import odin.common.Message;
+import odin.common.MessageDispatcher;
+import odin.common.MessageHandler;
+import odin.domainmodel.DomainEvent;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.Person;
 import odin.example.readmodel.PersonList;
-import odin.framework.common.MessageDispatcher;
 
 public class PersonDeNormalizer implements DeNormalizer<PersonList> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

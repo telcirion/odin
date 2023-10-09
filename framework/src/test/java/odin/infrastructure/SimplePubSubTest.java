@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import odin.common.Message;
 import odin.common.MessageHandler;
 import odin.common.TestMessage;
-import odin.infrastructure.SimplePubSub;
 
 class SimplePubSubTest implements MessageHandler {
     private boolean msgHandled = false;

@@ -26,8 +26,8 @@ import odin.common.Identity;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
 import odin.common.MessageHandler;
+import odin.domainmodel.Aggregate;
 import odin.domainmodel.Command;
-import odin.domainmodel.EventAggregate;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
@@ -44,7 +44,7 @@ public class PersonCommandHandler implements CommandHandler {
 
     private CommandHandler handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
-        var p = new EventAggregate<>(new Identity(), new Person());
+        var p = new Aggregate<>(new Identity(), new Person());
         p.process(registerPerson);
         personRepository.save(p);
         LOGGER.info("Person with first name {} and last name {} registered.", p.getAggregateRoot().getFirstName(),

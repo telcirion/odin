@@ -8,11 +8,9 @@ import org.junit.jupiter.api.Test;
 import odin.common.Identity;
 import odin.common.Message;
 import odin.common.SendMessage;
-import odin.domainmodel.EventAggregate;
+import odin.domainmodel.Aggregate;
 import odin.domainmodel.TestAggregateRoot;
 import odin.domainmodel.TestCommand;
-import odin.infrastructure.EventRepository;
-import odin.infrastructure.InMemoryEventStore;
 
 class EventRepositoryTest {
     @Test
@@ -21,7 +19,7 @@ class EventRepositoryTest {
         var sut = new EventRepository<TestAggregateRoot>(eventStore, new TestBus());
 
         var id = new Identity();
-        var saveAggregate = new EventAggregate<>(id, new TestAggregateRoot());
+        var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());
         saveAggregate.process(new TestCommand(id, null, "value 1"));
         assertNotNull(saveAggregate.getAddedEvents().get(0).getMessageInfo().timestamp());
         sut.save(saveAggregate);

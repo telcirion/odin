@@ -1,4 +1,4 @@
-/* Copyright 2020 Peter Jansen
+/* Copyright 2019 Peter Jansen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,38 @@
 
 package odin.domainmodel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import odin.common.Identity;
 
-public interface Aggregate<T extends AggregateRoot> {
-    public T getAggregateRoot();
+public class Aggregate<T extends AggregateRoot> {
 
-    public List<DomainEvent> getAddedEvents();
+    private final List<DomainEvent> addedEvents;
+    private final Identity id;
+    private final T aggregateRoot;
 
-    public Identity getId();
+    public Aggregate(final Identity id, final T aggregateRoot) {
+        this.id = id;
+        this.aggregateRoot = aggregateRoot;
+        this.addedEvents = new ArrayList<>();
+    }
 
-    public DomainEvent process(Command command);
+    public List<DomainEvent> getAddedEvents() {
+        return addedEvents;
+    }
 
+    public Identity getId() {
+        return id;
+    }
+
+    public T getAggregateRoot() {
+        return aggregateRoot;
+    }
+
+    public DomainEvent process(Command command) {
+        var event = aggregateRoot.process(command);
+        this.addedEvents.add(event);
+        return event;
+    }
 }

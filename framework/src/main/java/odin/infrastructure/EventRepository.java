@@ -24,7 +24,6 @@ import odin.common.SendMessage;
 import odin.domainmodel.Aggregate;
 import odin.domainmodel.AggregateRoot;
 import odin.domainmodel.DomainEvent;
-import odin.domainmodel.EventAggregate;
 
 public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 
@@ -41,7 +40,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
         var aggregate = creator.createAggregateRoot();
         final List<DomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregate::source);
-        return new EventAggregate<>(id, aggregate);
+        return new Aggregate<>(id, aggregate);
     }
 
     @Override

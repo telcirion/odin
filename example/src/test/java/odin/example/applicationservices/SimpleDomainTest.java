@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
-import odin.example.applicationservices.denormalizers.PersonDeNormalizer;
+import odin.example.applicationservices.denormalizers.PersonReadModelUpdater;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
 import odin.example.applicationservices.queries.PersonByNameQuery;
 import odin.example.applicationservices.queryhandlers.PersonQueryHandler;
@@ -57,7 +57,7 @@ class SimpleDomainTest {
         logger.info("ProcessManager created, wait for processing.");
 
         // start de-normalizer
-        PersonDeNormalizer personDeNormalizer = new PersonDeNormalizer();
+        PersonReadModelUpdater personDeNormalizer = new PersonReadModelUpdater();
         eventBus.subscribe(personDeNormalizer);
         logger.info("De-normalizer created, wait for processing.");
 
@@ -85,7 +85,7 @@ class SimpleDomainTest {
         logger.info("All DomainEvents (PersonRegistered) were processed by the de-normalizer.");
 
         // let's try a person query
-        PersonQueryHandler queryHandler = new PersonQueryHandler(personDeNormalizer.getReadModel());
+        PersonQueryHandler queryHandler = new PersonQueryHandler(personDeNormalizer.getReadModelRepository());
         PersonQueryResult personQueryResult = queryHandler.query(new PersonByNameQuery("Peter"));
         if (personQueryResult != null) {
             logger.info("Person found with first name: " + personQueryResult.person().firstName() + " and last name: "

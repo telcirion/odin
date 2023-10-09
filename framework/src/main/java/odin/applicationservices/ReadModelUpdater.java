@@ -17,6 +17,6 @@ package odin.applicationservices;
 
 import odin.common.MessageHandler;
 
-public interface DeNormalizer<T> extends MessageHandler {
-    T getReadModel();
+public interface ReadModelUpdater<T> extends MessageHandler {
+    T getReadModelRepository();
 }

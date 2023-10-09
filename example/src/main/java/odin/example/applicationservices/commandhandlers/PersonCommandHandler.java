@@ -15,8 +15,6 @@
 
 package odin.example.applicationservices.commandhandlers;
 
-import java.lang.invoke.MethodHandles;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +34,7 @@ public class PersonCommandHandler implements CommandHandler {
 
     private final Repository<Person> personRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonCommandHandler.class);
 
     public PersonCommandHandler(Repository<Person> personRepository) {
         this.personRepository = personRepository;

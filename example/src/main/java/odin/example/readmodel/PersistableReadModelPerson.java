@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import odin.common.Identity;
 
 @Entity
 @Getter
@@ -22,6 +23,7 @@ public class PersistableReadModelPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Identity identity;
     private String firstName;
     private String lastName;
 

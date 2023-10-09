@@ -1,10 +1,9 @@
-package odin.example.infrastructure;
+package odin.example.readmodel;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
-
-import odin.example.readmodel.PersistableReadModelPerson;
+import odin.common.Identity;
 
 public interface PersonReadModelRepository extends CrudRepository<PersistableReadModelPerson, Long> {
 
@@ -13,4 +12,6 @@ public interface PersonReadModelRepository extends CrudRepository<PersistableRea
     List<PersistableReadModelPerson> findByLastName(String lastName);
 
     PersistableReadModelPerson findById(long id);
+
+    PersistableReadModelPerson findByIdentity(Identity identity);
 }

@@ -1,10 +1,7 @@
-package odin.example.applicationservices.queryhandlers;
+package odin.example.readmodel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import odin.example.infrastructure.PersonReadModelRepository;
-import odin.example.readmodel.PersistableReadModelPerson;
 
 @Service
 public class PersonReadModelService {

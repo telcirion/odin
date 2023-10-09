@@ -13,10 +13,12 @@
  * limitations under the License.
  */
 
-package odin.example.applicationservices.denormalizers;
+package odin.example.readmodel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import odin.applicationservices.ReadModelUpdater;
 import odin.common.Message;
@@ -25,10 +27,9 @@ import odin.common.MessageHandler;
 import odin.domainmodel.DomainEvent;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
-import odin.example.readmodel.Person;
-import odin.example.readmodel.PersonList;
 
-public class PersonReadModelUpdater implements ReadModelUpdater<PersonList> {
+@Service
+public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelRepository> {
     private static final Logger LOGGER = LoggerFactory.getLogger(PersonReadModelUpdater.class);
     private int numberOfPersonRegisteredReceived = 0;
     private int numberOfPersonNameChangedReceived = 0;
@@ -45,24 +46,27 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonList> {
         }
     }
 
-    private final PersonList personList = new PersonList();
+    @Autowired
+    private PersonReadModelRepository personList;
 
-    private ReadModelUpdater<PersonList> handle(PersonRegistered personRegistered) {
+    private ReadModelUpdater<PersonReadModelRepository> handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
-        Person person = new Person(personRegistered.getMessageInfo().subjectId(), personRegistered.getFirstName(),
+        PersistableReadModelPerson person = new PersistableReadModelPerson(null,
+                personRegistered.getMessageInfo().subjectId(), personRegistered.getFirstName(),
                 personRegistered.getLastName());
-        personList.add(person);
+        personList.save(person);
         synchronized (this) {
             numberOfPersonRegisteredReceived++;
         }
         return this;
     }
 
-    private ReadModelUpdater<PersonList> handle(PersonNameChanged personNameChanged) {
+    private ReadModelUpdater<PersonReadModelRepository> handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
-        Person person = new Person(personNameChanged.getMessageInfo().subjectId(), personNameChanged.getFirstName(),
-                null);
-        personList.updateName(person);
+
+        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getMessageInfo().subjectId());
+        person.setFirstName(personNameChanged.getFirstName());
+        personList.save(person);
         synchronized (this) {
             numberOfPersonNameChangedReceived++;
         }
@@ -81,7 +85,7 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonList> {
     }
 
     @Override
-    public PersonList getReadModelRepository() {
+    public PersonReadModelRepository getReadModelRepository() {
         return personList;
     }
 }

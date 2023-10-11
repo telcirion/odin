@@ -15,6 +15,8 @@
 
 package odin.example.applicationservices;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.invoke.MethodHandles;
 
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
+import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
 import odin.example.readmodel.PersonReadModelUpdater;
@@ -57,9 +60,6 @@ class SimpleDomainTest {
         logger.info("De-normalizer created, wait for processing.");
 
         // Initialize repo & storage
-        // final SqlEventStore eventStore = new SqlEventStore(new TestDataSource());
-        // eventStore.createDatabase(); // it's only signUpPersonProcessManager test
-        // EventStore eventStore = new InMemoryEventStore();
         EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
 
         // start commandHandler
@@ -67,8 +67,8 @@ class SimpleDomainTest {
         logger.info("CommandHandler created, wait for processing.");
 
         // send first event
-        eventBus.send(new PersonSignUpReceived("1234567892", "Peter"));
-        eventBus.send(new PersonSignUpReceived("1234567893", "John"));
+        eventBus.send(new PersonSignUpReceived("Taylor", "Roger"));
+        eventBus.send(new PersonSignUpReceived("Le Bon", "Simon"));
 
         logger.info("DomainEvents send.");
 
@@ -80,45 +80,36 @@ class SimpleDomainTest {
         logger.info("All DomainEvents (PersonRegistered) were processed by the de-normalizer.");
 
         // let's try a person query
-        // PersonQueryHandler queryHandler = new
-        // PersonQueryHandler(personDeNormalizer.getReadModelRepository());
-        // PersonQueryResult personQueryResult = queryHandler.query(new
-        // PersonByNameQuery("Peter"));
-        // if (personQueryResult != null) {
-        // logger.info("Person found with first name: " +
-        // personQueryResult.person().firstName() + " and last name: "
-        // + personQueryResult.person().lastName());
+        var personQueryResult = personReadModelUpdater.getReadModelRepository().findByFirstName("Roger");
+        if (personQueryResult.size() > 0) {
+            logger.info("Person found with first name: "
+                    + personQueryResult.get(0).getFirstName() + " and last name: "
+                    + personQueryResult.get(0).getLastName());
 
-        // and then change the person's name
-        // commandBus.send(new ChangePersonName("Nico", personQueryResult.person().id(),
-        // null));
-        // }
+            // and then change the person's name
+            commandBus.send(new ChangePersonName("John", personQueryResult.get(0).getIdentity(),
+                    null));
+        }
 
         // wait for name to be changed.
-        // noinspection StatementWithEmptyBody
-        // while (personDeNormalizer.getNumberOfPersonNameChangedReceived() < 1) {
-        // do nothing, just wait.
-        // }
-        // logger.info("All DomainEvents (PersonNameChanged) were processed by the
-        // de-normalizer.");
+        while (personReadModelUpdater.getNumberOfPersonNameChangedReceived() < 1) {
+            // do nothing, just wait.
+        }
+        logger.info("All DomainEvents (PersonNameChanged) were processed by the PersonReadModelUpdater.");
 
-        // and check if the name is changed
-        // PersonQueryResult anotherPersonQueryResult = queryHandler.query(new
-        // PersonByNameQuery("Nico"));
-        // if (anotherPersonQueryResult != null) {
-        // logger.info("Person found with first name: " +
-        // anotherPersonQueryResult.person().firstName()
-        // + " and last name: "
-        // + anotherPersonQueryResult.person().lastName());
-        // }
-
+        // try to find the same person again by Identity
+        var anotherPersonQueryResult = personReadModelUpdater.getReadModelRepository()
+                .findByIdentity(personQueryResult.get(0).getIdentity());
+        if (anotherPersonQueryResult != null) {
+            logger.info("Person found with first name: "
+                    + anotherPersonQueryResult.getFirstName() + " and last name: "
+                    + anotherPersonQueryResult.getLastName());
+        }
         eventBus.stop();
         commandBus.stop();
 
-        // assertNotNull(anotherPersonQueryResult);
-        // assertEquals("Nico", anotherPersonQueryResult.person().firstName());
+        assertEquals("John", anotherPersonQueryResult.getFirstName());
         // Peter should no longer be found
-        // assertEquals(null, queryHandler.query(new
-        // PersonByNameQuery("Peter")).person());
+        assertEquals(0, personReadModelUpdater.getReadModelRepository().findByFirstName("Roger").size());
     }
 }

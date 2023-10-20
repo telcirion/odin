@@ -16,6 +16,7 @@
 package odin.example.applicationservices;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.invoke.MethodHandles;
 
@@ -46,34 +47,42 @@ class SimpleDomainTest {
     void test() {
         final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+        // create an eventbus where state changes to the Person domain are published
         final SimplePubSub eventBus = new SimplePubSub();
+
+        // create a commandbus where commands to the Person domain should be posted to
         final SimplePubSub commandBus = new SimplePubSub();
 
-        // start processManager
+        // start processManager (Saga pattern) which is responsible for the choreography
+        // betweem events and commands for the Person domain. This process manager
+        // listens to events, and will issue commands to fulfill the saga.
         SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
         eventBus.subscribe(signUpPersonProcessManager);
         logger.info("ProcessManager created, wait for processing.");
 
-        // start de-normalizer
-
+        // start a listener for Person domainevents, that will create and update a
+        // static readmodel based on these events
         eventBus.subscribe(personReadModelUpdater);
-        logger.info("De-normalizer created, wait for processing.");
+        logger.info("PersonReadModelUpdater created, wait for processing.");
 
-        // Initialize repo & storage
+        // Initialize eventstore, the eventstore will also publish events reflecting the
+        // changes in the Person domain on the eventbus.
         EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
 
-        // start commandHandler
+        // start commandHandler, which listens to the command bus
         commandBus.subscribe(new PersonCommandHandler(personRepository));
         logger.info("CommandHandler created, wait for processing.");
 
-        // send first event
+        // send first events, which would typically come from another domain, such as a
+        // registration website for club membership. These evetns are handled by the
+        // process manager (saga) which whill issue subsequent commands.
         eventBus.send(new PersonSignUpReceived("Taylor", "Roger"));
         eventBus.send(new PersonSignUpReceived("Le Bon", "Simon"));
 
         logger.info("DomainEvents send.");
 
-        // after processing 2 registrations, we're done.
-        // noinspection StatementWithEmptyBody
+        // after processing 2 registrations, eventually the read model would also
+        // contain 2 persons.
         while (personReadModelUpdater.getNumberOfPersonRegisteredReceived() < 2) {
             // do nothing, just wait.
         }
@@ -91,7 +100,7 @@ class SimpleDomainTest {
                     null));
         }
 
-        // wait for name to be changed.
+        // eventually the read model should be updated, so wait for name to be changed.
         while (personReadModelUpdater.getNumberOfPersonNameChangedReceived() < 1) {
             // do nothing, just wait.
         }
@@ -108,8 +117,9 @@ class SimpleDomainTest {
         eventBus.stop();
         commandBus.stop();
 
+        assertNotNull(anotherPersonQueryResult);
         assertEquals("John", anotherPersonQueryResult.getFirstName());
-        // Peter should no longer be found
+        // Roger should no longer be found in the read model
         assertEquals(0, personReadModelUpdater.getReadModelRepository().findByFirstName("Roger").size());
     }
 }

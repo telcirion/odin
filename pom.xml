@@ -9,10 +9,7 @@
         <revision>1.0.0</revision>
         <changelist>-SNAPSHOT</changelist>
         <sha1 />
-        <compiler-plugin.version>3.11.0</compiler-plugin.version>
-        <maven.compiler.parameters>true</maven.compiler.parameters>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>5.9.2</junit.version>
@@ -22,7 +19,6 @@
         <jacoco.version>0.8.10</jacoco.version>
         <surefire-plugin.version>3.1.2</surefire-plugin.version>
         <checkstyle-maven-plugin.version>3.3.0</checkstyle-maven-plugin.version>
-
         <checkstyle.version>10.9.3</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
@@ -82,9 +78,8 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${compiler-plugin.version}</version>
                     <configuration>
-                        <compilerArgument>-parameters</compilerArgument>
+                        <compilerArgument>-proc:full</compilerArgument>
                     </configuration>
                 </plugin>
                 <plugin>

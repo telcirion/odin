@@ -6,7 +6,7 @@
     <artifactId>odin-example</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <properties>
-        <spring.boot.version>3.1.4</spring.boot.version>
+        <spring.boot.version>3.1.5</spring.boot.version>
     </properties>
     <parent>
         <artifactId>odin</artifactId>

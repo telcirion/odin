@@ -1,5 +1,5 @@
 [![Build Java CI with Maven(https://github.com/telcirion/odin/workflows/maven-push.yml/badge.svg)](https://github.com/telcirion/odin/actions/workflows/maven-push.yml/badge.svg)](https://github.com/telcirion/odin/actions?query=maven-push)
-[![Code QL](https://github.com/telcirion/odin/actions/workflows/codeql.yml/badge.svg)](https://github.com/telcirion/odin/actions/workflows/codeql.yml/badge.svg)
+[![Code QL](https://github.com/telcirion/odin/actions/workflows/codeql.yml/badge.svg)](https://github.com/telcirion/odin/actions?query=codeql)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=alert_status)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=telcirion_odin&metric=coverage)](https://sonarcloud.io/dashboard?id=telcirion_odin)
 # ODIN-Framework

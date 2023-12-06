@@ -17,5 +17,5 @@ package odin.applicationservices;
 
 import odin.common.MessageHandler;
 
-public interface ProcessManager extends MessageHandler {
+public interface SagaManager extends MessageHandler {
 }

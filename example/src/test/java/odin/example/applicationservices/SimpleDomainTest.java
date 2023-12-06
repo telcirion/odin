@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
-import odin.example.applicationservices.processmanagers.SignUpPersonProcessManager;
+import odin.example.applicationservices.sagas.SignUpPersonSaga;
 import odin.example.domain.commands.ChangePersonName;
 import odin.example.domain.events.PersonSignUpReceived;
 import odin.example.domain.state.Person;
@@ -53,12 +53,12 @@ class SimpleDomainTest {
         // create a commandbus where commands to the Person domain should be posted to
         final SimplePubSub commandBus = new SimplePubSub();
 
-        // start processManager (Saga pattern) which is responsible for the choreography
-        // betweem events and commands for the Person domain. This process manager
+        // start SagaManager (Saga pattern) which is responsible for the choreography
+        // betweem events and commands for the Person domain. This saga manager
         // listens to events, and will issue commands to fulfill the saga.
-        SignUpPersonProcessManager signUpPersonProcessManager = new SignUpPersonProcessManager(commandBus);
-        eventBus.subscribe(signUpPersonProcessManager);
-        logger.info("ProcessManager created, wait for processing.");
+        SignUpPersonSaga signUpPersonSaga = new SignUpPersonSaga(commandBus);
+        eventBus.subscribe(signUpPersonSaga);
+        logger.info("SagaManager created, wait for processing.");
 
         // start a listener for Person domainevents, that will create and update a
         // static readmodel based on these events
@@ -75,7 +75,7 @@ class SimpleDomainTest {
 
         // send first events, which would typically come from another domain, such as a
         // registration website for club membership. These evetns are handled by the
-        // process manager (saga) which whill issue subsequent commands.
+        // saga which whill issue subsequent commands.
         eventBus.send(new PersonSignUpReceived("Taylor", "Roger"));
         eventBus.send(new PersonSignUpReceived("Le Bon", "Simon"));
 

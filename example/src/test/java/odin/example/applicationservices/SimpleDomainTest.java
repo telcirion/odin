@@ -92,11 +92,11 @@ class SimpleDomainTest {
         var personQueryResult = personReadModelUpdater.getReadModelRepository().findByFirstName("Roger");
         if (personQueryResult.size() > 0) {
             logger.info("Person found with first name: "
-                    + personQueryResult.get(0).getFirstName() + " and last name: "
-                    + personQueryResult.get(0).getLastName());
+                    + personQueryResult.getFirst().getFirstName() + " and last name: "
+                    + personQueryResult.getFirst().getLastName());
 
             // and then change the person's name
-            commandBus.send(new ChangePersonName("John", personQueryResult.get(0).getIdentity(),
+            commandBus.send(new ChangePersonName("John", personQueryResult.getFirst().getIdentity(),
                     null));
         }
 
@@ -108,7 +108,7 @@ class SimpleDomainTest {
 
         // try to find the same person again by Identity
         var anotherPersonQueryResult = personReadModelUpdater.getReadModelRepository()
-                .findByIdentity(personQueryResult.get(0).getIdentity());
+                .findByIdentity(personQueryResult.getFirst().getIdentity());
         if (anotherPersonQueryResult != null) {
             logger.info("Person found with first name: "
                     + anotherPersonQueryResult.getFirstName() + " and last name: "

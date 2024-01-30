@@ -24,10 +24,14 @@ import odin.infrastructure.SimplePubSub;
 
 @SpringBootTest
 class SimpleDomainTest {
+    private final EventStore eventStore;
+    private final PersonReadModelUpdater personReadModelUpdater;
+
     @Autowired
-    private EventStore eventStore;
-    @Autowired
-    private PersonReadModelUpdater personReadModelUpdater;
+    SimpleDomainTest(EventStore eventStore, PersonReadModelUpdater personReadModelUpdater) {
+        this.eventStore = eventStore;
+        this.personReadModelUpdater = personReadModelUpdater;
+    }
 
     @Test
     void test() {

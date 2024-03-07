@@ -13,7 +13,7 @@
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <spring.boot.version>3.2.1</spring.boot.version>
+        <spring.boot.version>3.2.3</spring.boot.version>
     </properties>
 
     <dependencyManagement>
@@ -57,8 +57,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

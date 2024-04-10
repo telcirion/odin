@@ -2,6 +2,6 @@
 package odin.common;
 
 @FunctionalInterface
-public interface MessageAction<T, K> {
-    K executeAction(T msg);
+public interface MessageAction<T, Z> {
+    Z executeAction(T msg);
 }

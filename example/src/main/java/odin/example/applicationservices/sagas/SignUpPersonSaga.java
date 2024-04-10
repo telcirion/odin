@@ -10,7 +10,7 @@ import odin.applicationservices.SagaManager;
 import odin.common.Identity;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
-import odin.common.MessageHandler;
+import odin.common.Result;
 import odin.common.SendMessage;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
@@ -27,20 +27,21 @@ public class SignUpPersonSaga implements SagaManager {
     }
 
     @Override
-    public MessageHandler handle(Message msg) {
-        return new MessageDispatcher<MessageHandler>(this).match(PersonSignUpReceived.class, this::handle, msg)
+    public Result handle(Message msg) {
+        return new MessageDispatcher<>(Result.NOK).match(PersonSignUpReceived.class, this::handle, msg)
                 .match(PersonRegistered.class, this::handle, msg).result();
+
     }
 
-    private MessageHandler handle(PersonSignUpReceived msg) {
+    private Result handle(PersonSignUpReceived msg) {
         logReception(msg);
         commandBus.send(new RegisterPerson(new Identity(), msg.getLastName(), msg.getFirstName()));
-        return this;
+        return Result.OK;
     }
 
-    private MessageHandler handle(PersonRegistered msg) {
+    private Result handle(PersonRegistered msg) {
         logReception(msg);
-        return this;
+        return Result.OK;
     }
 
     private void logReception(Message msg) {

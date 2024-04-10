@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import odin.applicationservices.ReadModelUpdater;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
-import odin.common.MessageHandler;
+import odin.common.Result;
 import odin.domainmodel.DomainEvent;
 import odin.example.domain.events.PersonNameChanged;
 import odin.example.domain.events.PersonRegistered;
@@ -35,39 +35,39 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
     @Autowired
     private PersonReadModelRepository personList;
 
-    private ReadModelUpdater<PersonReadModelRepository> handle(PersonRegistered personRegistered) {
+    private Result handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
         PersistableReadModelPerson person = new PersistableReadModelPerson(null,
-                personRegistered.getMessageInfo().subjectId(), personRegistered.getFirstName(),
+                personRegistered.getMessageInfo().objectId(), personRegistered.getFirstName(),
                 personRegistered.getLastName());
         personList.save(person);
         synchronized (this) {
             numberOfPersonRegisteredReceived++;
         }
-        return this;
+        return null;
     }
 
-    private ReadModelUpdater<PersonReadModelRepository> handle(PersonNameChanged personNameChanged) {
+    private Result handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
 
-        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getMessageInfo().subjectId());
+        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getMessageInfo().objectId());
         person.setFirstName(personNameChanged.getFirstName());
         personList.save(person);
         synchronized (this) {
             numberOfPersonNameChangedReceived++;
         }
-        return this;
+        return null;
     }
 
     @Override
-    public MessageHandler handle(Message msg) {
-        return new MessageDispatcher<MessageHandler>(this).match(PersonRegistered.class, this::handle, msg)
+    public Result handle(Message msg) {
+        return new MessageDispatcher<Result>(null).match(PersonRegistered.class, this::handle, msg)
                 .match(PersonNameChanged.class, this::handle, msg).result();
     }
 
     private void log(DomainEvent event) {
         LOGGER.info("DomainEvent {} received for aggregateId: {}", event.getClass().getSimpleName(),
-                event.getMessageInfo().subjectId());
+                event.getMessageInfo().objectId());
     }
 
     @Override

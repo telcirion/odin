@@ -28,13 +28,13 @@ class MessageInfoTest {
 
     @Test
     void getSubjectId() {
-        assertEquals(aggregateId, sut.subjectId());
-        assertEquals(aggregateId.getId(), sut.subjectId().getId());
+        assertEquals(aggregateId, sut.objectId());
+        assertEquals(aggregateId.getId(), sut.objectId().getId());
     }
 
     @Test
     void getSubjectVersion() {
-        assertEquals(aggregateVersion, sut.subjectVersion());
+        assertEquals(aggregateVersion, sut.objectVersion());
     }
 
     @Test

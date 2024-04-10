@@ -50,7 +50,7 @@ public class PersistableDomainEvent {
             log.error(getEventJson(), e);
         }
         this.timestamp = event.getMessageInfo().timestamp();
-        this.aggregateId = event.getMessageInfo().subjectId();
+        this.aggregateId = event.getMessageInfo().objectId();
     }
 
     DomainEvent unwrap() {

@@ -2,10 +2,10 @@
 package odin.common;
 
 public class MessageDispatcher<Z> {
-    final Z defaultHandler;
+    final Z defaultResult;
 
-    public MessageDispatcher(Z defaultHandler) {
-        this.defaultHandler = defaultHandler;
+    public MessageDispatcher(Z defaultResult) {
+        this.defaultResult = defaultResult;
     }
 
     public <T> MessageDispatcher<Z> match(final Class<T> msgClazz, final MessageAction<T, Z> msgAction,
@@ -17,6 +17,6 @@ public class MessageDispatcher<Z> {
     }
 
     public Z result() {
-        return defaultHandler;
+        return defaultResult;
     }
 }

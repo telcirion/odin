@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 public interface MessageInfo extends Serializable {
     Identity messageId();
 
-    Identity subjectId();
+    Identity objectId();
 
-    Version subjectVersion();
+    Version objectVersion();
 
     LocalDateTime timestamp();
 }

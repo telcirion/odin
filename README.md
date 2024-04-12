@@ -9,9 +9,7 @@ This framework is based on the ideas that a "domain" can be modeled not only as 
 
 ## What does this framework do?
 As stated in the introduction, the basic building blocks for modeling are events and commands. Events are things
-that have happened and are irreversible facts. Events are caught by event handlers or process managers, which can decide
-to send a command to a command handler which targets a specific aggregate (data within a certain consistency boundary
-within the domain.)
+that have happened and are irreversible facts. Events are caught by event handlers implemented by process managers / sagas, which can decide to send a command to a command handler which targets a specific aggregate (data within a certain consistency boundary within the domain.)
 
 This framework facilitates the above pattern by providing the presented concepts with interfaces, implementation and
 some glue to tie it all together.

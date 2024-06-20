@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandles;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
@@ -27,7 +26,6 @@ class SimpleDomainTest {
     private final EventStore eventStore;
     private final PersonReadModelUpdater personReadModelUpdater;
 
-    @Autowired
     SimpleDomainTest(EventStore eventStore, PersonReadModelUpdater personReadModelUpdater) {
         this.eventStore = eventStore;
         this.personReadModelUpdater = personReadModelUpdater;

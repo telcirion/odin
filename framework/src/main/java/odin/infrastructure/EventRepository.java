@@ -23,10 +23,10 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 
     @Override
     public Aggregate<T> load(Identity id, CreateAggregateRoot<T> creator) {
-        var aggregate = creator.createAggregateRoot();
+        var aggregateRoot = creator.createAggregateRoot();
         final List<DomainEvent> resultSet = es.load(id);
-        resultSet.forEach(aggregate::source);
-        return new Aggregate<>(id, aggregate);
+        resultSet.forEach(aggregateRoot::source);
+        return new Aggregate<>(id, aggregateRoot);
     }
 
     @Override

@@ -6,7 +6,6 @@ import odin.common.Version;
 
 public class TestCommand extends Command {
 
-    private static final long serialVersionUID = 1L;
     private final String testValue;
 
     public TestCommand(Identity id, Version targetVersion, String testValue) {

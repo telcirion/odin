@@ -6,7 +6,6 @@ import odin.domainmodel.Command;
 
 public class RegisterPerson extends Command {
 
-    private static final long serialVersionUID = 1L;
     private final String firstName;
     private final String lastName;
 

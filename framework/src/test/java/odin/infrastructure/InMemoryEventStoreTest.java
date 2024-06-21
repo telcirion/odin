@@ -30,7 +30,7 @@ class InMemoryEventStoreTest {
         assertEquals(2, loadedEvents1.size());
         assertEquals(1, loadedEvents2.size());
 
-        assertEquals(testDomainEvent1.getMessageInfo().messageId().getId().toString(),
-                loadedEvents1.getFirst().getMessageInfo().messageId().getId().toString());
+        assertEquals(testDomainEvent1.getEventId().getId().toString(),
+                loadedEvents1.getFirst().getEventId().getId().toString());
     }
 }

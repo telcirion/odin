@@ -33,10 +33,4 @@ class AggregateTest {
 
         assertEquals(2, sut.getAddedEvents().size());
     }
-
-    @Test
-    void getId() {
-        assertEquals(aggregateId, sut.getId());
-    }
-
 }

@@ -8,7 +8,6 @@ import odin.domainmodel.DomainEvent;
 @NoArgsConstructor
 public class PersonNameChanged extends DomainEvent {
 
-    private static final long serialVersionUID = 1L;
     private String firstName;
 
     public PersonNameChanged(Identity aggregateId, String firstName) {

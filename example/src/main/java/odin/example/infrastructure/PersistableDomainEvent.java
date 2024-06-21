@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,12 +38,15 @@ public class PersistableDomainEvent {
     private Long id;
     private Identity aggregateId;
     private LocalDateTime timestamp;
+    @Lob
     private String eventJson;
     private String domainEventClassName;
 
     PersistableDomainEvent(DomainEvent event) {
         domainEventClassName = event.getClass().getCanonicalName();
         var mapper = new ObjectMapper();
+        mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withGetterVisibility(Visibility.NONE).withFieldVisibility(Visibility.ANY));
         mapper.registerModule(new JavaTimeModule());
         try {
 
@@ -49,12 +54,14 @@ public class PersistableDomainEvent {
         } catch (JsonProcessingException e) {
             log.error(getEventJson(), e);
         }
-        this.timestamp = event.getMessageInfo().timestamp();
-        this.aggregateId = event.getMessageInfo().objectId();
+        this.timestamp = event.getTimestamp();
+        this.aggregateId = event.getAggregateRootId();
     }
 
     DomainEvent unwrap() {
         var mapper = new ObjectMapper();
+        mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withGetterVisibility(Visibility.NONE).withFieldVisibility(Visibility.ANY));
         mapper.registerModule(new JavaTimeModule());
         try {
             return (DomainEvent) mapper.readValue(eventJson, Class.forName(domainEventClassName));

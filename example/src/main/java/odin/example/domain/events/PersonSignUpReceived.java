@@ -8,7 +8,6 @@ import odin.domainmodel.DomainEvent;
 @NoArgsConstructor
 public class PersonSignUpReceived extends DomainEvent {
 
-    private static final long serialVersionUID = 1L;
     private String lastName;
     private String firstName;
 

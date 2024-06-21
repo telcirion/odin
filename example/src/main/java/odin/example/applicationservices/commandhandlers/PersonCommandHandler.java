@@ -36,7 +36,7 @@ public class PersonCommandHandler implements CommandHandler {
 
     private Result handle(ChangePersonName changePersonName) {
         this.log(changePersonName);
-        var p = personRepository.load(changePersonName.getMessageInfo().objectId(), Person::new);
+        var p = personRepository.load(changePersonName.getAggregateRootId(), Person::new);
         p.process(changePersonName);
         personRepository.save(p);
         return Result.OK;
@@ -51,6 +51,6 @@ public class PersonCommandHandler implements CommandHandler {
 
     private void log(Command command) {
         LOGGER.info("Command {} received for aggregateId: {}, revision: {}", command.getClass().getSimpleName(),
-                command.getMessageInfo().objectId(), command.getMessageInfo().objectVersion());
+                command.getAggregateRootId(), command.getAggregateVersion());
     }
 }

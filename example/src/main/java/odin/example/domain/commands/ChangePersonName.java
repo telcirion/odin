@@ -7,7 +7,6 @@ import odin.domainmodel.Command;
 
 public class ChangePersonName extends Command {
 
-    private static final long serialVersionUID = 1L;
     private final String firstName;
 
     public ChangePersonName(String name, Identity targetId, Version targetVersion) {

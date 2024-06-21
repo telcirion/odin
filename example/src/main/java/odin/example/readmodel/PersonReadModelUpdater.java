@@ -38,7 +38,7 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
     private Result handle(PersonRegistered personRegistered) {
         this.log(personRegistered);
         PersistableReadModelPerson person = new PersistableReadModelPerson(null,
-                personRegistered.getMessageInfo().objectId(), personRegistered.getFirstName(),
+                personRegistered.getAggregateRootId(), personRegistered.getFirstName(),
                 personRegistered.getLastName());
         personList.save(person);
         synchronized (this) {
@@ -50,7 +50,7 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
     private Result handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
 
-        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getMessageInfo().objectId());
+        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getAggregateRootId());
         person.setFirstName(personNameChanged.getFirstName());
         personList.save(person);
         synchronized (this) {
@@ -67,7 +67,7 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
 
     private void log(DomainEvent event) {
         LOGGER.info("DomainEvent {} received for aggregateId: {}", event.getClass().getSimpleName(),
-                event.getMessageInfo().objectId());
+                event.getAggregateRootId());
     }
 
     @Override

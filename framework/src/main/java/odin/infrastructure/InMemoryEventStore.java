@@ -21,7 +21,7 @@ public class InMemoryEventStore implements EventStore {
         List<DomainEvent> filteredEvents = new ArrayList<>();
 
         filteredEvents.addAll(
-                eventStore.stream().filter(c -> c.getMessageInfo().objectId().getId().equals(id.getId())).toList());
+                eventStore.stream().filter(c -> c.getAggregateRootId().getId().equals(id.getId())).toList());
         return filteredEvents;
     }
 

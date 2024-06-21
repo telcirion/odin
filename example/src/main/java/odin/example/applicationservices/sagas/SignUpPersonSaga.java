@@ -12,6 +12,7 @@ import odin.common.Message;
 import odin.common.MessageDispatcher;
 import odin.common.Result;
 import odin.common.SendMessage;
+import odin.domainmodel.DomainEvent;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
 import odin.example.domain.events.PersonSignUpReceived;
@@ -44,7 +45,7 @@ public class SignUpPersonSaga implements SagaManager {
         return Result.OK;
     }
 
-    private void logReception(Message msg) {
-        logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getMessageInfo().timestamp());
+    private void logReception(DomainEvent msg) {
+        logger.info("Event {} received, on {}.", msg.getClass().getSimpleName(), msg.getTimestamp());
     }
 }

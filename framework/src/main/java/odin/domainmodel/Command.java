@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import odin.common.Identity;
 import odin.common.Message;
-import odin.common.MessageInfo;
 import odin.common.MessageInfoRecord;
 import odin.common.Version;
 
@@ -15,9 +14,12 @@ public abstract class Command implements Message {
     public Command(Identity id, Version targetVersion) {
         this.messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), id, targetVersion);
     }
+    
+    public Identity getAggregateRootId() {
+        return messageInfo.objectId();
+    }
 
-    @Override
-    public MessageInfo getMessageInfo() {
-        return messageInfo;
+    public Version getAggregateVersion() {
+        return messageInfo.objectVersion();
     }
 }

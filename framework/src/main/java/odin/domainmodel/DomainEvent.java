@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import odin.common.Identity;
 import odin.common.Message;
-import odin.common.MessageInfo;
 import odin.common.MessageInfoRecord;
 
 public abstract class DomainEvent implements Message {
@@ -19,8 +18,16 @@ public abstract class DomainEvent implements Message {
         this.messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), aggregateId, null);
     }
 
-    @Override
-    public MessageInfo getMessageInfo() {
-        return messageInfo;
+    public LocalDateTime getTimestamp() {
+        return messageInfo.timestamp();
     }
+  
+    public Identity getAggregateRootId() {
+        return messageInfo.objectId();
+    }
+
+    public Identity getEventId() {
+        return messageInfo.messageId();
+    }
+
 }

@@ -7,7 +7,7 @@ public class TestAggregateRoot implements AggregateRoot {
     private String testField;
 
     private DomainEvent changeTestField(TestCommand command) {
-        return new TestDomainEvent(command.getMessageInfo().objectId(), command.getTestValue());
+        return new TestDomainEvent(command.getAggregateRootId(), command.getTestValue());
     }
 
     public TestAggregateRoot testFieldChanged(TestDomainEvent event) {

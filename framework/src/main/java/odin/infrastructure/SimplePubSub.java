@@ -10,10 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import odin.common.Message;
 import odin.common.MessageHandler;
-import odin.common.PublishMessage;
-import odin.common.SendMessage;
+import odin.common.MessageSender;
 
-public class SimplePubSub implements SendMessage, PublishMessage {
+public class SimplePubSub implements MessageSender {
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final List<MessageHandler> subscribers = new ArrayList<>();

@@ -6,7 +6,7 @@ import java.util.List;
 import odin.applicationservices.CreateAggregateRoot;
 import odin.applicationservices.Repository;
 import odin.common.Identity;
-import odin.common.SendMessage;
+import odin.common.MessageSender;
 import odin.domainmodel.Aggregate;
 import odin.domainmodel.AggregateRoot;
 import odin.domainmodel.DomainEvent;
@@ -14,9 +14,9 @@ import odin.domainmodel.DomainEvent;
 public class EventRepository<T extends AggregateRoot> implements Repository<T> {
 
     private final EventStore es;
-    private final SendMessage eventBus;
+    private final MessageSender eventBus;
 
-    public EventRepository(final EventStore es, final SendMessage eventBus) {
+    public EventRepository(final EventStore es, final MessageSender eventBus) {
         this.eventBus = eventBus;
         this.es = es;
     }

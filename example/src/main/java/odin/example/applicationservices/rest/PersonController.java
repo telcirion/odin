@@ -8,15 +8,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import odin.example.readmodel.PersistableReadModelPerson;
 import odin.example.readmodel.PersonReadModelService;
+import odin.example.readmodel.PersonReadModelUpdater;
+import odin.infrastructure.EventStore;
 
 @RestController
 public class PersonController {
 
     @Autowired
     PersonReadModelService personService;
+    @Autowired
+    EventStore eventStore;
+    @Autowired
+    PersonReadModelUpdater personReadModelUpdater;
 
     @GetMapping(path = "/person/{id}")
-    public PersistableReadModelPerson getBook(@PathVariable int id) {
+    public PersistableReadModelPerson getPerson(@PathVariable int id) {
         return personService.findPersonById(id);
     }
 

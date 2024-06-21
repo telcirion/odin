@@ -10,8 +10,8 @@ import odin.applicationservices.SagaManager;
 import odin.common.Identity;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
+import odin.common.MessageSender;
 import odin.common.Result;
-import odin.common.SendMessage;
 import odin.domainmodel.DomainEvent;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.events.PersonRegistered;
@@ -19,11 +19,11 @@ import odin.example.domain.events.PersonSignUpReceived;
 
 public class SignUpPersonSaga implements SagaManager {
 
-    private final SendMessage commandBus;
+    private final MessageSender commandBus;
 
     final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public SignUpPersonSaga(SendMessage commandBus) {
+    public SignUpPersonSaga(MessageSender commandBus) {
         this.commandBus = commandBus;
     }
 

@@ -18,7 +18,7 @@ class AggregateTest {
     static void setUp() {
         aggregateId = new Identity();
         aggregateRoot = new TestAggregateRoot();
-        sut = new Aggregate<>(aggregateId, aggregateRoot);
+        sut = new Aggregate<>(aggregateRoot);
     }
 
     @Test

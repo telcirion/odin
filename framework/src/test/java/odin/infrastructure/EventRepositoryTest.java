@@ -22,7 +22,7 @@ class EventRepositoryTest {
         var sut = new EventRepository<TestAggregateRoot>(eventStore, new TestBus());
 
         var id = new Identity();
-        var saveAggregate = new Aggregate<>(id, new TestAggregateRoot());
+        var saveAggregate = new Aggregate<>(new TestAggregateRoot());
         saveAggregate.process(new TestCommand(id, null, "value 1"));
         assertNotNull(saveAggregate.getAddedEvents().get(0).getTimestamp());
         sut.save(saveAggregate);

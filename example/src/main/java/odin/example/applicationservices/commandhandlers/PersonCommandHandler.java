@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import odin.applicationservices.CommandHandler;
 import odin.applicationservices.Repository;
-import odin.common.Identity;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
 import odin.common.Result;
@@ -28,7 +27,7 @@ public class PersonCommandHandler implements CommandHandler {
 
     private Result handle(RegisterPerson registerPerson) {
         this.log(registerPerson);
-        var p = new Aggregate<>(new Identity(), new Person());
+        var p = new Aggregate<>(new Person());
         p.process(registerPerson);
         personRepository.save(p);
         return Result.OK;

@@ -26,7 +26,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
         var aggregateRoot = creator.createAggregateRoot();
         final List<DomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregateRoot::source);
-        return new Aggregate<>(id, aggregateRoot);
+        return new Aggregate<>(aggregateRoot);
     }
 
     @Override

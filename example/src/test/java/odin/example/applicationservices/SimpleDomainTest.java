@@ -86,7 +86,7 @@ class SimpleDomainTest {
                     + personQueryResult.getFirst().getLastName());
 
             // and then change the person's name
-            commandBus.send(new ChangePersonName("John", personQueryResult.getFirst().getIdentity(),
+            commandBus.send(new ChangePersonName("John", personQueryResult.getFirst().getAggregateRootId(),
                     null));
         }
 
@@ -98,7 +98,7 @@ class SimpleDomainTest {
 
         // try to find the same person again by Identity
         var anotherPersonQueryResult = personReadModelUpdater.getReadModelRepository()
-                .findByIdentity(personQueryResult.getFirst().getIdentity());
+                .findByAggregateRootId(personQueryResult.getFirst().getAggregateRootId());
         if (anotherPersonQueryResult != null) {
             logger.info("Person found with first name: "
                     + anotherPersonQueryResult.getFirstName() + " and last name: "

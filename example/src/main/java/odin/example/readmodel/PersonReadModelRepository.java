@@ -2,10 +2,9 @@
 package odin.example.readmodel;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
-
-import odin.common.Identity;
 
 public interface PersonReadModelRepository extends CrudRepository<PersistableReadModelPerson, Long> {
 
@@ -15,5 +14,5 @@ public interface PersonReadModelRepository extends CrudRepository<PersistableRea
 
     PersistableReadModelPerson findById(long id);
 
-    PersistableReadModelPerson findByIdentity(Identity identity);
+    PersistableReadModelPerson findByAggregateRootId(UUID identity);
 }

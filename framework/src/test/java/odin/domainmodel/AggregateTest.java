@@ -3,20 +3,20 @@ package odin.domainmodel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import odin.common.Identity;
-
 class AggregateTest {
 
-    private static Identity aggregateId;
+    private static UUID aggregateId;
     private static AggregateRoot aggregateRoot;
     private static Aggregate<AggregateRoot> sut;
 
     @BeforeAll
     static void setUp() {
-        aggregateId = new Identity();
+        aggregateId = UUID.randomUUID();
         aggregateRoot = new TestAggregateRoot();
         sut = new Aggregate<>(aggregateRoot);
     }

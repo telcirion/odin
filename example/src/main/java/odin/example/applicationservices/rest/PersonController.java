@@ -1,13 +1,14 @@
 
 package odin.example.applicationservices.rest;
 
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import odin.common.Identity;
 import odin.common.Result;
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.domain.commands.RegisterPerson;
@@ -40,9 +41,9 @@ public class PersonController {
         return r;
     }
 
-    @GetMapping(path = "/person/{id}")
-    public PersistableReadModelPerson getPerson(@PathVariable Identity id) {
-        return personReadModelUpdater.getReadModelRepository().findByIdentity(id);
+    @GetMapping("/person/{id}")
+    public PersistableReadModelPerson getPerson(@PathVariable UUID id) {
+        return personReadModelUpdater.getReadModelRepository().findByAggregateRootId(id);
     }
 
 }

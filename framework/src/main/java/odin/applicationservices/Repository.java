@@ -1,12 +1,13 @@
 
 package odin.applicationservices;
 
-import odin.common.Identity;
+import java.util.UUID;
+
 import odin.domainmodel.Aggregate;
 import odin.domainmodel.AggregateRoot;
 
 public interface Repository<T extends AggregateRoot> {
-    public Aggregate<T> load(Identity id, CreateAggregateRoot<T> creator);
+    public Aggregate<T> load(UUID id, CreateAggregateRoot<T> creator);
 
     public void save(Aggregate<T> obj);
 }

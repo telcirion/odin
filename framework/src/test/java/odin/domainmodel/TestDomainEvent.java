@@ -1,13 +1,13 @@
 
 package odin.domainmodel;
 
-import odin.common.Identity;
+import java.util.UUID;
 
 public class TestDomainEvent extends DomainEvent {
 
     private final String eventData;
 
-    public TestDomainEvent(final Identity aggregateId, String eventData) {
+    public TestDomainEvent(final UUID aggregateId, String eventData) {
         super(aggregateId);
         this.eventData = eventData;
     }

@@ -3,9 +3,10 @@ package odin.infrastructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 
-import odin.common.Identity;
 import odin.domainmodel.TestDomainEvent;
 
 class InMemoryEventStoreTest {
@@ -13,8 +14,8 @@ class InMemoryEventStoreTest {
     void eventStoreTest() {
         var eventStore = new InMemoryEventStore();
 
-        Identity aggregateId1 = new Identity();
-        Identity aggregateId2 = new Identity();
+        UUID aggregateId1 = UUID.randomUUID();
+        UUID aggregateId2 = UUID.randomUUID();
 
         var testDomainEvent1 = new TestDomainEvent(aggregateId1, "event 1");
         var testDomainEvent2 = new TestDomainEvent(aggregateId2, "event 2");
@@ -30,7 +31,7 @@ class InMemoryEventStoreTest {
         assertEquals(2, loadedEvents1.size());
         assertEquals(1, loadedEvents2.size());
 
-        assertEquals(testDomainEvent1.getEventId().getId().toString(),
-                loadedEvents1.getFirst().getEventId().getId().toString());
+        assertEquals(testDomainEvent1.getEventId().toString(),
+                loadedEvents1.getFirst().getEventId().toString());
     }
 }

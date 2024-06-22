@@ -2,12 +2,12 @@
 package odin.example.applicationservices.sagas;
 
 import java.lang.invoke.MethodHandles;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import odin.applicationservices.SagaManager;
-import odin.common.Identity;
 import odin.common.Message;
 import odin.common.MessageDispatcher;
 import odin.common.MessageSender;
@@ -36,7 +36,7 @@ public class SignUpPersonSaga implements SagaManager {
 
     private Result handle(PersonSignUpReceived msg) {
         logReception(msg);
-        commandBus.send(new RegisterPerson(new Identity(), msg.getLastName(), msg.getFirstName()));
+        commandBus.send(new RegisterPerson(UUID.randomUUID(), msg.getLastName(), msg.getFirstName()));
         return Result.OK;
     }
 

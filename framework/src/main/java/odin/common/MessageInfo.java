@@ -3,7 +3,8 @@ package odin.common;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public record MessageInfoRecord(Identity messageId, LocalDateTime timestamp, Identity objectId, Version objectVersion)
+public record MessageInfo(UUID messageId, LocalDateTime timestamp)
         implements Serializable {
 }

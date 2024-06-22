@@ -2,6 +2,7 @@
 package odin.example.infrastructure;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import odin.common.Identity;
 import odin.domainmodel.DomainEvent;
 import odin.example.ExampleApplication;
 
@@ -36,7 +36,7 @@ public class PersistableDomainEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Identity aggregateId;
+    private UUID aggregateId;
     private LocalDateTime timestamp;
     @Lob
     private String eventJson;

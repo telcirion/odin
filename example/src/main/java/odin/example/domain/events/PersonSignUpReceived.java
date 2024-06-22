@@ -1,8 +1,9 @@
 
 package odin.example.domain.events;
 
+import java.util.UUID;
+
 import lombok.NoArgsConstructor;
-import odin.common.Identity;
 import odin.domainmodel.DomainEvent;
 
 @NoArgsConstructor
@@ -12,7 +13,7 @@ public class PersonSignUpReceived extends DomainEvent {
     private String firstName;
 
     public PersonSignUpReceived(String lastName, String firstName) {
-        super(new Identity());
+        super(UUID.randomUUID());
         this.lastName = lastName;
         this.firstName = firstName;
     }

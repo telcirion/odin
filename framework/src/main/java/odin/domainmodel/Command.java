@@ -2,29 +2,36 @@
 package odin.domainmodel;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-import odin.common.Identity;
 import odin.common.Message;
-import odin.common.MessageInfoRecord;
-import odin.common.Version;
+import odin.common.MessageInfo;
 
 public abstract class Command implements Message {
-    private MessageInfoRecord messageInfo;
+    private MessageInfo messageInfo;
 
-    private final Identity aggregateRootId;
-    private final Version aggregateVersion;
+    private UUID aggregateRootId;
+    private UUID aggregateVersion;
 
-    public Command(Identity id, Version targetVersion) {
-        this.messageInfo = new MessageInfoRecord(new Identity(), LocalDateTime.now(), null, null);
+    public Command() {
+
+    }
+
+    public Command(UUID id, UUID targetVersion) {
+        this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now());
         this.aggregateRootId = id;
         this.aggregateVersion = targetVersion;
     }
 
-    public Identity getAggregateRootId() {
+    public UUID getAggregateRootId() {
         return aggregateRootId;
     }
 
-    public Version getAggregateVersion() {
+    public UUID getAggregateVersion() {
         return aggregateVersion;
+    }
+
+    public MessageInfo getMessageInfo() {
+        return messageInfo;
     }
 }

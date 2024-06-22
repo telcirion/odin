@@ -3,11 +3,11 @@ package odin.example.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import odin.common.Identity;
 import odin.domainmodel.DomainEvent;
 import odin.infrastructure.EventStore;
 
@@ -23,7 +23,7 @@ public class SpringEventStore implements EventStore {
     }
 
     @Override
-    public List<DomainEvent> load(Identity id) {
+    public List<DomainEvent> load(UUID id) {
         List<PersistableDomainEvent> persistableDomainEvents = repo.findByAggregateIdOrderByTimestampAsc(id);
         List<DomainEvent> domainEvents = new ArrayList<>();
         persistableDomainEvents.forEach(e -> domainEvents.add(e.unwrap()));

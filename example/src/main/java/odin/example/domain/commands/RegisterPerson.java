@@ -1,7 +1,8 @@
 
 package odin.example.domain.commands;
 
-import odin.common.Identity;
+import java.util.UUID;
+
 import odin.domainmodel.Command;
 
 public class RegisterPerson extends Command {
@@ -9,7 +10,7 @@ public class RegisterPerson extends Command {
     private final String firstName;
     private final String lastName;
 
-    public RegisterPerson(Identity targetId, String lastName, String firstName) {
+    public RegisterPerson(UUID targetId, String lastName, String firstName) {
         super(targetId, null);
         this.firstName = firstName;
         this.lastName = lastName;

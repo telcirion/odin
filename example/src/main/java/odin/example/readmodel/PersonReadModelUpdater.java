@@ -50,7 +50,7 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
     private Result handle(PersonNameChanged personNameChanged) {
         this.log(personNameChanged);
 
-        PersistableReadModelPerson person = personList.findByIdentity(personNameChanged.getAggregateRootId());
+        PersistableReadModelPerson person = personList.findByAggregateRootId(personNameChanged.getAggregateRootId());
         person.setFirstName(personNameChanged.getFirstName());
         personList.save(person);
         synchronized (this) {

@@ -1,6 +1,8 @@
 
 package odin.example.domain.state;
 
+import java.util.UUID;
+
 import odin.common.MessageDispatcher;
 import odin.domainmodel.AggregateRoot;
 import odin.domainmodel.Command;
@@ -40,7 +42,7 @@ public class Person implements AggregateRoot {
     }
 
     public DomainEvent register(RegisterPerson command) {
-        return new PersonRegistered(command.getAggregateRootId(), command.getLastName(),
+        return new PersonRegistered(UUID.randomUUID(), command.getLastName(),
                 command.getFirstName());
     }
 

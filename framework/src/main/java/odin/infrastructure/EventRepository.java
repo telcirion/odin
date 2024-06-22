@@ -2,10 +2,10 @@
 package odin.infrastructure;
 
 import java.util.List;
+import java.util.UUID;
 
 import odin.applicationservices.CreateAggregateRoot;
 import odin.applicationservices.Repository;
-import odin.common.Identity;
 import odin.common.MessageSender;
 import odin.domainmodel.Aggregate;
 import odin.domainmodel.AggregateRoot;
@@ -22,7 +22,7 @@ public class EventRepository<T extends AggregateRoot> implements Repository<T> {
     }
 
     @Override
-    public Aggregate<T> load(Identity id, CreateAggregateRoot<T> creator) {
+    public Aggregate<T> load(UUID id, CreateAggregateRoot<T> creator) {
         var aggregateRoot = creator.createAggregateRoot();
         final List<DomainEvent> resultSet = es.load(id);
         resultSet.forEach(aggregateRoot::source);

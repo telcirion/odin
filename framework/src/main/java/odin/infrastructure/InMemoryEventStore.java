@@ -3,8 +3,8 @@ package odin.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import odin.common.Identity;
 import odin.domainmodel.DomainEvent;
 
 public class InMemoryEventStore implements EventStore {
@@ -17,11 +17,11 @@ public class InMemoryEventStore implements EventStore {
     }
 
     @Override
-    public List<DomainEvent> load(Identity id) {
+    public List<DomainEvent> load(UUID id) {
         List<DomainEvent> filteredEvents = new ArrayList<>();
 
         filteredEvents.addAll(
-                eventStore.stream().filter(c -> c.getAggregateRootId().getId().equals(id.getId())).toList());
+                eventStore.stream().filter(c -> c.getAggregateRootId().equals(id)).toList());
         return filteredEvents;
     }
 

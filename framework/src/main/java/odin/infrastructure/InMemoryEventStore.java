@@ -25,4 +25,13 @@ public class InMemoryEventStore implements EventStore {
         return filteredEvents;
     }
 
+    @Override
+    public List<DomainEvent> load() {
+        List<DomainEvent> allEvents = new ArrayList<>();
+
+        allEvents.addAll(
+                eventStore.stream().toList());
+        return allEvents;
+    }
+
 }

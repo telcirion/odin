@@ -30,4 +30,12 @@ public class SpringEventStore implements EventStore {
         return domainEvents;
     }
 
+    @Override
+    public List<DomainEvent> load() {
+        Iterable<PersistableDomainEvent> persistableDomainEvents = repo.findAll();
+        List<DomainEvent> domainEvents = new ArrayList<>();
+        persistableDomainEvents.forEach(e -> domainEvents.add(e.unwrap()));
+        return domainEvents;
+    }
+
 }

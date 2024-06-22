@@ -8,5 +8,4 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PersistableDomainEventRepo extends CrudRepository<PersistableDomainEvent, Long> {
     List<PersistableDomainEvent> findByAggregateIdOrderByTimestampAsc(UUID aggregateId);
-
 }

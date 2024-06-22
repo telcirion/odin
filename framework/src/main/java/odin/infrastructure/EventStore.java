@@ -10,4 +10,6 @@ public interface EventStore {
     void save(DomainEvent domainEvents);
 
     List<DomainEvent> load(UUID id);
+
+    List<DomainEvent> load();
 }

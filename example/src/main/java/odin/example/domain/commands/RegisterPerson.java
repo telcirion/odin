@@ -7,8 +7,8 @@ import odin.domainmodel.Command;
 
 public class RegisterPerson extends Command {
 
-    private final String firstName;
-    private final String lastName;
+    private String firstName;
+    private String lastName;
 
     public RegisterPerson(UUID targetId, String lastName, String firstName) {
         super(targetId, null);

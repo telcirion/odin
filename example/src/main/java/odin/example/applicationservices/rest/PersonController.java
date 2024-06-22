@@ -1,7 +1,7 @@
 
 package odin.example.applicationservices.rest;
 
-import java.util.UUID;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import odin.common.Result;
+import odin.domainmodel.DomainEvent;
 import odin.example.applicationservices.commandhandlers.PersonCommandHandler;
 import odin.example.domain.commands.RegisterPerson;
 import odin.example.domain.state.Person;
@@ -25,10 +26,12 @@ public class PersonController {
     private final PersonReadModelUpdater personReadModelUpdater;
     private final SimplePubSub eventBus;
     private final PersonCommandHandler pc;
+    private final EventStore es;
 
     public PersonController(EventStore eventStore, PersonReadModelUpdater personReadModelUpdater) {
         this.personReadModelUpdater = personReadModelUpdater;
         this.eventBus = new SimplePubSub();
+        this.es = eventStore;
         EventRepository<Person> personRepository = new EventRepository<>(eventStore, eventBus);
         pc = new PersonCommandHandler(personRepository);
         eventBus.subscribe(personReadModelUpdater);
@@ -41,9 +44,19 @@ public class PersonController {
         return r;
     }
 
+    @GetMapping("/events")
+    public List<DomainEvent> getEvents() {
+        return es.load();
+    }
+
+    @GetMapping("/persons")
+    public Iterable<PersistableReadModelPerson> getPersons() {
+        return personReadModelUpdater.getReadModelRepository().findAll();
+    }
+
     @GetMapping("/person/{id}")
-    public PersistableReadModelPerson getPerson(@PathVariable UUID id) {
-        return personReadModelUpdater.getReadModelRepository().findByAggregateRootId(id);
+    public PersistableReadModelPerson getPerson(@PathVariable int id) {
+        return personReadModelUpdater.getReadModelRepository().findById(id);
     }
 
 }

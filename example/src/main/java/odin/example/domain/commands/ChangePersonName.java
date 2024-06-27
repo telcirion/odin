@@ -3,11 +3,13 @@ package odin.example.domain.commands;
 
 import java.util.UUID;
 
+import lombok.NoArgsConstructor;
 import odin.domainmodel.Command;
 
+@NoArgsConstructor
 public class ChangePersonName extends Command {
 
-    private final String firstName;
+    private String firstName;
 
     public ChangePersonName(String name, UUID targetId, UUID targetVersion) {
         super(targetId, targetVersion);

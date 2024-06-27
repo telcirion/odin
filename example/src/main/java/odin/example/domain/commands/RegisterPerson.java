@@ -3,8 +3,10 @@ package odin.example.domain.commands;
 
 import java.util.UUID;
 
+import lombok.NoArgsConstructor;
 import odin.domainmodel.Command;
 
+@NoArgsConstructor
 public class RegisterPerson extends Command {
 
     private String firstName;

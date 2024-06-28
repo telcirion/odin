@@ -50,6 +50,11 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    public AuthController(RoleRepository roleRepository) {
+
+        roleRepository.save(new Role(RoleType.ROLE_USER));
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 

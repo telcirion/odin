@@ -14,5 +14,4 @@ public class ExampleApplication {
         SpringApplication.run(ExampleApplication.class, args);
         log.info("Alles ging goed");
     }
-
 }

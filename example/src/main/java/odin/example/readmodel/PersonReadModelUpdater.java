@@ -32,8 +32,12 @@ public class PersonReadModelUpdater implements ReadModelUpdater<PersonReadModelR
         }
     }
 
-    @Autowired
-    private PersonReadModelRepository personList;
+    private final PersonReadModelRepository personList;
+
+    public PersonReadModelUpdater(@Autowired PersonReadModelRepository personList) {
+        super();
+        this.personList = personList;
+    }
 
     private Result handle(PersonRegistered personRegistered) {
         this.log(personRegistered);

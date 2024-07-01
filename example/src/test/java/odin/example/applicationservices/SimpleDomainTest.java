@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.invoke.MethodHandles;
+import java.text.MessageFormat;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -81,9 +82,8 @@ class SimpleDomainTest {
         // let's try a person query
         var personQueryResult = personReadModelUpdater.getReadModelRepository().findByFirstName("Roger");
         if (personQueryResult.size() > 0) {
-            logger.info("Person found with first name: "
-                    + personQueryResult.getFirst().getFirstName() + " and last name: "
-                    + personQueryResult.getFirst().getLastName());
+            logger.info(MessageFormat.format("Person found with first name: {0} and last name: {1}",
+                    personQueryResult.getFirst().getFirstName(), personQueryResult.getFirst().getLastName()));
 
             // and then change the person's name
             commandBus.send(new ChangePersonName("John", personQueryResult.getFirst().getAggregateRootId(),
@@ -100,9 +100,8 @@ class SimpleDomainTest {
         var anotherPersonQueryResult = personReadModelUpdater.getReadModelRepository()
                 .findByAggregateRootId(personQueryResult.getFirst().getAggregateRootId());
         if (anotherPersonQueryResult != null) {
-            logger.info("Person found with first name: "
-                    + anotherPersonQueryResult.getFirstName() + " and last name: "
-                    + anotherPersonQueryResult.getLastName());
+            logger.info(MessageFormat.format("Person found with first name: {0} and last name: {1}",
+                    anotherPersonQueryResult.getFirstName(), anotherPersonQueryResult.getLastName()));
         }
         eventBus.stop();
         commandBus.stop();

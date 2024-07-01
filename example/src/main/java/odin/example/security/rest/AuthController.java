@@ -3,7 +3,6 @@ package odin.example.security.rest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,20 +39,21 @@ public class AuthController {
     private static final String ERROR_ROLE_IS_NOT_FOUND = "Error: Role is not found.";
     private static final String ERROR_EMAIL_IS_ALREADY_IN_USE = "Error: Email is already in use!";
 
-    @Autowired
     AuthenticationManager authenticationManager;
-
-    @Autowired
     UserRepository userRepository;
-
-    @Autowired
     RoleRepository roleRepository;
-
-    @Autowired
     PasswordEncoder encoder;
+    JwtUtils jwtUtils;
 
     @Autowired
-    JwtUtils jwtUtils;
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
+            RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     public AuthController(RoleRepository roleRepository) {
 
@@ -71,8 +71,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .map(item -> item.getAuthority()).toList();
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),

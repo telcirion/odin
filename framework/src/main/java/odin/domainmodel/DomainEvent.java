@@ -11,11 +11,11 @@ public abstract class DomainEvent implements Message {
     private MessageInfo messageInfo;
     private UUID aggregateRootId;
 
-    public DomainEvent() {
+    protected DomainEvent() {
 
     }
 
-    public DomainEvent(final UUID aggregateId) {
+    protected DomainEvent(final UUID aggregateId) {
         this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now());
         this.aggregateRootId = aggregateId;
     }

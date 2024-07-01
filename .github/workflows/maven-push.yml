@@ -6,8 +6,7 @@ name: Build Java CI with Maven on push to master
 
 on:
   push:
-    branches: [ master ]
-
+    branches: []
 jobs:
   build:
     runs-on: ubuntu-latest

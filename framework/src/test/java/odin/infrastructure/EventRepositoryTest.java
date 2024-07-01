@@ -35,11 +35,12 @@ class EventRepositoryTest {
 
         @Override
         public void send(Message m) {
+            // Does nothing
         }
 
         @Override
         public void subscribe(MessageHandler messageHandler) {
-
+            // Does nothing
         }
 
     }

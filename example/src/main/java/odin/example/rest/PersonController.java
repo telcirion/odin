@@ -44,15 +44,13 @@ public class PersonController {
     @PostMapping("/person/commands/register")
     @Operation(description = "Post a register person command.")
     public Result postMethodName(@RequestBody RegisterPerson command) {
-        Result r = pc.handle(command);
-        return r;
+        return pc.handle(command);
     }
 
     @PostMapping("/person/commands/changename")
     @Operation(description = "Post a change person name command.")
     public Result postMethodName(@RequestBody ChangePersonName command) {
-        Result r = pc.handle(command);
-        return r;
+        return pc.handle(command);
     }
 
     @GetMapping("/person/source/{id}")

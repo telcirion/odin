@@ -13,8 +13,13 @@ import odin.infrastructure.EventStore;
 
 @Component
 public class SpringEventStore implements EventStore {
-    @Autowired
-    PersistableDomainEventRepo repo;
+
+    final PersistableDomainEventRepo repo;
+
+    public SpringEventStore(@Autowired PersistableDomainEventRepo repo) {
+        super();
+        this.repo = repo;
+    }
 
     @Override
     public void save(DomainEvent domainEvent) {

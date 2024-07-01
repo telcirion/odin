@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonReadModelService {
 
-    @Autowired
-    PersonReadModelRepository repo;
+    private final PersonReadModelRepository repo;
+
+    public PersonReadModelService(@Autowired PersonReadModelRepository repo) {
+        this.repo = repo;
+    }
 
     public PersistableReadModelPerson findPersonById(int id) {
         return repo.findById(id);

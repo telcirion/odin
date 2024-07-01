@@ -13,11 +13,11 @@ public abstract class Command implements Message {
     private UUID aggregateRootId;
     private UUID aggregateVersion;
 
-    public Command() {
+    protected Command() {
 
     }
 
-    public Command(UUID id, UUID targetVersion) {
+    protected Command(UUID id, UUID targetVersion) {
         this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now());
         this.aggregateRootId = id;
         this.aggregateVersion = targetVersion;

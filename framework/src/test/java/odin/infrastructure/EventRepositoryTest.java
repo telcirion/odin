@@ -25,7 +25,7 @@ class EventRepositoryTest {
         var id = UUID.randomUUID();
         var saveAggregate = new Aggregate<>(new TestAggregateRoot());
         saveAggregate.process(new TestCommand(id, null, "value 1"));
-        assertNotNull(saveAggregate.getAddedEvents().get(0).getTimestamp());
+        assertNotNull(saveAggregate.getAddedEvents().getFirst().getTimestamp());
         sut.save(saveAggregate);
         var loadAggregate = sut.load(id, TestAggregateRoot::new);
         assertEquals(saveAggregate.getAggregateRoot().getTestField(), loadAggregate.getAggregateRoot().getTestField());
@@ -35,11 +35,12 @@ class EventRepositoryTest {
 
         @Override
         public void send(Message m) {
+            // Does nothing
         }
 
         @Override
         public void subscribe(MessageHandler messageHandler) {
-
+            // Does nothing
         }
 
     }

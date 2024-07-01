@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import odin.domainmodel.DomainEvent;
-import odin.example.ExampleApplication;
 
 @Entity
 @Getter
@@ -32,7 +31,7 @@ import odin.example.ExampleApplication;
 @AllArgsConstructor
 @Table(name = "Event")
 public class PersistableDomainEvent {
-    private static final Logger log = LoggerFactory.getLogger(ExampleApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(PersistableDomainEvent.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

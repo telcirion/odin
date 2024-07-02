@@ -22,11 +22,14 @@ import odin.example.security.services.UserDetailsImpl;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${example.app.jwtSecret}")
-    private String jwtSecret;
+    private final String jwtSecret;
+    private final int jwtExpirationMs;
 
-    @Value("${example.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    public JwtUtils(@Value("${example.app.jwtSecret}") String jwtSecret,
+            @Value("${example.app.jwtExpirationMs}") int jwtExpirationMs) {
+        this.jwtSecret = jwtSecret;
+        this.jwtExpirationMs = jwtExpirationMs;
+    }
 
     public String generateJwtToken(Authentication authentication) {
 

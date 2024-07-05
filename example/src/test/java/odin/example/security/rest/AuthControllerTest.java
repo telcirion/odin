@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,13 +53,13 @@ public class AuthControllerTest {
     private AuthController authController;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @SuppressWarnings("null")
     @Test
-    public void testLogin() {
+    void testLogin() {
         // Setup
         LoginRequest loginRequest = new LoginRequest("user", "password");
         Authentication auth = mock(Authentication.class);
@@ -73,7 +72,7 @@ public class AuthControllerTest {
 
         when(auth.getPrincipal()).thenReturn(new UserDetailsImpl(1L, "user", "password", "email", roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList())));
+                .toList()));
 
         // Execute
         ResponseEntity<?> response = authController.authenticateUser(loginRequest);
@@ -86,7 +85,7 @@ public class AuthControllerTest {
 
     @SuppressWarnings("null")
     @Test
-    public void testSignup() {
+    void testSignup() {
         // Setup
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setUsername("newUser");

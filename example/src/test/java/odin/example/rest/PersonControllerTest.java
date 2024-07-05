@@ -33,14 +33,14 @@ public class PersonControllerTest {
     private PersonController personController;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         personController = new PersonController(eventStore, personReadModelUpdater);
 
     }
 
     @Test
-    public void testRegisterPerson() {
+    void testRegisterPerson() {
         RegisterPerson command = new RegisterPerson();
         Result expected = Result.OK;
         doNothing().when(eventStore).save(any(DomainEvent.class));
@@ -50,7 +50,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void testChangePersonName() {
+    void testChangePersonName() {
         UUID id = UUID.randomUUID();
         ChangePersonName command = new ChangePersonName("name", id, UUID.randomUUID());
         Result expected = Result.OK;

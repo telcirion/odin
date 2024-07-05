@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,7 +44,6 @@ public class AuthController {
     PasswordEncoder encoder;
     JwtUtils jwtUtils;
 
-    @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
             RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
@@ -53,11 +51,10 @@ public class AuthController {
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
-    }
-
-    public AuthController(RoleRepository roleRepository) {
 
         roleRepository.save(new Role(RoleType.ROLE_USER));
+        roleRepository.save(new Role(RoleType.ROLE_MODERATOR));
+        roleRepository.save(new Role(RoleType.ROLE_ADMIN));
     }
 
     @PostMapping("/signin")

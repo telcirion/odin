@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import odin.example.security.jwt.AuthEntryPointJwt;
 import odin.example.security.jwt.AuthTokenFilter;
+import odin.example.security.jwt.JwtUtils;
 import odin.example.security.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -23,10 +24,18 @@ import odin.example.security.services.UserDetailsServiceImpl;
 // jsr250Enabled = true,
 // prePostEnabled = true) // by default
 public class WebSecurityConfig {
+    private JwtUtils jwtUtils;
+
+    private UserDetailsServiceImpl userDetailsService;
+
+    public WebSecurityConfig(JwtUtils jwtUtils, UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+        this.jwtUtils = jwtUtils;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
     @Bean

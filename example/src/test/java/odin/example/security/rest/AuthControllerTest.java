@@ -32,7 +32,7 @@ import odin.example.security.repositories.RoleRepository;
 import odin.example.security.repositories.UserRepository;
 import odin.example.security.services.UserDetailsImpl;
 
-public class AuthControllerTest {
+class AuthControllerTest {
 
     @Mock
     private AuthenticationManager authenticationManager;

@@ -22,7 +22,7 @@ import odin.example.domain.events.PersonRegistered;
 import odin.example.readmodel.PersonReadModelUpdater;
 import odin.infrastructure.EventStore;
 
-public class PersonControllerTest {
+class PersonControllerTest {
 
     @Mock
     private EventStore eventStore;

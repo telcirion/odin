@@ -52,13 +52,12 @@ public class PersonControllerTest {
     @Test
     void testChangePersonName() {
         UUID id = UUID.randomUUID();
-        ChangePersonName command = new ChangePersonName("name", id, UUID.randomUUID());
-        Result expected = Result.OK;
         List<DomainEvent> domainEvents = new ArrayList<>();
         domainEvents.add(new PersonRegistered(id, "name", null));
         when(eventStore.load(any(UUID.class))).thenReturn(domainEvents);
         doNothing().when(eventStore).save(any(DomainEvent.class));
-
+        Result expected = Result.OK;
+        ChangePersonName command = new ChangePersonName("name", id, UUID.randomUUID());
         Result actual = personController.postMethodName(command);
 
         assertEquals(expected, actual);

@@ -61,7 +61,6 @@ public class AuthControllerTest {
     @Test
     void testLogin() {
         // Setup
-        LoginRequest loginRequest = new LoginRequest("user", "password");
         Authentication auth = mock(Authentication.class);
         when(authenticationManager.authenticate(any())).thenReturn(auth);
         when(jwtUtils.generateJwtToken(auth)).thenReturn("dummy-token");
@@ -73,7 +72,7 @@ public class AuthControllerTest {
         when(auth.getPrincipal()).thenReturn(new UserDetailsImpl(1L, "user", "password", "email", roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .toList()));
-
+        LoginRequest loginRequest = new LoginRequest("user", "password");
         // Execute
         ResponseEntity<?> response = authController.authenticateUser(loginRequest);
 

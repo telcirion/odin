@@ -13,18 +13,18 @@ import org.springframework.security.core.Authentication;
 import odin.example.security.services.UserDetailsImpl;
 
 @SpringBootTest
-public class JwtUtilsTest {
+class JwtUtilsTest {
 
     private JwtUtils jwtUtils;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // Initialize JwtUtils with test secret and expiration
         jwtUtils = new JwtUtils("testSecretKeyWhichIsNotSoSecretButMustBeLongEnough", 3600000); // 1 hour for testing
     }
 
     @Test
-    public void testGenerateJwtToken() {
+    void testGenerateJwtToken() {
         // Mock the authentication object
         Authentication authentication = mock(Authentication.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(1L, "test", "test@example.org", "test", null);
@@ -38,7 +38,7 @@ public class JwtUtilsTest {
     }
 
     @Test
-    public void testValidateJwtToken() {
+    void testValidateJwtToken() {
         // Mock the authentication object
         Authentication authentication = mock(Authentication.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(1L, "test", "test@example.org", "test", null);

@@ -46,6 +46,7 @@ class AuthTokenFilterTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
     }
 
     @Disabled
@@ -78,7 +79,6 @@ class AuthTokenFilterTest {
         assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    @Disabled
     @Test
     void whenException_thenLogError() throws Exception {
         when(request.getHeader("Authorization")).thenThrow(new RuntimeException("Test exception"));

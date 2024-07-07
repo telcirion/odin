@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: 21
     - name: Build with Maven
-      run: mvn -B test
+      run: mvn -B -T1 test
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.ODIN }}

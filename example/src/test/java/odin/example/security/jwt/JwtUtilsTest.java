@@ -7,12 +7,10 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 
 import odin.example.security.services.UserDetailsImpl;
 
-@SpringBootTest
 class JwtUtilsTest {
 
     private JwtUtils jwtUtils;

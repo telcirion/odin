@@ -7,30 +7,27 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import odin.example.security.services.UserDetailsServiceImpl;
 
-@Disabled
 class AuthTokenFilterTest {
-
     @InjectMocks
-    private AuthTokenFilter authTokenFilter;
+    AuthTokenFilter authTokenFilter;
 
     @Mock
     private JwtUtils jwtUtils;
 
     @Mock
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Mock
     private HttpServletRequest request;
@@ -54,7 +51,8 @@ class AuthTokenFilterTest {
     void whenValidJwt_thenAuthenticate() throws Exception {
         String jwt = "valid.jwt.token";
         String username = "user";
-
+        // AuthTokenFilter authTokenFilter = new AuthTokenFilter(jwtUtils,
+        // userDetailsService);
         when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
         when(jwtUtils.validateJwtToken(jwt)).thenReturn(true);
         when(jwtUtils.getUserNameFromJwtToken(jwt)).thenReturn(username);
@@ -85,9 +83,5 @@ class AuthTokenFilterTest {
 
         authTokenFilter.doFilterInternal(request, response, filterChain);
 
-        // Here you would verify that the logger was called with the expected error
-        // message.
-        // This step depends on how you implement logging and might require additional
-        // mocking.
     }
 }

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.lang.invoke.MethodHandles;
 import java.text.MessageFormat;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ import odin.infrastructure.EventRepository;
 import odin.infrastructure.EventStore;
 import odin.infrastructure.SimplePubSub;
 
-@Disabled
 @SpringBootTest
 class SimpleDomainTest {
     private final EventStore eventStore;

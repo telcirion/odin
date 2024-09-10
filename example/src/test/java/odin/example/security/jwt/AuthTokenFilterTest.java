@@ -51,8 +51,7 @@ class AuthTokenFilterTest {
     void whenValidJwt_thenAuthenticate() throws Exception {
         String jwt = "valid.jwt.token";
         String username = "user";
-        // AuthTokenFilter authTokenFilter = new AuthTokenFilter(jwtUtils,
-        // userDetailsService);
+
         when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
         when(jwtUtils.validateJwtToken(jwt)).thenReturn(true);
         when(jwtUtils.getUserNameFromJwtToken(jwt)).thenReturn(username);
@@ -79,9 +78,10 @@ class AuthTokenFilterTest {
 
     @Test
     void whenException_thenLogError() throws Exception {
+
         when(request.getHeader("Authorization")).thenThrow(new RuntimeException("Test exception"));
 
         authTokenFilter.doFilterInternal(request, response, filterChain);
-
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 }

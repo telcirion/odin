@@ -2,10 +2,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.example</groupId>
+    <groupId>org.example.odin</groupId>
     <artifactId>odin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>odin</name>
     <properties>
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -20,21 +21,6 @@
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
     </properties>
-
-    <modules>
-        <module>framework</module>
-        <module>example</module>
-    </modules>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.example</groupId>
-                <artifactId>odin-framework</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
     <build>
         <pluginManagement>
             <plugins>
@@ -93,4 +79,8 @@
             </plugins>
         </pluginManagement>
     </build>
+    <modules>
+        <module>framework</module>
+        <module>example</module>
+    </modules>
 </project>

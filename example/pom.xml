@@ -4,14 +4,15 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.example</groupId>
+        <groupId>org.example.odin</groupId>
         <artifactId>odin</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.example</groupId>
-    <artifactId>odin-example</artifactId>
+    <groupId>org.example.odin</groupId>
+    <artifactId>example</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <name>example</name>
 
     <properties>
         <java.version>21</java.version>
@@ -35,8 +36,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>odin-framework</artifactId>
+            <groupId>org.example.odin</groupId>
+            <artifactId>framework</artifactId>
             <version>${odin.framework.version}</version>
             <exclusions>
                 <exclusion>

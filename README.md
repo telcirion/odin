@@ -27,3 +27,41 @@ See example in [test](https://github.com/telcirion/odin/tree/master/example/src/
 - **`framework\src\main\java\odin\framework\`**, some supporting abstract classes implementing interfaces that can be used to avoid logic duplication.
 - **`framework\src\main\java\odin\infrastructure\`**, some supporting classes which implement the interfaces requiring external infrastructural libraries.
 - **`example\src\test\java\odin\example\test\`**, a basic scenario test which demonstrates this framework.
+
+## Running the Frontend and Backend Together
+
+### Prerequisites
+
+- Node.js and npm installed on your machine
+- Java Development Kit (JDK) installed on your machine
+
+### Running the Backend
+
+1. Navigate to the `example` directory:
+   ```sh
+   cd example
+   ```
+
+2. Build and run the Spring Boot application:
+   ```sh
+   ./mvnw spring-boot:run
+   ```
+
+### Running the Frontend
+
+1. Navigate to the `frontend` directory:
+   ```sh
+   cd frontend
+   ```
+
+2. Install the dependencies:
+   ```sh
+   npm install
+   ```
+
+3. Start the React application:
+   ```sh
+   npm start
+   ```
+
+The frontend application will be available at `http://localhost:3000` and will communicate with the backend API running at `http://localhost:8080`.

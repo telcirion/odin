@@ -19,7 +19,7 @@
         <checkstyle.version>10.9.3</checkstyle.version>
         <sonar.projectKey>telcirion_odin</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     </properties>
     <build>
         <pluginManagement>

@@ -57,7 +57,6 @@ class AuthControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @SuppressWarnings("null")
     @Test
     void testLogin() {
         // Setup
@@ -82,7 +81,6 @@ class AuthControllerTest {
         assertEquals("dummy-token", ((JwtResponse) response.getBody()).getToken());
     }
 
-    @SuppressWarnings("null")
     @Test
     void testSignup() {
         // Setup

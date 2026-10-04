@@ -4,11 +4,13 @@ package odin.example.rest;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,7 +58,11 @@ public class PersonController {
     @GetMapping("/person/source/{id}")
     public Person source(
             @Parameter(name = "id", description = "id of the aggregate root to be retrieved") @PathVariable UUID id) {
-        return new EventRepository<Person>(es, eventBus).load(id, Person::new).getAggregateRoot();
+        var aggregate = new EventRepository<Person>(es, eventBus).load(id, Person::new);
+        if (aggregate == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found");
+        }
+        return aggregate.getAggregateRoot();
     }
 
     @GetMapping("/person/events")

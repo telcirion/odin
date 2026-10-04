@@ -1,6 +1,7 @@
 package odin.example.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import odin.common.Result;
 import odin.domainmodel.DomainEvent;
@@ -61,5 +64,16 @@ class PersonControllerTest {
         Result actual = personController.postMethodName(command);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void sourceReturnsNotFoundWhenPersonDoesNotExist() {
+        UUID id = UUID.randomUUID();
+        when(eventStore.load(id)).thenReturn(List.of());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> personController.source(id));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }

@@ -2,6 +2,7 @@
 package odin.domainmodel;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import odin.common.Message;
@@ -18,7 +19,7 @@ public abstract class Command implements Message {
     }
 
     protected Command(UUID id, UUID targetVersion) {
-        this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now());
+        this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()));
         this.aggregateRootId = id;
         this.aggregateVersion = targetVersion;
     }

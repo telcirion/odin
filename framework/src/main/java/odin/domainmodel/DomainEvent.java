@@ -2,6 +2,7 @@
 package odin.domainmodel;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import odin.common.Message;
@@ -16,7 +17,7 @@ public abstract class DomainEvent implements Message {
     }
 
     protected DomainEvent(final UUID aggregateId) {
-        this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now());
+        this.messageInfo = new MessageInfo(UUID.randomUUID(), LocalDateTime.now(ZoneId.systemDefault()));
         this.aggregateRootId = aggregateId;
     }
 
